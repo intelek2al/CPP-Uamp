@@ -10,6 +10,8 @@ set(SOURCES mainwindow.cpp
         loggingcategories.cpp
         settings.cpp
         app.cpp
+        dialogpreferences.h
+        settings.h
         )
 
 set(HEADERS mainwindow.h
@@ -22,9 +24,11 @@ set(HEADERS mainwindow.h
         loggingcategories.h
         settings.h
         app.h
+        dialogpreferences.cpp
+        settings.cpp
         )
 
-set(UI mainwindow.ui)
+set(UI mainwindow.ui dialogpreferences.ui)
 
 link_directories(../../build/3dparty/taglib/)
 

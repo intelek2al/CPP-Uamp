@@ -6,7 +6,7 @@
 //Settings::Settings(const QString& strOrg, const QString& strAppName) {
 Settings::Settings() {
 //    m_preferences = new QSettings(strOrg, strAppName);
-    m_preferences = App::utext_app()->utext_settings();
+    m_preferences = App::get_app()->app_settings();
 
   // load saved theme
     QString theme = m_preferences->value("theme").toString();
@@ -32,7 +32,7 @@ void Settings::loadTheme(QString &theme) {
     if (!theme.isEmpty()) {
         QFile file(":/qss/" + theme + ".qss");
         file.open(QFile::ReadOnly);
-        App::utext_app()->setStyleSheet(file.readAll());
+        App::get_app()->setStyleSheet(file.readAll());
         current_settings["theme"] = theme;
     }
     qInfo(logInfo()) << theme;

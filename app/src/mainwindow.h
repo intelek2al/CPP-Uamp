@@ -23,6 +23,7 @@
 #include "sound_tags.h"
 #include "soundPlayer.h"
 #include "searcher.h"
+#include "settings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -67,6 +68,12 @@ private slots:
 
     void on_actionQuit_triggered();
 
+    void onSideBarContextMenu(const QPoint &point);
+
+    void on_actionPlaylist_triggered();
+
+    void on_actionPreferences_triggered();
+
 
 
 
@@ -82,6 +89,7 @@ private:
     SoundPlayer *m_player;
     QString m_path;
     Searcher *m_searcher;
+    Settings *m_settings;
 
     void readDir(const QModelIndex &index);
     void setMusicPlay(QString soundPath);

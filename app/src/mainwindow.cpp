@@ -5,7 +5,9 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <algorithm>
+#include <QtWidgets>
 #include "loggingcategories.h"
+#include "dialogpreferences.h"
 
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
 
@@ -28,7 +30,8 @@ void MainWindow::outputCurrentInfo(const QVector<QString> &current, const QModel
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-//    QResource::registerResource("./app/myresource.rcc");
+    readSettings();
+    m_settings = new Settings();
 
     m_player = new SoundPlayer(ui);
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -39,6 +42,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->cover_label_large->setPixmap(pix);
     ui->cover_label->setPixmap(pix);
 
+
+    ui->sideBar->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->sideBar, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onSideBarContextMenu(const QPoint &)));
+
+
+
     m_tableViewer = new TableViewer(ui->tableInfoSong);
     m_dirmodel = new QFileSystemModel(this);
     m_dirmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
@@ -47,21 +56,61 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_searcher = new Searcher{ui->search_line, ui->filterBox, &m_music_list};
 
     m_path = "~/";
-    ui->fileBrowser->setModel(m_dirmodel);
-    ui->fileBrowser->scrollTo(m_dirmodel->index(m_path));
+//    ui->fileBrowser->setModel(m_dirmodel);
+//    ui->fileBrowser->scrollTo(m_dirmodel->index(m_path));
 
     ui->statusbar->hide();
-    ui->fileBrowser->hide();
+//    ui->fileBrowser->hide();
 
     ui->verticalLayout_2->setAlignment(ui->cover_label_large, Qt::AlignmentFlag::AlignCenter);
-    for (int i = 1; i < m_dirmodel->columnCount(); ++i)
-    {
-        ui->fileBrowser->hideColumn(i);
-    }
+//    for (int i = 1; i < m_dirmodel->columnCount(); ++i)
+//    {
+//        ui->fileBrowser->hideColumn(i);
+//    }
     on_fileBrowser_clicked(m_dirmodel->index(m_path));
 
     connect(ui->filterBox, SIGNAL(activated(int)), this, SLOT(on_search_line_editingFinished()));
 }
+
+void MainWindow::onSideBarContextMenu(const QPoint &point)
+{
+    QMenu contextMenu(tr("SideBar context menu"), this);
+
+//    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
+
+    QAction action_new("New Playlist", this);
+    connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    contextMenu.addAction(&action_new);
+
+//    QAction action_rename("Rename ", this);
+//    connect(&action_rename, &QAction::triggered, this, [=] () { on_action_context_file_rename(fullFileName); });
+//    contextMenu.addAction(&action_rename);
+//
+//    QAction action_delete("Delete ", this);
+//    connect(&action_delete, &QAction::triggered, this, [=] { on_action_context_file_delete(fullFileName) ;});
+//    contextMenu.addAction(&action_delete);
+
+    contextMenu.exec(mapToGlobal(point));
+}
+
+
+void MainWindow::on_actionPlaylist_triggered()
+{
+    bool ok;
+    QString new_playlist_name = QInputDialog::getText(this,"New folder",
+                                                    tr("Enter the new path for the new folder"),
+                                                    QLineEdit::Normal,
+                                                    "",
+                                                    &ok);
+    if (ok) {
+            qInfo(logInfo()) << "new playlist " << new_playlist_name;
+        } else {
+//            QMessageBox::warning(0, "Warning ", "You cannot delete the folder");  // show warning
+        qInfo(logInfo()) << "Warning You cannot delete the folder " << new_playlist_name;
+    }
+}
+
+
 
 MainWindow::~MainWindow()
 {
@@ -286,7 +335,7 @@ void MainWindow::on_change_cover_button_clicked()
 
 void MainWindow::on_search_line_editingFinished()
 {
-    readDir(ui->fileBrowser->currentIndex());
+//    readDir(ui->fileBrowser->currentIndex());
     auto tmp = m_searcher->search();
     m_music_list = tmp;
     if (!m_tableModel)
@@ -330,3 +379,21 @@ void MainWindow::on_actionQuit_triggered()
 
 
 
+
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    qDebug(logDebug()) << "on_action Preferences_triggered";
+
+    DialogPreferences *window_settings = new DialogPreferences(m_settings->get_current_settings(), 0);
+    window_settings->setModal(true);
+
+//    QObject::connect(window_settings, &DialogSettings::SavedSettings, this, &MainWindow::applySettings);
+
+    if (window_settings->exec() == QDialog::Accepted) {
+        qInfo(logInfo()) << "exec QDilaog";
+        QMap<QString, QString> new_settings;
+        window_settings->get_dialog_options(new_settings);  // get settings from QDialog
+//        m_settings->set_settings(new_settings);
+    }
+}
