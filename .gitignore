@@ -6,6 +6,7 @@ build/*
 .idea
 cmake-build-debug
 build
+.vscode
 
 # system files
 *.DS_Store

@@ -1,0 +1,3 @@
+[submodule "3dparty/taglib"]
+	path = 3dparty/taglib
+	url = https://github.com/taglib/taglib.git
