@@ -19,7 +19,7 @@ include_directories("../include/taglib/")
 
 add_compile_options(
         -std=c++1y
-            -Werror
+#            -Werror
             -Wall
             -Wextra
             -Wpedantic

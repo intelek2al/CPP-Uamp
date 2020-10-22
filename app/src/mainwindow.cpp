@@ -1,3 +1,5 @@
+#include "settings.h"
+#include "app.h"
 #include "mainwindow.h"
 #include "sound_tags.h"
 #include "ui_mainwindow.h"
@@ -5,26 +7,6 @@
 #include <algorithm>
 
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
-
-//#define T___NAME 0
-//#define T___TIME 1
-//#define V__TITLE 2
-//#define V_ARTIST 3
-//#define V__GENRE 4
-//#define V__ALBUM 5
-//#define T___YEAR 6
-//#define T__TRACK 7
-//#define T___COMT 8
-
-//#define V___NAME 0
-//#define V___TIME 1
-//#define V__TITLE 2
-//#define V_ARTIST 3
-//#define V__GENRE 4
-//#define V__ALBUM 5
-//#define V___YEAR 6
-//#define V__TRACK 7
-//#define V___COMT 8
 
 #define default_cover ":/logo1.png"
 
@@ -42,7 +24,7 @@ void MainWindow::outputCurrentInfo(const QVector<QString> &current, const QModel
     m_tableViewer->setNewItems(current, index);
 }
 
-MainWindow::MainWindow(QString sPath, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 //    QResource::registerResource("./app/myresource.rcc");
@@ -56,22 +38,14 @@ MainWindow::MainWindow(QString sPath, QWidget *parent) : QMainWindow(parent), ui
     ui->cover_label_large->setPixmap(pix);
     ui->cover_label->setPixmap(pix);
 
-
     m_tableViewer = new TableViewer(ui->tableInfoSong);
     m_dirmodel = new QFileSystemModel(this);
     m_dirmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
     m_dirmodel->setRootPath("~/");
     ui->log->setHidden(true);
-    m_log = new Logger(ui);
     m_searcher = new Searcher{ui->search_line, ui->filterBox, &m_music_list};
 
-
-    if (QDir c_dir(sPath); !c_dir.exists()) {
-        m_path = "~/";
-        m_log->add_log_massage(sPath + " directory not exists");
-        ui->statusbar->showMessage(sPath + " directory not exists", 3000);
-    }
-    m_path = sPath;
+    m_path = "~/";
     ui->fileBrowser->setModel(m_dirmodel);
     ui->fileBrowser->scrollTo(m_dirmodel->index(m_path));
 
@@ -90,7 +64,7 @@ MainWindow::~MainWindow()
     delete m_tableViewer;
     delete m_dirmodel;
     delete m_searcher;
-//    system("leaks -q utag");
+//    system("leaks -q uamp");
     delete ui;
 }
 
@@ -100,7 +74,7 @@ void MainWindow::readDir(const QModelIndex &index) {
 
     if (!current_directory.isReadable())
     {
-        m_log->add_log_massage(sPath + " directory not readable");
+//        m_log->add_log_massage(sPath + " directory not readable");
         ui->statusbar->showMessage(sPath + " directory not readable", 3000);
     };
 
@@ -121,7 +95,7 @@ void MainWindow::readDir(const QModelIndex &index) {
     {
         QFileInfo fileInfo = list.at(i);
         if (!fileInfo.isReadable()) {
-            m_log->add_log_massage(fileInfo.fileName() + " not readable");
+//            m_log->add_log_massage(fileInfo.fileName() + " not readable");
             ui->statusbar->showMessage(fileInfo.fileName()  + " not readable", 3000);
             continue;
         }
@@ -170,7 +144,7 @@ void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
     }
     else {
         ui->statusbar->showMessage(tr(" cover is unsupported"), 200);
-        m_log->add_log_massage(m_music_list[index.row()][0] + " cover is unsupported");
+//        m_log->add_log_massage(m_music_list[index.row()][0] + " cover is unsupported");
 //        coverQImg = QImage("../../app/logo1.png");
         coverQImg = QImage(default_cover);
     }
@@ -188,7 +162,7 @@ void MainWindow::on_pushButton_clicked()
     }
     if (!(modify_tags(newSongTag))) {
         ui->statusbar->showMessage(newSongTag[8] + " is not writable", 200);
-        m_log->add_log_massage(newSongTag[8] + " is not writable");
+//        m_log->add_log_massage(newSongTag[8] + " is not writable");
     }
 
     m_music_list[m_tableViewer->getIndex().row()] = std::move(newSongTag);
@@ -281,7 +255,7 @@ void MainWindow::on_change_cover_button_clicked()
                 tr("Images (*.png *.jpg)")
         );
         if (!(set_image_mpeg(currentSongTag[8].toStdString().data(), file_image.toStdString().data()))) {
-            m_log->add_log_massage(currentSongTag[8] + " not editable");
+//            m_log->add_log_massage(currentSongTag[8] + " not editable");
             ui->statusbar->showMessage(currentSongTag[0] + "not editable", 2000);
         }
         ui->statusbar->showMessage(tr(file_image.toStdString().data()), 2000);
@@ -308,7 +282,7 @@ void MainWindow::on_change_cover_button_clicked()
 
 void MainWindow::on_actionlog_triggered()
 {
-    m_log->show_logger();
+//    m_log->show_logger();
     ui->statusbar->showMessage(tr("menu log"), 2000);
 }
 
@@ -324,4 +298,25 @@ void MainWindow::on_search_line_editingFinished()
     m_tableModel->music_list_add(m_music_list);
     ui->mainMusicTable->setModel(m_tableModel);
     ui->mainMusicTable->viewport()->update();
+}
+
+void MainWindow::readSettings() {
+    QSettings *settings = App::get_app()->app_settings();
+
+//    QString theme = settings->value("theme").toString();
+
+    const QByteArray geometry = settings->value("geometry", QByteArray()).toByteArray();
+    if (geometry.isEmpty()) {
+        const QRect availableGeometry = screen()->availableGeometry();
+        resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
+        move((availableGeometry.width() - width()) / 2,
+             (availableGeometry.height() - height()) / 2);
+    } else {
+        restoreGeometry(geometry);
+    }
+}
+
+void MainWindow::writeSettings() {
+    QSettings *settings = App::get_app()->app_settings();
+    settings->setValue("geometry", saveGeometry());
 }

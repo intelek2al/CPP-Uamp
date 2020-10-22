@@ -22,7 +22,6 @@
 #include "musictablemodel.h"
 #include "sound_tags.h"
 #include "soundPlayer.h"
-#include "logger.h"
 #include "searcher.h"
 
 QT_BEGIN_NAMESPACE
@@ -38,7 +37,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QString path = "~/", QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
 private slots:
@@ -68,6 +67,9 @@ private slots:
     void on_search_line_editingFinished();
 
 private:
+    void readSettings();
+    void writeSettings();
+
     Ui::MainWindow *ui;
     QFileSystemModel *m_dirmodel;
     QVector<QVector<QString>> m_music_list;
@@ -75,7 +77,6 @@ private:
     MusicTableModel *m_tableModel;
     SoundPlayer *m_player;
     QString m_path;
-    Logger *m_log;
     Searcher *m_searcher;
 
     void readDir(const QModelIndex &index);

@@ -7,7 +7,9 @@ set(SOURCES mainwindow.cpp
         tableviewer.cpp
         searcher.cpp
         SoundPlayer.cpp
-        logger.cpp
+        loggingcategories.cpp
+        settings.cpp
+        app.cpp
         )
 
 set(HEADERS mainwindow.h
@@ -17,7 +19,9 @@ set(HEADERS mainwindow.h
         tableviewer.h
         searcher.h
         SoundPlayer.h
-        logger.h
+        loggingcategories.h
+        settings.h
+        app.h
         )
 
 set(UI mainwindow.ui)
