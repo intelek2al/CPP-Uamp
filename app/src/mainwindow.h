@@ -61,10 +61,14 @@ private slots:
 
     void on_change_cover_button_clicked();
 
-    void on_actionlog_triggered();
 
 //    void on_pushButton_2_clicked();
     void on_search_line_editingFinished();
+
+    void on_actionQuit_triggered();
+
+
+
 
 private:
     void readSettings();

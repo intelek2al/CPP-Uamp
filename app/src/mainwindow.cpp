@@ -5,6 +5,7 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <algorithm>
+#include "loggingcategories.h"
 
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
 
@@ -42,12 +43,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_dirmodel = new QFileSystemModel(this);
     m_dirmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
     m_dirmodel->setRootPath("~/");
-    ui->log->setHidden(true);
+//    ui->log->setHidden(true);
     m_searcher = new Searcher{ui->search_line, ui->filterBox, &m_music_list};
 
     m_path = "~/";
     ui->fileBrowser->setModel(m_dirmodel);
     ui->fileBrowser->scrollTo(m_dirmodel->index(m_path));
+
+    ui->statusbar->hide();
+    ui->fileBrowser->hide();
 
     ui->verticalLayout_2->setAlignment(ui->cover_label_large, Qt::AlignmentFlag::AlignCenter);
     for (int i = 1; i < m_dirmodel->columnCount(); ++i)
@@ -280,13 +284,6 @@ void MainWindow::on_change_cover_button_clicked()
     }
 }
 
-void MainWindow::on_actionlog_triggered()
-{
-//    m_log->show_logger();
-    ui->statusbar->showMessage(tr("menu log"), 2000);
-}
-
-
 void MainWindow::on_search_line_editingFinished()
 {
     readDir(ui->fileBrowser->currentIndex());
@@ -317,6 +314,19 @@ void MainWindow::readSettings() {
 }
 
 void MainWindow::writeSettings() {
+    qInfo(logInfo()) << "write settings before quit";
+
     QSettings *settings = App::get_app()->app_settings();
     settings->setValue("geometry", saveGeometry());
 }
+
+
+void MainWindow::on_actionQuit_triggered()
+{
+    writeSettings();
+    qInfo(logInfo()) << QString("Quit uamp\n");
+    App::quit();
+}
+
+
+
