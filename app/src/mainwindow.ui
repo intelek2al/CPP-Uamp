@@ -369,7 +369,7 @@ color: rgb(132, 130, 133);</string>
      </layout>
     </item>
     <item row="1" column="0">
-     <layout class="QGridLayout" name="gridLayout" rowstretch="0" columnstretch="1,5,0,0">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="0" columnstretch="1,5,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetNoConstraint</enum>
       </property>
@@ -550,11 +550,11 @@ color: rgb(132, 130, 133);</string>
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>true</bool>
           </attribute>
-          <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>270</number>
-          </attribute>
           <attribute name="horizontalHeaderMinimumSectionSize">
            <number>25</number>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>270</number>
           </attribute>
           <row>
            <property name="text">
@@ -663,11 +663,11 @@ color: rgb(132, 130, 133);</string>
         <attribute name="horizontalHeaderCascadingSectionResizes">
          <bool>true</bool>
         </attribute>
-        <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>150</number>
-        </attribute>
         <attribute name="horizontalHeaderMinimumSectionSize">
          <number>30</number>
+        </attribute>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>150</number>
         </attribute>
         <attribute name="horizontalHeaderStretchLastSection">
          <bool>false</bool>
@@ -710,10 +710,13 @@ color: rgb(132, 130, 133);</string>
     <property name="title">
      <string>Song</string>
     </property>
+    <addaction name="actionAdd_to_Playlist"/>
+    <addaction name="actionInfo"/>
     <addaction name="actionPlay_Next"/>
     <addaction name="actionPlay_Layter"/>
     <addaction name="actionStar"/>
     <addaction name="actionUnStar"/>
+    <addaction name="actionDelete_from_Library"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -723,26 +726,50 @@ color: rgb(132, 130, 133);</string>
     <addaction name="actionView_Options"/>
     <addaction name="actionShow_Satus_Bar"/>
     <addaction name="actionHide_SideBar"/>
+    <addaction name="actionShow_Lyrics"/>
+    <addaction name="actionShow_Playing_Next"/>
    </widget>
    <widget class="QMenu" name="menuContorl">
     <property name="title">
      <string>Contorls</string>
     </property>
+    <addaction name="actionPlay"/>
+    <addaction name="actionStop"/>
+    <addaction name="actionNext"/>
+    <addaction name="actionPrevious"/>
+    <addaction name="separator"/>
+    <addaction name="actionIncrease_Volume"/>
+    <addaction name="actionDecrease_Volume"/>
+    <addaction name="actionShuffle"/>
+    <addaction name="actionRepeat"/>
    </widget>
    <widget class="QMenu" name="menuAccount">
     <property name="title">
      <string>Account</string>
     </property>
+    <addaction name="actionSign_In"/>
+    <addaction name="actionSign_Out"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
      <string>Window</string>
     </property>
+    <addaction name="actionEqualizer"/>
+    <addaction name="actionViz"/>
+    <addaction name="actionActyvyti"/>
+    <addaction name="separator"/>
+    <addaction name="actionVizualizer"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+   </widget>
+   <widget class="QMenu" name="menuHelp_2">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionUamp_Help"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSong"/>
@@ -751,6 +778,7 @@ color: rgb(132, 130, 133);</string>
    <addaction name="menuAccount"/>
    <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
+   <addaction name="menuHelp_2"/>
   </widget>
   <action name="actionPreferences">
    <property name="text">
@@ -808,6 +836,9 @@ color: rgb(132, 130, 133);</string>
    <property name="text">
     <string>View Options</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+J</string>
+   </property>
   </action>
   <action name="actionSort_by">
    <property name="text">
@@ -836,10 +867,149 @@ color: rgb(132, 130, 133);</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Hide SideBar</string>
+    <string>Show SideBar</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="actionInfo">
+   <property name="text">
+    <string>Info...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionAdd_to_Playlist">
+   <property name="text">
+    <string>Add to Playlist</string>
+   </property>
+  </action>
+  <action name="actionDelete_from_Library">
+   <property name="text">
+    <string>Delete from Library</string>
+   </property>
+  </action>
+  <action name="actionShow_Lyrics">
+   <property name="text">
+    <string>Show Lyrics</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionShow_Playing_Next">
+   <property name="text">
+    <string>Show Playing Next</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+U</string>
+   </property>
+  </action>
+  <action name="actionPlay">
+   <property name="text">
+    <string>Play</string>
+   </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+.</string>
+   </property>
+  </action>
+  <action name="actionNext">
+   <property name="text">
+    <string>Next</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Right</string>
+   </property>
+  </action>
+  <action name="actionPrevious">
+   <property name="text">
+    <string>Previous</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Left</string>
+   </property>
+  </action>
+  <action name="actionIncrease_Volume">
+   <property name="text">
+    <string>Increase Volume</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Up</string>
+   </property>
+  </action>
+  <action name="actionDecrease_Volume">
+   <property name="text">
+    <string>Decrease Volume</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Down</string>
+   </property>
+  </action>
+  <action name="actionShuffle">
+   <property name="text">
+    <string>Shuffle</string>
+   </property>
+  </action>
+  <action name="actionRepeat">
+   <property name="text">
+    <string>Repeat</string>
+   </property>
+  </action>
+  <action name="actionSign_In">
+   <property name="text">
+    <string>Sign In</string>
+   </property>
+  </action>
+  <action name="actionSign_Out">
+   <property name="text">
+    <string>Sign Out</string>
+   </property>
+  </action>
+  <action name="actionEqualizer">
+   <property name="text">
+    <string>Equalizer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+E</string>
+   </property>
+  </action>
+  <action name="actionViz">
+   <property name="text">
+    <string>Mini Player</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+M</string>
+   </property>
+  </action>
+  <action name="actionActyvyti">
+   <property name="text">
+    <string>Activity</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+L</string>
+   </property>
+  </action>
+  <action name="actionVizualizer">
+   <property name="text">
+    <string>Visualizer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionUamp_Help">
+   <property name="text">
+    <string>Uamp Help</string>
    </property>
   </action>
  </widget>
