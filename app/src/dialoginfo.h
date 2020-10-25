@@ -12,11 +12,12 @@ class DialogInfo : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInfo(QWidget *parent = nullptr);
+    explicit DialogInfo(QVector<QString> songInfo, QWidget *parent = nullptr);
     ~DialogInfo();
 
 private:
     Ui::DialogInfo *ui;
+    QVector<QString> m_tagsInfo;
 };
 
 #endif // DIALOGINFO_H

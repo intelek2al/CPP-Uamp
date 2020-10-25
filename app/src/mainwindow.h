@@ -74,6 +74,8 @@ private slots:
 
     void on_actionPreferences_triggered();
 
+    void on_actionInfo_triggered();
+
 
 
 

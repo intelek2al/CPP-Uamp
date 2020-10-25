@@ -8,6 +8,7 @@
 #include <QtWidgets>
 #include "loggingcategories.h"
 #include "dialogpreferences.h"
+#include "dialoginfo.h"
 
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
 
@@ -396,4 +397,18 @@ void MainWindow::on_actionPreferences_triggered()
         window_settings->get_dialog_options(new_settings);  // get settings from QDialog
 //        m_settings->set_settings(new_settings);
     }
+}
+
+void MainWindow::on_actionInfo_triggered()
+{
+  qDebug(logDebug()) << "on_actionInfo_triggered";
+
+  DialogInfo *songInfo = new DialogInfo({"AA", "dddd"}, 0);
+  songInfo->setModal(true);
+  if (songInfo->exec() == QDialog::Accepted) {
+    qInfo(logInfo()) << "ok DialogInfo";
+  }
+  else {
+    qInfo(logInfo()) << "cancel DialogInfo";
+  }
 }
