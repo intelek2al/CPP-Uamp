@@ -1,6 +1,7 @@
 #include "musictablemodel.h"
 #include "mainwindow.h"
 #include "iostream"
+#include "loggingcategories.h"
 
 MusicTableModel::MusicTableModel(QWidget *parent) : m_parent(parent)
 {
@@ -100,5 +101,6 @@ void MusicTableModel::sort(int column, Qt::SortOrder order)
 
 void MusicTableModel::music_list_add(QVector<QVector<QString>> params)
 {
+    qDebug(logDebug()) <<  "music_list_add";
     music_list = std::move(params);
 }

@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>DialogInfo</class>
  <widget class="QDialog" name="DialogInfo">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -9,6 +12,21 @@
     <width>404</width>
     <height>500</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>404</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>404</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -68,19 +86,43 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="nameSongInfo">
-          <property name="font">
-           <font>
-            <pointsize>20</pointsize>
-           </font>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="spacing">
+           <number>0</number>
           </property>
-          <property name="text">
-           <string>Name song</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
+          <item>
+           <widget class="QLabel" name="title_large">
+            <property name="font">
+             <font>
+              <pointsize>18</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="artisti_large">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -129,9 +171,9 @@
             <height>341</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <layout class="QVBoxLayout" name="song_info">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
+            <layout class="QHBoxLayout" name="title">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -148,7 +190,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="label_title">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -173,7 +215,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit">
+              <widget class="QLineEdit" name="line_title">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>
@@ -182,7 +224,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QHBoxLayout" name="artist">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -199,7 +241,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="label_artist">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -224,7 +266,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_2">
+              <widget class="QLineEdit" name="line_artist">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>
@@ -233,7 +275,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <layout class="QHBoxLayout" name="album">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -250,7 +292,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="label_album">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -275,7 +317,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_3">
+              <widget class="QLineEdit" name="line_album">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>
@@ -284,7 +326,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <layout class="QHBoxLayout" name="genre">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -301,7 +343,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_4">
+              <widget class="QLabel" name="label_genre">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -326,7 +368,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_4">
+              <widget class="QLineEdit" name="line_genre">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>
@@ -335,7 +377,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <layout class="QHBoxLayout" name="year">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -352,7 +394,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_5">
+              <widget class="QLabel" name="label_year">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -377,7 +419,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_5">
+              <widget class="QLineEdit" name="line_year">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>
@@ -386,7 +428,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <layout class="QHBoxLayout" name="track">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -403,7 +445,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_6">
+              <widget class="QLabel" name="label_track">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -428,7 +470,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_6">
+              <widget class="QLineEdit" name="line_track">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>
@@ -437,7 +479,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="raiting">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -454,7 +496,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_7">
+              <widget class="QLabel" name="label_raiting">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -479,7 +521,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_7">
+              <widget class="QLineEdit" name="line_raiting">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>
@@ -488,7 +530,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <layout class="QHBoxLayout" name="comments">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -505,7 +547,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_9">
+              <widget class="QLabel" name="label_comments">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -530,7 +572,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_9">
+              <widget class="QLineEdit" name="line_comments">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>
@@ -539,7 +581,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <layout class="QHBoxLayout" name="path">
              <property name="spacing">
               <number>10</number>
              </property>
@@ -556,7 +598,7 @@
               <number>2</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_8">
+              <widget class="QLabel" name="label_path">
                <property name="minimumSize">
                 <size>
                  <width>80</width>
@@ -581,7 +623,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_8">
+              <widget class="QLineEdit" name="line_path">
                <property name="autoFillBackground">
                 <bool>false</bool>
                </property>

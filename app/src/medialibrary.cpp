@@ -16,7 +16,6 @@ MediaLibrary::MediaLibrary() {
     if (!load_media_base()) {
         m_media_list = {};
     }
-
 }
 
 bool MediaLibrary::load_media_base() {
@@ -24,8 +23,8 @@ bool MediaLibrary::load_media_base() {
 }
 
 MediaLibrary::~MediaLibrary() {
-    // close media base
     // save changes
+    // close media base
 }
 
 bool MediaLibrary::add_media(const QString &media_path) {
@@ -36,8 +35,6 @@ bool MediaLibrary::add_media(const QString &media_path) {
     else {
         add_dir(media_path);
     }
-
-
     return false;
 }
 
@@ -55,7 +52,6 @@ void MediaLibrary::add_dir(const QString &dir_name) {
     //    current_directory.setSorting(QDir::Size | QDir::Reversed);
 
     QFileInfoList list = cur_dir.entryInfoList();
-
     for (int i = 0; i < list.size(); ++i)
     {
         add_file(list.at(i).filePath());
@@ -84,4 +80,8 @@ void MediaLibrary::add_file(const QString &file_name) {
     }
     if (!tmp.empty())
         m_media_list.push_back(tmp);
+}
+
+QVector<QVector<QString>> MediaLibrary::data() {
+    return m_media_list;
 }

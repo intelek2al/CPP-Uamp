@@ -15,6 +15,11 @@ public:
     explicit DialogInfo(QVector<QString> songInfo, QWidget *parent = nullptr);
     ~DialogInfo();
 
+    private slots:
+    void on_nextInfo_clicked();
+
+
+
 private:
     Ui::DialogInfo *ui;
     QVector<QString> m_tagsInfo;
