@@ -1,6 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource>
-        <file>default_cover.png</file>
-        <file>logo1.png</file>
+        <file>def_cover_grey.png</file>
+        <file>def_cover_color.png</file>
     </qresource>
 </RCC>

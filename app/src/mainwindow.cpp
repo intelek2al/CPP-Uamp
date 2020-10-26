@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
-    QImage def_cover(":/default_cover.png");
+    QImage def_cover(":/def_cover_color.png");
     QPixmap pix(QPixmap::fromImage(def_cover));
     ui->cover_label_large->setPixmap(pix);
     ui->cover_label->setPixmap(pix);
@@ -46,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->sideBar->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->sideBar, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onSideBarContextMenu(const QPoint &)));
-
-
 
     m_tableViewer = new TableViewer(ui->tableInfoSong);
     m_dirmodel = new QFileSystemModel(this);
