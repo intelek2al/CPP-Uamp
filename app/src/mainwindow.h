@@ -24,6 +24,7 @@
 #include "soundPlayer.h"
 #include "searcher.h"
 #include "settings.h"
+#include "medialibrary.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -76,6 +77,8 @@ private slots:
 
     void on_actionInfo_triggered();
 
+    void on_actionAdd_to_Library_triggered();  // cmd + O
+
 
 
 
@@ -86,6 +89,9 @@ private:
     Ui::MainWindow *ui;
     QFileSystemModel *m_dirmodel;
     QVector<QVector<QString>> m_music_list;
+
+    MediaLibrary *m_library = nullptr;
+
     TableViewer *m_tableViewer = nullptr;
     MusicTableModel *m_tableModel;
     SoundPlayer *m_player;
@@ -94,10 +100,13 @@ private:
     Settings *m_settings;
 
     void readDir(const QModelIndex &index);
+    void readFile(const QString& file_name);
+
+//    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);
     void outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index);
 };
 
-char *toChar(QString str);
+char *toChar2(QString str);
 
 #endif // MAINWINDOW_H

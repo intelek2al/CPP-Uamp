@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 
 set(SOURCES mainwindow.cpp
-        sound_tags.cpp
+#        sound_tags.cpp
         musictablemodel.cpp
         tag_functions.cpp
         tableviewer.cpp
@@ -10,13 +10,14 @@ set(SOURCES mainwindow.cpp
         loggingcategories.cpp
         settings.cpp
         app.cpp
-        dialogpreferences.h
-        settings.h
-        dialoginfo.h
+        dialogpreferences.cpp
+        settings.cpp
+        dialoginfo.cpp
+        medialibrary.cpp
         )
 
 set(HEADERS mainwindow.h
-        sound_tags.h
+#        sound_tags.h
         tag_functions.h
         musictablemodel.h
         tableviewer.h
@@ -25,9 +26,10 @@ set(HEADERS mainwindow.h
         loggingcategories.h
         settings.h
         app.h
-        dialogpreferences.cpp
-        settings.cpp
-        dialoginfo.cpp
+        dialogpreferences.h
+        settings.h
+        dialoginfo.h
+        medialibrary.h
         )
 
 set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui)

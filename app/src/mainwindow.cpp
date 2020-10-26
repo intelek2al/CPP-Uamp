@@ -1,7 +1,7 @@
 #include "settings.h"
 #include "app.h"
 #include "mainwindow.h"
-#include "sound_tags.h"
+//#include "sound_tags.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <algorithm>
@@ -17,7 +17,7 @@
 using std::cout;
 using std::endl;
 
-char *toChar(QString str)
+char *toChar2(QString str)
 {
     char *test = str.toUtf8().data();
     return test;
@@ -35,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_settings = new Settings();
 
     m_player = new SoundPlayer(ui);
+
+    m_library = new MediaLibrary();
+
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
@@ -142,7 +145,7 @@ void MainWindow::readDir(const QModelIndex &index) {
 
     QFileInfoList list = current_directory.entryInfoList();
 
-    m_music_list.clear();
+//    m_music_list.clear();
     for (int i = 0; i < list.size(); ++i)
     {
         QFileInfo fileInfo = list.at(i);
@@ -154,7 +157,7 @@ void MainWindow::readDir(const QModelIndex &index) {
         QVector<QString> tmp;
         try
         {
-            Sound_tags current;
+//            Sound_tags current;
             tmp = read_tags(toChar(QString(fileInfo.fileName())),
                             toChar(QString(fileInfo.filePath())));
         }
@@ -410,3 +413,39 @@ void MainWindow::on_actionInfo_triggered()
     qInfo(logInfo()) << "cancel DialogInfo";
   }
 }
+
+void MainWindow::on_actionAdd_to_Library_triggered()
+{
+
+    QFileDialog* _f_dlg = new QFileDialog(this);
+    _f_dlg->setFileMode(QFileDialog::Directory);
+    _f_dlg->setOption(QFileDialog::DontUseNativeDialog, true);
+
+    // Try to select multiple files and directories at the same time in QFileDialog
+    QListView *l = _f_dlg->findChild<QListView*>("listView");
+    if (l) {
+        l->setSelectionMode(QAbstractItemView::MultiSelection);
+    }
+    QTreeView *t = _f_dlg->findChild<QTreeView*>();
+    if (t) {
+        t->setSelectionMode(QAbstractItemView::MultiSelection);
+    }
+
+
+
+    int nMode = _f_dlg->exec();
+    QStringList _fnames = _f_dlg->selectedFiles();
+
+//    QString f_name = QFileDialog::getOpenFileName(this, "Add media", "/",
+//                                                        QFileDialog::DontUseNativeDialog);
+////                                                        QFileDialog::ShowDirsOnly
+////                                                        | QFileDialog::DontResolveSymlinks);
+//
+
+    qDebug(logDebug()) << "add media " << _fnames.size();
+
+    for (int i = 0; i < _fnames.size(); ++i) {
+        m_library->add_media(_fnames.at(i));
+    }
+}
+
