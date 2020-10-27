@@ -26,20 +26,25 @@ DialogInfo::DialogInfo(QVector<QString> songInfo, QWidget *parent):
     ui->artisti_large->setText(songInfo[3]);
 
 
-    // cover
-    std::string fileName = songInfo[0].toStdString();
-    std::string fileType = fileName.substr(fileName.size() - 3);
-
-//    connect(ui->coverInfo , SIGNAL(clicked()), this, SLOT(coverInfoDoubleclicked()));
     connect(ui->coverInfo, &ClickedLabel::doubleClicked, this, &DialogInfo::coverInfoDoubleclicked);
+
+    load_cover();
+
+}
+
+
+void DialogInfo::load_cover() {
+    // cover
+    std::string fileName = m_tagsInfo[0].toStdString();
+    std::string fileType = fileName.substr(fileName.size() - 3);
 
     QImage coverQImg;
     if (fileType == "mp3") {
-        coverQImg = load_cover_image_mpeg(songInfo[8].toStdString().data());
+        coverQImg = load_cover_image_mpeg(m_tagsInfo[8].toStdString().data());
 //        ui->statusbar->showMessage(tr( " loaded"), 200);
     }
     else if (fileType == "m4a") {
-        coverQImg = load_cover_image_m4a(songInfo[8].toStdString().data());
+        coverQImg = load_cover_image_m4a(m_tagsInfo[8].toStdString().data());
 //        ui->statusbar->showMessage(tr( " loaded"), 200);
     }
     else {
@@ -49,14 +54,19 @@ DialogInfo::DialogInfo(QVector<QString> songInfo, QWidget *parent):
     }
     QPixmap pix(QPixmap::fromImage(coverQImg));
     ui->coverInfo->setPixmap(pix);
+
+
+//    QPixmap pix(QPixmap::fromImage(coverQImg));
+//    ui->cover_label->setPixmap(pix);
+
 //    outputCurrentInfo(current, index);
 
 //    QImage def_cover(":/def_cover_color.png");
 //    QPixmap pix(QPixmap::fromImage(def_cover));
 //    ui->cover_label_large->setPixmap(pix);
 //    ui->cover_label->setPixmap(pix);
-
 }
+
 
 DialogInfo::~DialogInfo()
 {
@@ -88,6 +98,7 @@ void DialogInfo::coverInfoDoubleclicked() {
             qInfo(logInfo()) << m_tagsInfo[0] <<  " not editable";
 //            ui->statusbar->showMessage(m_tagsInfo[0] + "not editable", 2000);
         }
+        load_cover();  // reopen cover
     }
 
 //    else if (fileType == "m4a") {
@@ -103,11 +114,11 @@ void DialogInfo::coverInfoDoubleclicked() {
 //        }
 //        ui->statusbar->showMessage(tr(file_image.toStdString().data()), 2000);
 //    }
-
     else {
         qInfo(logInfo()) << "cover not editable";
     }
 }
+
 
 
 

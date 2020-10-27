@@ -1,21 +1,16 @@
 #include "settings.h"
 #include "app.h"
 #include "mainwindow.h"
-//#include "sound_tags.h"
 #include "ui_mainwindow.h"
-#include <QFileDialog>
-#include <algorithm>
-#include <QtWidgets>
 #include "loggingcategories.h"
 #include "dialogpreferences.h"
 #include "dialoginfo.h"
 
+#include <QFileDialog>
+#include <algorithm>
+#include <QtWidgets>
+
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
-
-#define default_cover ":/logo1.png"
-
-using std::cout;
-using std::endl;
 
 char *toChar2(QString str)
 {
@@ -23,35 +18,81 @@ char *toChar2(QString str)
     return test;
 }
 
-//void MainWindow::outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index)
-//{
-//    m_tableViewer->setNewItems(current, index);
-//}
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     readSettings();
+
     m_settings = new Settings();
-
     m_player = new SoundPlayer(ui);
-
     m_library = new MediaLibrary();
 
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+
+    // default cover in player
     QImage def_cover(":/def_cover_color.png");
     QPixmap pix(QPixmap::fromImage(def_cover));
-//    ui->cover_label_large->setPixmap(pix);
     ui->cover_label->setPixmap(pix);
+
+    // context menu for ...
     ui->sideBar->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->sideBar, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onSideBarContextMenu(const QPoint &)));
+    connect(ui->sideBar, SIGNAL(customContextMenuRequested(const QPoint &)), this,
+            SLOT(onSideBarContextMenu(const QPoint &)));
 
 //    m_searcher = new Searcher{ui->search_line, ui->filterBox, &m_music_list};
     ui->statusbar->hide();
+    ui->mainMusicTable->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->filterBox, SIGNAL(activated(int)), this, SLOT(on_search_line_editingFinished()));
+    // context menu for music table
+    connect(ui->mainMusicTable, SIGNAL(customContextMenuRequested(const QPoint &)), this,
+            SLOT(onMusicTableContextMenu(const QPoint &)));
 }
+
+void MainWindow::onMusicTableContextMenu(const QPoint &point) {
+    QMenu contextMenu(tr("Music table context menu"), this);
+
+    QModelIndex index = ui->mainMusicTable->indexAt(point);
+
+//    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
+
+    QAction action_add_to_playlist("Add to Playlist", this);
+//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    contextMenu.addAction(&action_add_to_playlist);
+
+    QAction action_play_next("Play Next", this);
+//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    contextMenu.addAction(&action_play_next);
+
+    QAction action_play_later("Play Later", this);
+//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    contextMenu.addAction(&action_play_later);
+
+    QAction action_song_info("Song Info", this);
+    connect(&action_song_info, &QAction::triggered, this, &MainWindow::on_actionInfo_triggered);
+    contextMenu.addAction(&action_song_info);
+
+    QAction action_like("Like", this);
+//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    contextMenu.addAction(&action_like);
+
+    QAction action_dislike("Dislike", this);
+//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    contextMenu.addAction(&action_dislike);
+    QAction action_show_in_finder("Show in Finder", this);
+//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    contextMenu.addAction(&action_show_in_finder);
+
+    QAction action_del_from_library("Delete from Library", this);
+//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    contextMenu.addAction(&action_del_from_library);
+
+
+    contextMenu.exec(mapToGlobal(point));
+}
+
 
 void MainWindow::onSideBarContextMenu(const QPoint &point)
 {
@@ -66,7 +107,6 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
 //    QAction action_rename("Rename ", this);
 //    connect(&action_rename, &QAction::triggered, this, [=] () { on_action_context_file_rename(fullFileName); });
 //    contextMenu.addAction(&action_rename);
-//
 //    QAction action_delete("Delete ", this);
 //    connect(&action_delete, &QAction::triggered, this, [=] { on_action_context_file_delete(fullFileName) ;});
 //    contextMenu.addAction(&action_delete);
@@ -104,9 +144,13 @@ MainWindow::~MainWindow()
 void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
 {
     m_table_index = index;
-
 }
 
+
+//void MainWindow::outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index)
+//{
+//    m_tableViewer->setNewItems(current, index);
+//}
 
 
 //void MainWindow::on_pushButton_clicked()
@@ -127,44 +171,14 @@ void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
 //    ui->mainMusicTable->viewport()->update();
 //}
 
-void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)
-// player
+void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
     QVector<QString> current = m_library->data()[index.row()];
-
-    //    QImage coverQImg = load_cover_image(m_music_list[index.row()][8].toStdString().data());
-    //    ui->statusbar->showMessage(tr("image loaded"), 200);
-    //    QGraphicsScene *scene = new QGraphicsScene();
-    //    ui->imageSong->setScene(scene);
-    //    QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap::fromImage(coverQImg));
-    //    scene->addItem(item);
-    //    ui->imageSong->show();
 //    outputCurrentInfo(current, index);
+
     setMusicPlay(current[8]);
-
-    std::string fileName = m_library->data()[index.row()][0].toStdString().data();
-    std::string fileType = fileName.substr(fileName.size() - 3);
-
-    QImage coverQImg;
-
-    if (fileType == "mp3") {
-        coverQImg = load_cover_image_mpeg(m_library->data()[index.row()][8].toStdString().data());
-        ui->statusbar->showMessage(tr( " loaded"), 200);
-    }
-    else if (fileType == "m4a") {
-        coverQImg = load_cover_image_m4a(m_library->data()[index.row()][8].toStdString().data());
-        ui->statusbar->showMessage(tr( " loaded"), 200);
-    }
-    else {
-        ui->statusbar->showMessage(tr(" cover is unsupported." ), 200);
-//        coverQImg = QImage("../../app/logo1.png");  // Clion
-        coverQImg = QImage("./app/logo1.png");  // zsh
-    }
-
-    QPixmap pix(QPixmap::fromImage(coverQImg));
-    ui->cover_label->setPixmap(pix);
+    loadCoverImage(index);
 }
-
 
 void MainWindow::setMusicPlay(QString soundPath)
 {
@@ -290,6 +304,33 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
     m_tableModel->music_list_add(m_library->data());
     ui->mainMusicTable->setModel(m_tableModel);
     ui->mainMusicTable->viewport()->update();
+}
+
+void MainWindow::loadCoverImage(const QModelIndex &index) {
+
+    std::string fileName = m_library->data()[index.row()][0].toStdString().data();
+    std::string fileType = fileName.substr(fileName.size() - 3);
+
+    QImage coverQImg;
+
+    if (fileType == "mp3") {
+        coverQImg = load_cover_image_mpeg(m_library->data()[index.row()][8].toStdString().data());
+        ui->statusbar->showMessage(tr( " loaded"), 200);
+    }
+    else if (fileType == "m4a") {
+        coverQImg = load_cover_image_m4a(m_library->data()[index.row()][8].toStdString().data());
+        ui->statusbar->showMessage(tr( " loaded"), 200);
+    }
+    else {
+        ui->statusbar->showMessage(tr(" cover is unsupported." ), 200);
+//        coverQImg = QImage("../../app/logo1.png");  // Clion
+        coverQImg = QImage("./app/logo1.png");  // zsh
+    }
+
+    QPixmap pix(QPixmap::fromImage(coverQImg));
+    ui->cover_label->setPixmap(pix);
+
+
 }
 
 

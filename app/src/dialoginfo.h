@@ -18,6 +18,7 @@ public:
     void coverInfoDoubleclicked();
 
 private:
+    void load_cover();
     Ui::DialogInfo *ui;
     QVector<QString> m_tagsInfo;
 };
