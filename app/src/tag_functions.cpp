@@ -2,6 +2,7 @@
 #include <QImage>
 #include <mp4/mp4file.h>
 #include "tag_functions.h"
+#include "loggingcategories.h"
 //#define default_cover "./app/resources/logo1.png"
 #define default_cover ":/logo1.png"
 class ImageFile;
@@ -363,8 +364,9 @@ QImage load_cover_image_ogg(char *file_path) {
 
 bool set_image_mpeg(char *file_path, char *image_path)
 {
-    QFile file(file_path);
+    QFileInfo file(file_path);
     if (!file.isWritable()) {
+
         return false;
     }
 

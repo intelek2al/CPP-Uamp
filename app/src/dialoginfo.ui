@@ -61,7 +61,7 @@
          <number>5</number>
         </property>
         <item>
-         <widget class="QLabel" name="coverInfo">
+         <widget class="ClickedLabel" name="coverInfo">
           <property name="minimumSize">
            <size>
             <width>80</width>
@@ -89,6 +89,9 @@
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="spacing">
            <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>10</number>
           </property>
           <item>
            <widget class="QLabel" name="title_large">
@@ -687,6 +690,13 @@
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ClickedLabel</class>
+   <extends>QLabel</extends>
+   <header>clickedlabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

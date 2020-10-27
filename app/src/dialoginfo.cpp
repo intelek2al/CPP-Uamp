@@ -1,6 +1,8 @@
+#include <QFileDialog>
 #include "dialoginfo.h"
 #include "ui_dialoginfo.h"
 #include "tag_functions.h"
+#include "loggingcategories.h"
 
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
 
@@ -27,6 +29,9 @@ DialogInfo::DialogInfo(QVector<QString> songInfo, QWidget *parent):
     // cover
     std::string fileName = songInfo[0].toStdString();
     std::string fileType = fileName.substr(fileName.size() - 3);
+
+//    connect(ui->coverInfo , SIGNAL(clicked()), this, SLOT(coverInfoDoubleclicked()));
+    connect(ui->coverInfo, &ClickedLabel::doubleClicked, this, &DialogInfo::coverInfoDoubleclicked);
 
     QImage coverQImg;
     if (fileType == "mp3") {
@@ -58,7 +63,58 @@ DialogInfo::~DialogInfo()
     delete ui;
 }
 
-void DialogInfo::on_nextInfo_clicked()
-{
 
+
+void DialogInfo::coverInfoDoubleclicked() {
+    qDebug(logDebug()) << "coverInfoDoubleclicked";
+
+    if (m_tagsInfo[8].isEmpty() || m_tagsInfo[0].isEmpty()) {
+        return;
+    }
+
+    std::string current_file = m_tagsInfo[0].toStdString();
+    std::string fileType = current_file.substr(current_file.size() - 3);
+
+    if (fileType == "mp3") {
+        QString file_image = QFileDialog::getOpenFileName(
+                this,
+                tr("Open File"),
+                "~/",
+                tr("Images (*.png *.jpg)")
+        );
+        qDebug(logDebug()) << "new file name cover" << file_image;
+
+        if (!(set_image_mpeg(m_tagsInfo[8].toStdString().data(), file_image.toStdString().data()))) {
+            qInfo(logInfo()) << m_tagsInfo[0] <<  " not editable";
+//            ui->statusbar->showMessage(m_tagsInfo[0] + "not editable", 2000);
+        }
+    }
+
+//    else if (fileType == "m4a") {
+//        QString file_image = QFileDialog::getOpenFileName(
+//                this,
+//                tr("Open File"),
+//                "~/",
+//                tr("Images (*.png *.jpg)")
+//        );
+//        if (!(load_cover_image_m4a(currentSongTag[8].toStdString().data(), file_image.toStdString().data()))) {
+//            m_log->add_log_massage(currentSongTag[8] + " not editable");
+//            ui->statusbar->showMessage(currentSongTag[0] + "not editable", 2000);
+//        }
+//        ui->statusbar->showMessage(tr(file_image.toStdString().data()), 2000);
+//    }
+
+    else {
+        qInfo(logInfo()) << "cover not editable";
+    }
 }
+
+
+
+//void DialogInfo::on_nextInfo_clicked()
+//{
+//
+//}
+
+
+

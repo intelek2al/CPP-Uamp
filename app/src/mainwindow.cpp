@@ -197,52 +197,7 @@ void MainWindow::on_statusVolume_valueChanged(int value)
 }
 
 
-/*
-void MainWindow::on_change_cover_button_clicked()
-{
-    auto currentSongTag = m_tableViewer->getResult();
-    if (currentSongTag[8].isEmpty() || currentSongTag[0].isEmpty()) {
-        return;
-    }
 
-    std::string current_file = currentSongTag[0].toStdString();
-    std::string fileType = current_file.substr(current_file.size() - 3);
-
-    if (fileType == "mp3") {
-        QString file_image = QFileDialog::getOpenFileName(
-                this,
-                tr("Open File"),
-                "~/",
-                tr("Images (*.png *.jpg)")
-        );
-        if (!(set_image_mpeg(currentSongTag[8].toStdString().data(), file_image.toStdString().data()))) {
-//            m_log->add_log_massage(currentSongTag[8] + " not editable");
-            ui->statusbar->showMessage(currentSongTag[0] + "not editable", 2000);
-        }
-        ui->statusbar->showMessage(tr(file_image.toStdString().data()), 2000);
-    }
-
-//    else if (fileType == "m4a") {
-//        QString file_image = QFileDialog::getOpenFileName(
-//                this,
-//                tr("Open File"),
-//                "~/",
-//                tr("Images (*.png *.jpg)")
-//        );
-//        if (!(load_cover_image_m4a(currentSongTag[8].toStdString().data(), file_image.toStdString().data()))) {
-//            m_log->add_log_massage(currentSongTag[8] + " not editable");
-//            ui->statusbar->showMessage(currentSongTag[0] + "not editable", 2000);
-//        }
-//        ui->statusbar->showMessage(tr(file_image.toStdString().data()), 2000);
-//    }
-
-    else {
-        ui->statusbar->showMessage(tr("cover not editable"), 2000);
-    }
-}
-
-
-*/
 //void MainWindow::on_search_line_editingFinished()
 //{
 ////    readDir(ui->fileBrowser->currentIndex());
@@ -331,6 +286,7 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
     if (!m_tableModel)
         delete m_tableModel;
     m_tableModel = new MusicTableModel(ui->mainMusicTable);
+
     m_tableModel->music_list_add(m_library->data());
     ui->mainMusicTable->setModel(m_tableModel);
     ui->mainMusicTable->viewport()->update();

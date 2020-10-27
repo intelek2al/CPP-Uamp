@@ -15,10 +15,7 @@ public:
     explicit DialogInfo(QVector<QString> songInfo, QWidget *parent = nullptr);
     ~DialogInfo();
 
-    private slots:
-    void on_nextInfo_clicked();
-
-
+    void coverInfoDoubleclicked();
 
 private:
     Ui::DialogInfo *ui;
