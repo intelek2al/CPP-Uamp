@@ -16,7 +16,11 @@ public:
     explicit DialogInfo(Music songInfo, QWidget *parent = nullptr);
     ~DialogInfo();
 
+    void accepted();
+
     void coverInfoDoubleclicked();
+
+    Music get_tag_changes(Music &music_tags);
 
 private:
     void load_cover();

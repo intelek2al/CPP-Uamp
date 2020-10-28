@@ -62,10 +62,10 @@ void modify_tag_genre(char *file_path, char *new_genre);
 void modify_tag_album(char *file_path, char *new_album);
 void modify_tag_comment(char *file_path, char *new_comment);
 
-void modify_tag_year(QVector<QString>& changes);
-void modify_tag_track(QVector<QString>& changes);
+void modify_tag_year(const Music& changes);
+void modify_tag_track(const Music& changes);
 
-bool modify_tags(QVector<QString>& changes);
+bool modify_tags(const Music& changes);
 
 
 

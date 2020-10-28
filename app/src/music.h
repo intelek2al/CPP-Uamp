@@ -29,11 +29,11 @@ public:
     QString m_time;
     QString m_title;
     QString m_artist;
-    unsigned short m_rate = 0;
+    unsigned int m_rate = 0;
     QString m_genre;
     QString m_album;
-    short m_year = -1;
-    short m_track = -1;
+    unsigned int m_year;
+    unsigned int m_track;
     QString m_comment;
     QString m_path;
     QString m_lyrics;

@@ -135,8 +135,9 @@ Music read_tags(char *file_name, char *file_path) {
         data.m_artist = tag->artist().toCString();
         data.m_genre = tag->genre().toCString();
         data.m_album = tag->album().toCString();
-        data.m_year = static_cast<short>(tag->year() != 0 ? tag->year(): -1);
-        data.m_track = static_cast<short>(tag->track() != 0 ? tag->track(): -1);
+        data.m_year = tag->year();
+        data.m_track = tag->track();
+//        data.m_track = static_cast<short>(tag->track() != 0 ? tag->track(): -1);
         data.m_path = QString(file_p.data());
         data.m_comment =tag->comment().toCString();
 
@@ -236,64 +237,60 @@ void modify_tag_comment(char *file_path, char *new_comment) {
     f.save();
 }
 
-void modify_tag_year(QVector<QString>& changes) {
-    TagLib::FileRef f(changes[8].toStdString().data());
-    unsigned int n_year;
-    try {
-        n_year = str_to_uint(changes[6].toStdString().data());
-    }
-    catch (std::exception& ex) {
-        std::cerr << ex.what();
-//        changes[6] = "";
-        return;
-    }
+void modify_tag_year(const Music& changes) {
+    TagLib::FileRef f(changes.m_path.toStdString().data());
+
+//    unsigned int n_year;
+//    try {
+//        n_year = str_to_uint(changes.m_year.toStdString().data());
+//    }
+//    catch (std::exception& ex) {
+//        std::cerr << ex.what();
+//        return;
+//    }
+
     if (!f.isNull() && f.tag())
     {
         TagLib::Tag *tag = f.tag();
-        tag->setYear(n_year);
+        tag->setYear(changes.m_year);
     }
     f.save();
 }
 
-void modify_tag_track(QVector<QString>& changes) {
-    TagLib::FileRef f(changes[8].toStdString().data());
-    unsigned int n_track;
-
-    try {
-        n_track = str_to_uint(changes[7].toStdString().data());
-    }
-    catch (std::exception& ex) {
-        std::cerr << ex.what();
-//        changes[7] = "";
-        return;
-    }
+void modify_tag_track(const Music& changes) {
+    TagLib::FileRef f(changes.m_path.toStdString().data());
+//    unsigned int n_track;
+//
+//    try {
+//        n_track = str_to_uint(changes.m_track.toStdString().data());
+//    }
+//    catch (std::exception& ex) {
+//        std::cerr << ex.what();
+//        return;
+//    }
     if (!f.isNull() && f.tag())
     {
         TagLib::Tag *tag = f.tag();
-        tag->setTrack(n_track);
+        tag->setTrack(changes.m_track);
     }
     f.save();
 }
 
-
-//{"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
-
-bool modify_tags(QVector<QString>& changes) {
-    if (QFileInfo file(changes[8]); !file.isWritable()) {
+bool modify_tags(const Music& changes) {
+    if (QFileInfo file(changes.m_path); !file.isWritable()) {
         return false;
     }
 
-    TagLib::FileRef f(changes[8].toStdString().data());
-//    std::cout << "line 382\n" << std::endl;
+    TagLib::FileRef f(changes.m_path.toStdString().data());
 
     if (!f.isNull() && f.tag())
     {
         TagLib::Tag *tag = f.tag();
-        tag->setArtist(changes[3].toStdString());
-        tag->setTitle(changes[2].toStdString());
-        tag->setGenre(changes[4].toStdString());
-        tag->setAlbum(changes[5].toStdString());
-        tag->setComment(changes[9].toStdString());
+        tag->setArtist(changes.m_artist.toStdString());
+        tag->setTitle(changes.m_title.toStdString());
+        tag->setGenre(changes.m_genre.toStdString());
+        tag->setAlbum(changes.m_album.toStdString());
+        tag->setComment(changes.m_comment.toStdString());
     }
     f.save();
     modify_tag_year(changes);
@@ -313,7 +310,6 @@ QImage load_cover_image_mpeg(char *file_path)
     if (l.isEmpty()) {
         return QImage(default_cover);
     }
-
     TagLib::ID3v2::AttachedPictureFrame *f =
             static_cast<TagLib::ID3v2::AttachedPictureFrame *>(l.front());
 
@@ -325,7 +321,6 @@ QImage load_cover_image_mpeg(char *file_path)
 QImage load_cover_image_m4a(char *file_path)
 {
     QImage image;
-
     TagLib::MP4::File file(file_path);
     TagLib::MP4::Tag* tag = file.tag();
     TagLib::MP4::ItemListMap itemsListMap = tag->itemListMap();

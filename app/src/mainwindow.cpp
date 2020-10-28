@@ -147,29 +147,7 @@ void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
 }
 
 
-//void MainWindow::outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index)
-//{
-//    m_tableViewer->setNewItems(current, index);
-//}
 
-
-//void MainWindow::on_pushButton_clicked()
-//{
-//    auto newSongTag = m_tableViewer->getResult();
-//
-//    if (newSongTag[8].isEmpty() || newSongTag[0].isEmpty()) {
-//        return;
-//    }
-//    if (!(modify_tags(newSongTag))) {
-//        ui->statusbar->showMessage(newSongTag[8] + " is not writable", 200);
-////        m_log->add_log_massage(newSongTag[8] + " is not writable");
-//    }
-//
-//    m_music_list[m_tableViewer->getIndex().row()] = std::move(newSongTag);
-//    m_tableModel->music_list_add(m_music_list);
-//    ui->mainMusicTable->setModel(m_tableModel);
-//    ui->mainMusicTable->viewport()->update();
-//}
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
@@ -209,8 +187,6 @@ void MainWindow::on_statusVolume_valueChanged(int value)
 {
     m_player->setVolume(value);
 }
-
-
 
 //void MainWindow::on_search_line_editingFinished()
 //{
@@ -279,16 +255,25 @@ void MainWindow::on_actionInfo_triggered()
   Music current = m_library->data()[m_table_index.row()];
 
   DialogInfo *songInfo = new DialogInfo(current, 0);
+
 //  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
   songInfo->setModal(true);
 
   if (songInfo->exec() == QDialog::Accepted) {
-    qInfo(logInfo()) << "ok DialogInfo";
+      qInfo(logInfo()) << "ok DialogInfo";
+      Music new_tags;
 
+      songInfo->get_tag_changes(new_tags);  // get settings from QDialog
+//        m_settings->set_settings(new_settings);
+      if (!(current == new_tags)) {
+          // save new tags;
+          if (!(modify_tags(new_tags))) {
+              qInfo(logInfo()) << new_tags.m_path << " is not writable";
+          }
+      }
   }
-  else {
+  else
     qInfo(logInfo()) << "cancel DialogInfo";
-  }
 }
 
 void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
@@ -310,17 +295,17 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 
 void MainWindow::loadCoverImage(const QModelIndex &index) {
 
-    std::string fileName = m_library->data()[index.row()][0].toStdString().data();
+    std::string fileName = m_library->data()[index.row()].m_name.toStdString().data();
     std::string fileType = fileName.substr(fileName.size() - 3);
 
     QImage coverQImg;
 
     if (fileType == "mp3") {
-        coverQImg = load_cover_image_mpeg(m_library->data()[index.row()][8].toStdString().data());
+        coverQImg = load_cover_image_mpeg(m_library->data()[index.row()].m_path.toStdString().data());
         ui->statusbar->showMessage(tr( " loaded"), 200);
     }
     else if (fileType == "m4a") {
-        coverQImg = load_cover_image_m4a(m_library->data()[index.row()][8].toStdString().data());
+        coverQImg = load_cover_image_m4a(m_library->data()[index.row()].m_path.toStdString().data());
         ui->statusbar->showMessage(tr( " loaded"), 200);
     }
     else {
@@ -332,7 +317,6 @@ void MainWindow::loadCoverImage(const QModelIndex &index) {
     QPixmap pix(QPixmap::fromImage(coverQImg));
     ui->cover_label->setPixmap(pix);
 
-
 }
 
 
@@ -341,7 +325,29 @@ void MainWindow::loadCoverImage(const QModelIndex &index) {
 
 
 
+//void MainWindow::outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index)
+//{
+//    m_tableViewer->setNewItems(current, index);
+//}
 
+
+//void MainWindow::on_pushButton_clicked()
+//{
+//    auto newSongTag = m_tableViewer->getResult();
+//
+//    if (newSongTag[8].isEmpty() || newSongTag[0].isEmpty()) {
+//        return;
+//    }
+//    if (!(modify_tags(newSongTag))) {
+//        ui->statusbar->showMessage(newSongTag[8] + " is not writable", 200);
+////        m_log->add_log_massage(newSongTag[8] + " is not writable");
+//    }
+//
+//    m_music_list[m_tableViewer->getIndex().row()] = std::move(newSongTag);
+//    m_tableModel->music_list_add(m_music_list);
+//    ui->mainMusicTable->setModel(m_tableModel);
+//    ui->mainMusicTable->viewport()->update();
+//}
 
 
 
