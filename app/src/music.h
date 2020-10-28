@@ -20,7 +20,7 @@ public:
     Music& operator=(const Music &m);
     QString operator[](int i) const;
     QVector<QString> getMusicInfo() const;
-    bool operator==(const Music *m) const;
+    bool operator==(const Music &m) const;
     bool empty() const;
 
     //    {"Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path" };
