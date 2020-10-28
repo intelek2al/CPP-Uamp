@@ -19,6 +19,8 @@
 
 #include "../../3dparty/taglib/bindings/c/tag_c.h"
 
+class Music;
+
 class ImageFile : public TagLib::File
 {
 public:
@@ -41,7 +43,7 @@ private:
 using std::cout;
 using std::endl;
 
-QVector<QString> read_tags(char *file_name, char *file_path);
+Music read_tags(char *file_name, char *file_path);
 void load_lyrics(char *file_name);
 void load_cover(char *file_name);
 

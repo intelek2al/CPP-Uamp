@@ -67,10 +67,13 @@ void MediaLibrary::add_file(const QString &file_name) {
         qWarning(logWarning()) << fileInfo.fileName() << " not readable";
     }
 
-    QVector<QString> tmp;
+//    QVector<QString> tmp;
+    Music tmp;
+
     try
     {
 //            Sound_tags current;
+
         tmp = read_tags(toChar(QString(fileInfo.fileName())),
                         toChar(QString(fileInfo.filePath())));
     }
@@ -83,5 +86,9 @@ void MediaLibrary::add_file(const QString &file_name) {
 }
 
 QVector<QVector<QString>> MediaLibrary::data() {
-    return m_media_list;
+    QVector<QVector<QString>> tmp;
+    for (const auto &media : m_media_list) {
+        tmp.push_back(media.getMusicInfo());
+    }
+    return tmp;
 }

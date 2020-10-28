@@ -3,6 +3,8 @@
 #include <mp4/mp4file.h>
 #include "tag_functions.h"
 #include "loggingcategories.h"
+#include "music.h"
+
 //#define default_cover "./app/resources/logo1.png"
 #define default_cover ":/logo1.png"
 class ImageFile;
@@ -118,28 +120,25 @@ unsigned int str_to_uint(const char* new_value) {
 }
 
 
-QVector<QString> read_tags(char *file_name, char *file_path) {
+Music read_tags(char *file_name, char *file_path) {
 //      0       1       2           3      4          5       6       7        8       9
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
-    QVector<QString> data;
-
+    Music data;
     std::string file_n= file_name;
     std::string file_p= file_path;
     TagLib::FileRef f(file_path);
 
     if (!f.isNull() && f.tag()) {
-        data.clear();
-        data = QVector<QString>(10);
         TagLib::Tag *tag = f.tag();
-        data[0] = QString(file_n.data());
-        data[2] = tag->title().toCString();
-        data[3] = tag->artist().toCString();
-        data[4] = tag->genre().toCString();
-        data[5] = tag->album().toCString();
-        data[6] = (tag->year() != 0 ? QString::fromStdString(std::to_string(tag->year())): "");
-        data[7] = (tag->track() != 0 ? QString::fromStdString(std::to_string(tag->track())): "");
-        data[8] = QString(file_p.data());
-        data[9] =tag->comment().toCString();
+        data.m_name = QString(file_n.data());
+        data.m_title = tag->title().toCString();
+        data.m_artist = tag->artist().toCString();
+        data.m_genre = tag->genre().toCString();
+        data.m_album = tag->album().toCString();
+        data.m_year = static_cast<short>(tag->year() != 0 ? tag->year(): -1);
+        data.m_track = static_cast<short>(tag->track() != 0 ? tag->track(): -1);
+        data.m_path = QString(file_p.data());
+        data.m_comment =tag->comment().toCString();
 
         /*
         cout << "-- TAG (basic) --" << endl;
@@ -160,22 +159,12 @@ QVector<QString> read_tags(char *file_name, char *file_path) {
                 longest = i->first.size();
             }
         }
-
-//        cout << "-- TAG (properties) --" << endl;
-
-/*
-        for (TagLib::PropertyMap::ConstIterator i = tags.begin(); i != tags.end(); ++i) {
-            for (TagLib::StringList::ConstIterator j = i->second.begin(); j != i->second.end(); ++j) {
-                cout << std::left << std::setw(longest) << i->first << " - " << '"' << *j << '"' << endl;
-            }
-        }
-        */
         if (!f.isNull() && f.audioProperties()) {
             TagLib::AudioProperties *properties = f.audioProperties();
             int seconds = properties->length() % 60;
             int minutes = (properties->length() - seconds) / 60;
 
-            data[1] =(QString::fromStdString(std::to_string(minutes) +
+            data.m_time =(QString::fromStdString(std::to_string(minutes) +
                                              ":" + std::to_string(seconds)));
             /*
             cout << "-- AUDIO --" << endl;

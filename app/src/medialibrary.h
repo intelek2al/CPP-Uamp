@@ -3,6 +3,8 @@
 
 #include <QString>
 #include <QVector>
+#include "playlist.h"
+#include "music.h"
 
 class MediaLibrary {
 
@@ -22,7 +24,7 @@ private:
     void add_dir(const QString& dir_name);
 
 
-    QVector<QVector<QString>> m_media_list;
+     QVector<Music> m_media_list;
 };
 
 char *toChar(QString str);
