@@ -189,20 +189,23 @@ Music& Music::operator=(const QVector<QString> &m) {
     return *this;
 }
 
+//QVector<QString> listHeaders = {"Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
+
 QString Music::operator[](int i) const {
     switch (i) {
         case 0: return m_name;
         case 1: return m_time;
         case 2: return m_title;
         case 3: return m_artist;
-        case 4: return m_genre;
-        case 5: return m_album;
-        case 6: return m_path;
-        case 7: return m_lyrics;
-        case 8: return m_comment;
-        case 9: return QString::number(static_cast<int>(m_rate));
-        case 10: return QString::number(static_cast<int>(m_year));
-        case 11: return QString::number(static_cast<int>(m_track));
+        case 4: return QString::number(static_cast<int>(m_rate));
+//        case 9: return m_rate;
+        case 5: return m_genre;
+        case 6: return m_album;
+        case 7: return QString::number(static_cast<int>(m_year));
+        case 8: return QString::number(static_cast<int>(m_track));
+        case 9: return m_comment;
+        case 10: return m_path;
+        case 11: return m_lyrics;
         case 12: return QString::number(static_cast<int>(m_count));
         default: return m_name;
     }

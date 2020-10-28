@@ -23,18 +23,20 @@ public:
     bool operator==(const Music *m) const;
     bool empty() const;
 
+    //    {"Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path" };
+
     QString m_name;
     QString m_time;
     QString m_title;
     QString m_artist;
+    unsigned short m_rate = 0;
     QString m_genre;
     QString m_album;
-    QString m_path;
-    QString m_lyrics;
-    QString m_comment;
-    unsigned short m_rate = 0;
     short m_year = -1;
     short m_track = -1;
+    QString m_comment;
+    QString m_path;
+    QString m_lyrics;
     short m_count = -1;
     QUrl m_url;
 };

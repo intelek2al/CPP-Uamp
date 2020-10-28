@@ -2,6 +2,7 @@
 #define DIALOGINFO_H
 
 #include <QDialog>
+#include "music.h"
 
 namespace Ui {
 class DialogInfo;
@@ -12,7 +13,7 @@ class DialogInfo : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogInfo(QVector<QString> songInfo, QWidget *parent = nullptr);
+    explicit DialogInfo(Music songInfo, QWidget *parent = nullptr);
     ~DialogInfo();
 
     void coverInfoDoubleclicked();
@@ -20,7 +21,7 @@ public:
 private:
     void load_cover();
     Ui::DialogInfo *ui;
-    QVector<QString> m_tagsInfo;
+    Music m_tagsInfo;
 };
 
 #endif // DIALOGINFO_H

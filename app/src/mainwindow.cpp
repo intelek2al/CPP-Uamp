@@ -173,10 +173,10 @@ void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
-    QVector<QString> current = m_library->data()[index.row()];
+    Music current = m_library->data()[index.row()];
 //    outputCurrentInfo(current, index);
 
-    setMusicPlay(current[8]);
+    setMusicPlay(current.m_path);
     loadCoverImage(index);
 }
 
@@ -275,7 +275,8 @@ void MainWindow::on_actionInfo_triggered()
 {
   qDebug(logDebug()) << "on_actionInfo_triggered";
 
-  QVector<QString> current = m_library->data()[m_table_index.row()];
+//  QVector<QString> current = m_library->data()[m_table_index.row()];
+  Music current = m_library->data()[m_table_index.row()];
 
   DialogInfo *songInfo = new DialogInfo(current, 0);
 //  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
@@ -296,6 +297,7 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 //                                                        QFileDialog::ShowDirsOnly
 //                                                        | QFileDialog::DontResolveSymlinks);
     m_library->add_media(f_name);
+    qDebug(logDebug()) << "m_library size=" << m_library->data().size();
 
     if (!m_tableModel)
         delete m_tableModel;

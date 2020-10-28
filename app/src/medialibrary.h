@@ -14,7 +14,7 @@ public:
     ~MediaLibrary();
 
     bool add_media(const QString& media_path);
-    QVector<QVector<QString>> data();
+    QVector<Music> data();
 
 private:
 

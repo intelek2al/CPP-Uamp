@@ -110,7 +110,11 @@ void MusicTableModel::music_list_add(QVector<QVector<QString>> params)
             break;
         el = std::move(*(iter++));
     }
-//    music_list = std::move(params);
+}
+
+void MusicTableModel::music_list_add(const QVector<Music> &params) {
+    qDebug(logDebug()) <<  "music_list_add Qvector<music>";
+    music_list = std::move(params);
 }
 
 

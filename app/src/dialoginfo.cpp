@@ -6,24 +6,24 @@
 
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
 
-DialogInfo::DialogInfo(QVector<QString> songInfo, QWidget *parent):
+DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     QDialog(parent),
     ui(new Ui::DialogInfo)
 {
     ui->setupUi(this);
     m_tagsInfo = songInfo;
 
-    ui->line_title->setText(songInfo[2]);
-    ui->line_artist->setText(songInfo[3]);
-    ui->line_album->setText(songInfo[5]);
-    ui->line_genre->setText(songInfo[4]);
-    ui->line_year->setText(songInfo[6]);
-    ui->line_track->setText(songInfo[7]);
-    ui->line_comments->setText(songInfo[9]);
-    ui->line_path->setText(songInfo[8]);
-
-    ui->title_large->setText(songInfo[2]);
-    ui->artisti_large->setText(songInfo[3]);
+//    ui->line_title->setText(songInfo[2]);
+//    ui->line_artist->setText(songInfo[3]);
+//    ui->line_album->setText(songInfo[5]);
+//    ui->line_genre->setText(songInfo[4]);
+//    ui->line_year->setText(songInfo[6]);
+//    ui->line_track->setText(songInfo[7]);
+//    ui->line_comments->setText(songInfo[9]);
+//    ui->line_path->setText(songInfo[8]);
+//
+//    ui->title_large->setText(songInfo[2]);
+//    ui->artisti_large->setText(songInfo[3]);
 
 
     connect(ui->coverInfo, &ClickedLabel::doubleClicked, this, &DialogInfo::coverInfoDoubleclicked);

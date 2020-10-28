@@ -21,8 +21,10 @@ class MusicTableModel : public QAbstractTableModel
     void music_list_add(const QVector<Music> &params);
 
  private:
+    //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
+
     QWidget *m_parent;
-    QVector<QString> listHeaders = {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track"};
+    QVector<QString> listHeaders = {"Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
     QHash<int, QByteArray> m_roleNames;
     QVector<Music> music_list;
 //    /* QVector<QVector<QString>> music_list/*{{"bbb", "BBB", "R&B", "bbb", "BBB", "R&B"},
