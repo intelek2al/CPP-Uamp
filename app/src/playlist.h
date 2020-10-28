@@ -1,11 +1,11 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include <vector>
+#include <deque>
 #include <QUrl>
 #include <QMediaPlaylist>
 
-class Music;
+#include "music.h"
 
 class Playlist
 {
@@ -14,16 +14,22 @@ public:
     Playlist(QVector<QUrl> urls, const QString& name);
     void addMusic(const QUrl& url);
     void addMusic(const Music& music);
+    void addFrontMusic(const QUrl& url);
+    void addFrontMusic(const Music& music);
     void setPlaylistName(const QString& name);
     QString playlistName() const;
     Music getMusic(int pos);
-    void addToPlaylist(QMediaPlaylist *playlist);
-    void clearMusic();
+    bool empty() const;
+    void addToMediaPlaylist();
+    void clearMusic(int pos);
+    void clearMusic(const Music& music);
     void clear();
+    size_t size() const;
+    Music operator[](int index);
 
 private:
     QString m_playlistName;
-    std::vector<Music> m_musicPlaylist;
+    std::deque<Music> m_musicPlaylist;
 };
 
 #endif // PLAYLIST_H

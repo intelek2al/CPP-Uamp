@@ -2,7 +2,6 @@
 #include "loggingcategories.h"
 //#include "sound_tags.h"
 #include "tag_functions.h"
-
 #include <QDir>
 
 char *toChar(QString str)
