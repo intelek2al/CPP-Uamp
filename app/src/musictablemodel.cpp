@@ -50,6 +50,19 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
     return QString();
 }
 
+
+bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, int role) const {
+    if (index.isValid() && role == Qt::EditRole) {
+
+//        music_list[index.row()].setTag(index.column(), value);
+        emit dataChanged(index, index);
+        return true;
+    }
+    return false;
+}
+
+
+
 QVariant MusicTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role != Qt::DisplayRole)
@@ -100,6 +113,7 @@ void MusicTableModel::music_list_add(const QVector<Music> &params) {
     qDebug(logDebug()) <<  "music_list_add Qvector<music>";
     music_list = std::move(params);
 }
+
 
 
 

@@ -269,6 +269,9 @@ void MainWindow::on_actionInfo_triggered()
           // save new tags;
           if (!(modify_tags(new_tags))) {
               qInfo(logInfo()) << new_tags.m_path << " is not writable";
+          } else {
+              ui->mainMusicTable->repaint();
+              emit
           }
       }
   }
