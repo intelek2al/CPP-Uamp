@@ -8,6 +8,8 @@ cmake-build-debug
 build
 .vscode
 
+logFile.txt
+
 # system files
 *.DS_Store
 .DS_Store
