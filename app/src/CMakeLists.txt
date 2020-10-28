@@ -17,6 +17,7 @@ set(SOURCES mainwindow.cpp
         clickedlabel.cpp
         music.cpp
         playlist.cpp
+        playerplaylist.cpp
         )
 
 set(HEADERS mainwindow.h
@@ -36,6 +37,7 @@ set(HEADERS mainwindow.h
         clickedlabel.h
         music.h
         playlist.h
+        playerplaylist.h
         )
 
 set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui)

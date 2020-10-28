@@ -3,6 +3,8 @@
 #include <QWidget>
 #include <QMediaPlayer>
 #include <QTime>
+#include <QMediaPlaylist>
+#
 
 namespace Ui {
     class MainWindow;
@@ -23,13 +25,18 @@ public slots:
     void setPosition(int position);
     void setMovedPosition(int position);
     void stateCheck(QMediaPlayer::State state);
-
+    static QMediaPlaylist *playlist();
+//    static QMediaPlaylist *getInstance();
 private slots:
+
     void on_statusPlay_valueChanged(int value);
     void on_mainMusicTable_pressed(const QModelIndex &index);
 
 private:
+//    static SoundPlayer *singleton_;
     QMediaPlayer *m_player;
+    static QMediaPlaylist *m_playlist;
+
     Ui::MainWindow *ui;
 };
 

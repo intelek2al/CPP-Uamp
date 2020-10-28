@@ -4,6 +4,7 @@
 SoundPlayer::SoundPlayer(Ui::MainWindow *child)
 {
     m_player = new QMediaPlayer();
+    m_playlist = SoundPlayer::playlist();
     ui = child;
     connect(m_player, &QMediaPlayer::positionChanged, this, &SoundPlayer::setPosition);
     connect(m_player, &QMediaPlayer::stateChanged, this, &SoundPlayer::stateCheck);
@@ -98,4 +99,12 @@ void SoundPlayer::setPosition(int position)
 void SoundPlayer::setMovedPosition(int position)
 {
     m_player->setPosition(position);
+}
+
+QMediaPlaylist *SoundPlayer::m_playlist = nullptr;
+
+QMediaPlaylist *SoundPlayer::playlist() {
+    if (m_playlist == nullptr)
+        m_playlist = new QMediaPlaylist();
+    return m_playlist;
 }

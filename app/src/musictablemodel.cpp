@@ -47,22 +47,6 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
                 return music_list[index.row()][index.column()];
         }
     }
-    // else if (role == Qt::DecorationRole)
-    // {
-    //     if (!music_list.empty())
-    //     {
-    //         if (!music_list[index.row()][index.column()].isEmpty())
-    //             return music_list[index.row()][index.column()];
-    //     }
-    // }
-    // else if (role == Qt::StatusTipRole)
-    // {
-    //     if (!music_list.empty())
-    //     {
-    //         if (!music_list[index.row()][index.column()].isEmpty())
-    //             return music_list[index.row()][index.column()];
-    //     }
-    // }
     return QString();
 }
 
