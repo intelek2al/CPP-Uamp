@@ -18,8 +18,8 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui->line_artist->setText(songInfo.m_artist);
     ui->line_album->setText(songInfo.m_album);
     ui->line_genre->setText(songInfo.m_genre);
-    ui->line_year->setText(QString::number(songInfo.m_year));
-    ui->line_track->setText(QString::number(songInfo.m_track));
+    ui->line_year->setText(songInfo.m_year);
+    ui->line_track->setText(songInfo.m_track);
     ui->line_comments->setText(songInfo.m_comment);
     ui->line_path->setText(songInfo.m_path);
     ui->title_large->setText(songInfo.m_title);

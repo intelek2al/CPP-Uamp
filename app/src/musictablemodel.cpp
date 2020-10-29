@@ -41,13 +41,13 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
 //    return QString();
 }
 
-
 bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
 
         qDebug(logDebug()) << "Qvariant " << value.toString();
-
         music_list[index.row()][index.column()] = value.toString();
+        std::cout << value.toString().toStdString() << " :\t";
+//        std::cout << music_list[index.row()][index.column()] << " ";
 //        QString result;
 //        for (int row = 0; row < rowCount(); row++) {
 //            for (int col= 0; col < columnCount(); col++)
@@ -55,7 +55,6 @@ bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, i
 //        }
 //        emit editCompleted(result);
 //        beginResetModel();
-        emit dataChanged(index, index);
 //        endResetModel();
         return true;
     }
@@ -69,12 +68,15 @@ void MusicTableModel::saveTags(const QModelIndex &index, const Music &new_tags) 
 //    qDebug(logDebug()) << "index col  = " << index.column();
     for (int i = 0; i < this->columnCount(); ++i) {
         QModelIndex temp = index.sibling(index.row(), i);
-        this->setData(temp, new_tags[i], Qt::EditRole);
+        std::cout << setData(temp, new_tags[i], Qt::EditRole) << std::endl;
+//        std::cout << new_tags[index.column()].toStdString() << " ";
+
         qDebug(logDebug()) << "|-------index row  = " << temp.row();
         qDebug(logDebug()) << "|-------index col  = " << temp.column();
     }
 
-
+    emit dataChanged(QAbstractItemModel::createIndex(0, 0), QAbstractItemModel::createIndex(rowCount(), columnCount()));
+//    qobject_cast<QTableView *>(m_parent)->viewport()->update();
 }
 
 

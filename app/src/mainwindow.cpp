@@ -147,9 +147,6 @@ void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
     m_table_index = index;
 }
 
-
-
-
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
     Music current = m_library->data()[index.row()];
@@ -277,7 +274,7 @@ void MainWindow::on_actionInfo_triggered()
 //              ui->mainMusicTable->update()
 //              ui->mainMusicTable->repaint();
 //              emit
-                ui->mainMusicTable->viewport()->repaint();
+//                ui->mainMusicTable->viewport()->repaint();
               qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
           }
       }
