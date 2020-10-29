@@ -20,12 +20,13 @@ Playlist::Playlist(QVector<QUrl> urls, const QString &name) {
 }
 
 void Playlist::addMusic(const QUrl &url) {
-    Music song = read_tags(toChar(url.fileName()), toChar(url.toLocalFile()));
+    Music song = read_tags(toChar(url.fileName()), toChar(url.path()));
     m_musicPlaylist.push_back(std::move(song));
 }
 
 void Playlist::addMusic(const Music &music) {
     m_musicPlaylist.push_back(music);
+//    std::cout << music.m_url.path().toStdString() <<std::endl;
 }
 
 void Playlist::setPlaylistName(const QString &name) {
@@ -44,6 +45,7 @@ Music Playlist::getMusic(int pos) {
 
 void Playlist::addToMediaPlaylist() {
     for(const auto &song : m_musicPlaylist) {
+
         SoundPlayer::playlist()->addMedia(song.m_url);
     }
 }
@@ -89,7 +91,7 @@ Music Playlist::operator[](int index) {
 }
 
 void Playlist::addFrontMusic(const QUrl &url) {
-    Music song = read_tags(toChar(url.fileName()), toChar(url.toLocalFile()));
+    Music song = read_tags(toChar(url.fileName()), toChar(url.path()));
     m_musicPlaylist.push_front(std::move(song));
 }
 

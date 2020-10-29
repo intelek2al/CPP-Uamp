@@ -17,7 +17,8 @@ public:
     QVector<Music>& data();
     void setData(int index, Music _new_music);
 
-//    friend class MusicTableModel;
+//    QVector<Music> data();
+    Playlist dataPlaylist() const;
 
 private:
 

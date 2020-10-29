@@ -12,8 +12,8 @@ Sound_tags::Sound_tags() {
 
 void Sound_tags::read_tags(QString file, QString file_path) {
 
-    std::cout << "file = " << file.toStdString() << std ::endl;
-    std::cout << "file path= " << file_path.toStdString() << std ::endl;
+//    std::cout << "file = " << file.toStdString() << std ::endl;
+//    std::cout << "file path= " << file_path.toStdString() << std ::endl;
 
     sound_file->setMedia(QUrl::fromLocalFile(file_path));
 
@@ -25,7 +25,7 @@ void Sound_tags::read_tags(QString file, QString file_path) {
 //    }
     if (sound_file->isMetaDataAvailable()) {
 //        ui->statusbar->showMessage("Audio Avalib ", 2000);
-        cout << file.toStdString() << " loaded" << endl;
+//        cout << file.toStdString() << " loaded" << endl;
 //        ui->statusbar->showMessage("Audio Avalib ", 2000);
     }
     else {
@@ -46,7 +46,7 @@ void Sound_tags::read_tags(QString file, QString file_path) {
     tags[9] = sound_file->metaData(QStringLiteral("Comment")).toString();
 
 
-    cout << "\n print all tags ========\n" <<
+//    cout << "\n print all tags ========\n" <<
      "title\t\t" << sound_file->metaData(QStringLiteral("Title")).toString().toStdString() << endl <<
      " Year\t\t"  <<
     sound_file->metaData(QStringLiteral("Year")).toString().toStdString() << std::endl

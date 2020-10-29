@@ -8,7 +8,7 @@ Music::Music(QObject *parent) : QObject(parent)
 Music::Music(const QUrl &url) {
     m_url = url;
     std::string file_n= url.fileName().toStdString();
-    std::string file_p= url.toLocalFile().toStdString();
+    std::string file_p= url.path().toStdString();
     TagLib::FileRef f(file_p.data());
 
     if (!f.isNull() && f.tag()) {

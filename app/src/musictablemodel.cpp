@@ -38,9 +38,10 @@ bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, i
         music_list[index.row()][index.column()] = value.toString();
         emit dataChanged(index, index);
 
-        qDebug(logDebug()) << "new data value before" << value.toString();
+//        qDebug(logDebug()) << "new data value before" << value.toString();
 
-        qDebug(logDebug()) << "new data after   save" << music_list[index.row()][index.column()];
+//        qDebug(logDebug()) << "new data after   save" << music_list[index.row()][index.column()];
+
         return true;
     }
     return false;
@@ -48,7 +49,6 @@ bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, i
 
 void MusicTableModel::saveTags(const QModelIndex &index, const Music &new_tags) {
     qDebug(logDebug()) << "saveTags" << new_tags.m_name;
-
 //        0       1      2           3         4        5       6       7         8         9       10
 //     "Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
 

@@ -96,3 +96,16 @@ void MediaLibrary::setData(int index, Music _new_music) {
     m_media_list[index] = _new_music;
 
 }
+
+Playlist MediaLibrary::dataPlaylist() const {
+    Playlist list;
+    cout << "!" << endl;
+    for (const auto &music : m_media_list) {
+        cout << "|---!" << endl;
+        list.addMusic(music);
+    }
+    cout << endl;
+    return list;
+}
+
+

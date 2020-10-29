@@ -98,6 +98,7 @@ private:
 
 //    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);
+    void setMusicPlay(int index);
 //    void outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index);
 };
 

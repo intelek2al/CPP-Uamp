@@ -149,16 +149,23 @@ void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
-    Music current = m_library->data()[index.row()];
+//    Music current = m_library->data()[index.row()];
 //    outputCurrentInfo(current, index);
 
-    setMusicPlay(current.m_path);
+//    setMusicPlay(current.m_path);
+    setMusicPlay(index.row());
+
     loadCoverImage(index);
 }
 
 void MainWindow::setMusicPlay(QString soundPath)
 {
     m_player->setSound(soundPath);
+}
+
+void MainWindow::setMusicPlay(int index)
+{
+    m_player->setSound(index);
 }
 
 void MainWindow::on_playButton_clicked()
@@ -298,6 +305,7 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
     m_tableModel->music_list_add(m_library->data());
     ui->mainMusicTable->setModel(m_tableModel);
     ui->mainMusicTable->viewport()->update();
+    m_player->setPlaylist(m_library->dataPlaylist());
     connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
 }
 
