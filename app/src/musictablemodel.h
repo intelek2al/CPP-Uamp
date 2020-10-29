@@ -11,7 +11,7 @@ class MusicTableModel : public QAbstractTableModel
 {
     Q_OBJECT
  public:
-    explicit MusicTableModel(QWidget *parent = nullptr, QVector<Music> &_media = QVector<Music>());
+    explicit MusicTableModel(QWidget *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -46,7 +46,7 @@ private:
 
     QVector<QString> listHeaders = {"Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
     QHash<int, QByteArray> m_roleNames;
-    QVector<Music>& music_list;
+    QVector<Music> music_list;
 
 //    /* QVector<QVector<QString>> music_list/*{{"bbb", "BBB", "R&B", "bbb", "BBB", "R&B"},
 // *                                          {"ccasd", "CCC", "Rock", "ccc", "CCC", "Rock"},

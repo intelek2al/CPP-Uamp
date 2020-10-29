@@ -4,20 +4,20 @@
 #include "loggingcategories.h"
 //#include "music.h"
 
-MusicTableModel::MusicTableModel(QWidget *parent, QVector<Music> _media)
-        : m_parent(parent), music_list(_media)
+MusicTableModel::MusicTableModel(QWidget *parent)
+        : m_parent(parent)
 {
 }
-
 
 int MusicTableModel::rowCount(const QModelIndex &) const
 {
     return music_list.size();
 }
 
-int MusicTableModel::columnCount(const QModelIndex &) const
-{
+int MusicTableModel::columnCount(const QModelIndex &) const {
     return listHeaders.size();
+
+}
 
 QVariant MusicTableModel::data(const QModelIndex &index, int role) const
 {
@@ -48,8 +48,6 @@ bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, i
 
 void MusicTableModel::saveTags(const QModelIndex &index, const Music &new_tags) {
     qDebug(logDebug()) << "saveTags" << new_tags.m_name;
-//    qDebug(logDebug()) << "index row  = " << index.row();
-//    qDebug(logDebug()) << "index col  = " << index.column();
 
 //        0       1      2           3         4        5       6       7         8         9       10
 //     "Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
@@ -77,9 +75,6 @@ QVariant MusicTableModel::headerData(int section, Qt::Orientation orientation, i
     }
     return QVariant();
 }
-
-
-
 
 void MusicTableModel::sort(int column, Qt::SortOrder order)
 {
@@ -114,7 +109,8 @@ void MusicTableModel::music_list_add(const QVector<Music> &params) {
 
 Qt::ItemFlags MusicTableModel::flags(const QModelIndex &index) const {
     if (index.isValid())
-        return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+//        return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+        return  QAbstractTableModel::flags(index);  // not editible cell
 }
 
 bool MusicTableModel::insertRows(int row, int count, const QModelIndex &parent) {
@@ -134,9 +130,6 @@ bool MusicTableModel::insertColumns(int column, int count, const QModelIndex &pa
 bool MusicTableModel::removeColumns(int column, int count, const QModelIndex &parent) {
     return QAbstractItemModel::removeColumns(column, count, parent);
 }
-
-
-
 
 
 // QModelIndex index(int row, int column, const QModelIndex &parent)

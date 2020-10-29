@@ -248,26 +248,32 @@ void MainWindow::on_actionPreferences_triggered()
 void MainWindow::on_actionInfo_triggered()
 {
   qDebug(logDebug()) << "on_actionInfo_triggered";
-
+    if (!m_table_index.isValid()) {
+        return;
+    }
 //  QVector<QString> current = m_library->data()[m_table_index.row()];
   Music current = m_library->data()[m_table_index.row()];
   QModelIndex index;
 
-  DialogInfo *songInfo = new DialogInfo(current, 0);
+  DialogInfo songInfo = DialogInfo(current, 0);
 
 //  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
-  songInfo->setModal(true);
+  songInfo.setModal(true);
 
-  if (songInfo->exec() == QDialog::Accepted) {
+  if (songInfo.exec() == QDialog::Accepted) {
       qInfo(logInfo()) << "ok DialogInfo";
 
-      songInfo->get_tag_changes(new_song_info);  // get settings from QDialog
+      songInfo.get_tag_changes(new_song_info);  // get settings from QDialog
       if (!(current == new_song_info)) {
           // save new tags;
           if (!(modify_tags(new_song_info))) {
               qInfo(logInfo()) << new_song_info.m_path << " is not writable";
           } else {
               emit editTagsCompleted(m_table_index, new_song_info);
+                m_library->setData(m_table_index.row(), new_song_info);
+
+//              m_library->data()[m_table_index.row()] = std::move(new_song_info);
+
               qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
           }
       }
@@ -287,7 +293,7 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 
     if (!m_tableModel)
         delete m_tableModel;
-    m_tableModel = new MusicTableModel(ui->mainMusicTable, m_library->data());
+    m_tableModel = new MusicTableModel(ui->mainMusicTable);
 
     m_tableModel->music_list_add(m_library->data());
     ui->mainMusicTable->setModel(m_tableModel);

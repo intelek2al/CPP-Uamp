@@ -91,3 +91,8 @@ QVector<Music>& MediaLibrary::data() {
 //    }
     return m_media_list;
 }
+
+void MediaLibrary::setData(int index, Music _new_music) {
+    m_media_list[index] = _new_music;
+
+}

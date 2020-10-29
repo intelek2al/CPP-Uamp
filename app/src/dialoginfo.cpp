@@ -12,8 +12,6 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui->setupUi(this);
     m_tagsInfo = songInfo;
 
-    qDebug(logDebug()) << "DialogInfo constuctor";
-
     ui->line_title->setText(songInfo.m_title);
     ui->line_artist->setText(songInfo.m_artist);
     ui->line_album->setText(songInfo.m_album);
@@ -24,40 +22,32 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui->line_path->setText(songInfo.m_path);
     ui->title_large->setText(songInfo.m_title);
     ui->artisti_large->setText(songInfo.m_artist);
-
     connect(ui->coverInfo, &ClickedLabel::doubleClicked, this, &DialogInfo::coverInfoDoubleclicked);
     load_cover();
+    qDebug(logDebug()) << "DialogInfo constuctor 4";
 }
 
 
 void DialogInfo::load_cover() {
-    std::string fileName = m_tagsInfo.m_name.toStdString();
-    std::string fileType = fileName.substr(fileName.size() - 3);
+    QString fileType = QFileInfo(m_tagsInfo.m_path).completeSuffix();
 
-    QImage coverQImg;
+    QImage coverQImg(":/def_cover_color.png");
+
     if (fileType == "mp3") {
         coverQImg = load_cover_image_mpeg(m_tagsInfo.m_path.toStdString().data());
-//        ui->statusbar->showMessage(tr( " loaded"), 200);
     }
-    else if (fileType == "m4a") {
+    if (fileType == "m4a") {
         coverQImg = load_cover_image_m4a(m_tagsInfo.m_path.toStdString().data());
-//        ui->statusbar->showMessage(tr( " loaded"), 200);
     }
-    else {
-//        ui->statusbar->showMessage(tr(" cover is unsupported"), 200);
-        coverQImg = QImage(":/def_cover_color.png");
-//        coverQImg = QImage(default_cover);
-    }
+
     QPixmap pix(QPixmap::fromImage(coverQImg));
     ui->coverInfo->setPixmap(pix);
 }
-
 
 DialogInfo::~DialogInfo()
 {
     delete ui;
 }
-
 
 
 void DialogInfo::coverInfoDoubleclicked() {
