@@ -4,27 +4,18 @@
 #include "loggingcategories.h"
 //#include "music.h"
 
-MusicTableModel::MusicTableModel(QWidget *parent) : m_parent(parent)
+//MusicTableModel::MusicTableModel(QWidget *parent) : m_parent(parent)
+//{
+//    m_roleNames.insert(0, QByteArray("Title"));
+//    m_roleNames.insert(1, QByteArray("Artist"));
+//    m_roleNames.insert(2, QByteArray("Gener"));
+//}
+
+MusicTableModel::MusicTableModel(QWidget *parent)
+        : m_parent(parent)
 {
-    m_roleNames.insert(0, QByteArray("Title"));
-    m_roleNames.insert(1, QByteArray("Artist"));
-    m_roleNames.insert(2, QByteArray("Gener"));
 }
 
-// QModelIndex index(int row, int column, const QModelIndex &parent)
-// {
-//     return createIndex(row, column, /*&(music_list[index.row()].title)*/ "hello");
-// }
-
-// QModelIndex MusicTableModel::parent(const QModelIndex &child) const
-// {
-//     return QModelIndex();
-// }
-
-// QHash<int, QByteArray> MusicTableModel::roleNames() const
-// {
-//     return m_roleNames;
-// }
 
 int MusicTableModel::rowCount(const QModelIndex &) const
 {
@@ -42,34 +33,57 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
     {
         if (!music_list.empty())
         {
-//            std::cerr << "---\nrow: " << index.row() << "\ncolumn: " << index.column() << "\nfile: " << music_list[index.row()][0].toStdString() << "\n---\n\n";
             if (!music_list[index.row()][index.column()].isEmpty())
                 return music_list[index.row()][index.column()];
         }
     }
-    return QString();
+    return QVariant();
+//    return QString();
 }
 
 
-bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, int role) const {
+bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
 
-//        music_list[index.row()].setTag(index.column(), value);
+        qDebug(logDebug()) << "Qvariant " << value.toString();
+
+        music_list[index.row()][index.column()] = value.toString();
+//        QString result;
+//        for (int row = 0; row < rowCount(); row++) {
+//            for (int col= 0; col < columnCount(); col++)
+//                result += music_list[row][col] + ' ';
+//        }
+//        emit editCompleted(result);
+//        beginResetModel();
         emit dataChanged(index, index);
+//        endResetModel();
         return true;
     }
     return false;
 }
 
+void MusicTableModel::saveTags(const QModelIndex &index, const Music &new_tags) {
+
+    qDebug(logDebug()) << "saveTags" << new_tags.m_name;
+//    qDebug(logDebug()) << "index row  = " << index.row();
+//    qDebug(logDebug()) << "index col  = " << index.column();
+    for (int i = 0; i < this->columnCount(); ++i) {
+        QModelIndex temp = index.sibling(index.row(), i);
+        this->setData(temp, new_tags[i], Qt::EditRole);
+        qDebug(logDebug()) << "|-------index row  = " << temp.row();
+        qDebug(logDebug()) << "|-------index col  = " << temp.column();
+    }
+
+
+}
+
+
+
 
 
 QVariant MusicTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role != Qt::DisplayRole)
-        return QVariant();
-//    static int row = 0;
-
-    if (orientation == Qt::Horizontal)
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
     {
         try
         {
@@ -82,6 +96,9 @@ QVariant MusicTableModel::headerData(int section, Qt::Orientation orientation, i
     }
     return QVariant();
 }
+
+
+
 
 void MusicTableModel::sort(int column, Qt::SortOrder order)
 {
@@ -114,6 +131,30 @@ void MusicTableModel::music_list_add(const QVector<Music> &params) {
     music_list = std::move(params);
 }
 
+Qt::ItemFlags MusicTableModel::flags(const QModelIndex &index) const {
+    return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+}
+
+bool MusicTableModel::insertRows(int row, int count, const QModelIndex &parent) {
+
+    return QAbstractItemModel::insertRows(row, count, parent);
+}
 
 
 
+
+
+// QModelIndex index(int row, int column, const QModelIndex &parent)
+// {
+//     return createIndex(row, column, /*&(music_list[index.row()].title)*/ "hello");
+// }
+
+// QModelIndex MusicTableModel::parent(const QModelIndex &child) const
+// {
+//     return QModelIndex();
+// }
+
+// QHash<int, QByteArray> MusicTableModel::roleNames() const
+// {
+//     return m_roleNames;
+// }

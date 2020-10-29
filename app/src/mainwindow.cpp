@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // context menu for music table
     connect(ui->mainMusicTable, SIGNAL(customContextMenuRequested(const QPoint &)), this,
             SLOT(onMusicTableContextMenu(const QPoint &)));
+
 }
 
 void MainWindow::onMusicTableContextMenu(const QPoint &point) {
@@ -253,6 +254,7 @@ void MainWindow::on_actionInfo_triggered()
 
 //  QVector<QString> current = m_library->data()[m_table_index.row()];
   Music current = m_library->data()[m_table_index.row()];
+  QModelIndex index;
 
   DialogInfo *songInfo = new DialogInfo(current, 0);
 
@@ -261,23 +263,31 @@ void MainWindow::on_actionInfo_triggered()
 
   if (songInfo->exec() == QDialog::Accepted) {
       qInfo(logInfo()) << "ok DialogInfo";
-      Music new_tags;
+//      Music new_tags;
 
-      songInfo->get_tag_changes(new_tags);  // get settings from QDialog
+      songInfo->get_tag_changes(new_song_info);  // get settings from QDialog
 //        m_settings->set_settings(new_settings);
-      if (!(current == new_tags)) {
+      if (!(current == new_song_info)) {
           // save new tags;
-          if (!(modify_tags(new_tags))) {
-              qInfo(logInfo()) << new_tags.m_path << " is not writable";
+          if (!(modify_tags(new_song_info))) {
+              qInfo(logInfo()) << new_song_info.m_path << " is not writable";
           } else {
-              ui->mainMusicTable->repaint();
-              emit
+              emit editTagsCompleted(m_table_index, new_song_info);
+//              m_tableModel->setData();
+//              ui->mainMusicTable->update()
+//              ui->mainMusicTable->repaint();
+//              emit
+                ui->mainMusicTable->viewport()->repaint();
+              qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
           }
       }
   }
   else
     qInfo(logInfo()) << "cancel DialogInfo";
 }
+
+
+
 
 void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 {
@@ -294,6 +304,7 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
     m_tableModel->music_list_add(m_library->data());
     ui->mainMusicTable->setModel(m_tableModel);
     ui->mainMusicTable->viewport()->update();
+    connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
 }
 
 void MainWindow::loadCoverImage(const QModelIndex &index) {

@@ -73,6 +73,10 @@ private slots:
 
     void on_actionAdd_to_Library_triggered();  // cmd + O
 
+
+signals:
+    void editTagsCompleted(const QModelIndex &, const Music &);
+
 private:
     void readSettings();
     void writeSettings();
@@ -87,6 +91,7 @@ private:
     Settings *m_settings;
 
     QModelIndex m_table_index {};
+    Music new_song_info;
 
 //    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);
