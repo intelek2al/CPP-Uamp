@@ -147,9 +147,6 @@ void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
     m_table_index = index;
 }
 
-
-
-
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
     Music current = m_library->data()[index.row()];
@@ -271,7 +268,6 @@ void MainWindow::on_actionInfo_triggered()
               qInfo(logInfo()) << new_song_info.m_path << " is not writable";
           } else {
               emit editTagsCompleted(m_table_index, new_song_info);
-//                ui->mainMusicTable->viewport()->repaint();
               qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
           }
       }
@@ -291,7 +287,7 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 
     if (!m_tableModel)
         delete m_tableModel;
-    m_tableModel = new MusicTableModel(ui->mainMusicTable);
+    m_tableModel = new MusicTableModel(ui->mainMusicTable, m_library->data());
 
     m_tableModel->music_list_add(m_library->data());
     ui->mainMusicTable->setModel(m_tableModel);

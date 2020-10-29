@@ -135,9 +135,8 @@ Music read_tags(char *file_name, char *file_path) {
         data.m_artist = tag->artist().toCString();
         data.m_genre = tag->genre().toCString();
         data.m_album = tag->album().toCString();
-        data.m_year = tag->year();
-        data.m_track = tag->track();
-//        data.m_track = static_cast<short>(tag->track() != 0 ? tag->track(): -1);
+        data.m_year = QString::number(tag->year());
+        data.m_track = QString::number(tag->track());
         data.m_path = QString(file_p.data());
         data.m_comment =tag->comment().toCString();
 
@@ -240,38 +239,38 @@ void modify_tag_comment(char *file_path, char *new_comment) {
 void modify_tag_year(const Music& changes) {
     TagLib::FileRef f(changes.m_path.toStdString().data());
 
-//    unsigned int n_year;
-//    try {
-//        n_year = str_to_uint(changes.m_year.toStdString().data());
-//    }
-//    catch (std::exception& ex) {
-//        std::cerr << ex.what();
-//        return;
-//    }
+    unsigned int n_year;
+    try {
+        n_year = str_to_uint(changes.m_year.toStdString().data());
+    }
+    catch (std::exception& ex) {
+        std::cerr << ex.what();
+        return;
+    }
 
     if (!f.isNull() && f.tag())
     {
         TagLib::Tag *tag = f.tag();
-        tag->setYear(changes.m_year);
+        tag->setYear(n_year);
     }
     f.save();
 }
 
 void modify_tag_track(const Music& changes) {
     TagLib::FileRef f(changes.m_path.toStdString().data());
-//    unsigned int n_track;
-//
-//    try {
-//        n_track = str_to_uint(changes.m_track.toStdString().data());
-//    }
-//    catch (std::exception& ex) {
-//        std::cerr << ex.what();
-//        return;
-//    }
+    unsigned int n_track;
+
+    try {
+        n_track = str_to_uint(changes.m_track.toStdString().data());
+    }
+    catch (std::exception& ex) {
+        std::cerr << ex.what();
+        return;
+    }
     if (!f.isNull() && f.tag())
     {
         TagLib::Tag *tag = f.tag();
-        tag->setTrack(changes.m_track);
+        tag->setTrack(n_track);
     }
     f.save();
 }

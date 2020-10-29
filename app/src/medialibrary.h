@@ -4,7 +4,7 @@
 #include <QString>
 #include <QVector>
 #include "playlist.h"
-#include "music.h"
+//#include "music.h"
 
 class MediaLibrary {
 
@@ -14,7 +14,9 @@ public:
     ~MediaLibrary();
 
     bool add_media(const QString& media_path);
-    QVector<Music> data();
+    QVector<Music>& data();
+
+//    friend class MusicTableModel;
 
 private:
 
@@ -24,7 +26,7 @@ private:
     void add_dir(const QString& dir_name);
 
 
-     QVector<Music> m_media_list;
+     QVector<Music>& m_media_list;
 };
 
 char *toChar(QString str);

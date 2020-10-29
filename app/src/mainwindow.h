@@ -44,7 +44,7 @@ public:
 
 private slots:
     void on_mainMusicTable_clicked(const QModelIndex &index);
-//    void on_pushButton_clicked();  // save ?
+
     void on_mainMusicTable_doubleClicked(const QModelIndex &index);  // player
 
     void on_playButton_clicked();
@@ -83,8 +83,11 @@ private:
     void loadCoverImage(const QModelIndex &index);
 
     Ui::MainWindow *ui;
+
     MediaLibrary *m_library = nullptr;
+
     MusicTableModel *m_tableModel;
+
     SoundPlayer *m_player;
     QString m_path;
     Searcher *m_searcher;

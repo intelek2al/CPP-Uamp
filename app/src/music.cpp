@@ -191,24 +191,67 @@ Music& Music::operator=(const QVector<QString> &m) {
 
 //QVector<QString> listHeaders = {"Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
 
+
+
+
 QString Music::operator[](int i) const {
     switch (i) {
         case 0: return m_name;
         case 1: return m_time;
         case 2: return m_title;
         case 3: return m_artist;
-        case 4: return QString::number(static_cast<int>(m_rate));
+        case 4: return m_rate;
 //        case 9: return m_rate;
         case 5: return m_genre;
         case 6: return m_album;
-        case 7: return QString::number(static_cast<int>(m_year));
-        case 8: return QString::number(static_cast<int>(m_track));
+        case 7: return m_year;
+        case 8: return m_track;
         case 9: return m_comment;
         case 10: return m_path;
         case 11: return m_lyrics;
-        case 12: return QString::number(static_cast<int>(m_count));
+
+//        case 12: return QString::number(static_cast<int>(m_count));
         default: return m_name;
     }
+}
+
+QString &Music::operator[](int i) {
+    switch (i) {
+        case 0: return m_name;
+        case 1: return m_time;
+        case 2: return m_title;
+        case 3: return m_artist;
+        case 4: return m_rate;
+//        case 9: return m_rate;
+        case 5: return m_genre;
+        case 6: return m_album;
+        case 7: return m_year;
+        case 8: return m_track;
+        case 9: return m_comment;
+        case 10: return m_path;
+        case 11: return m_lyrics;
+
+//        case 12: return m_count;
+        default: return m_name;
+    }
+//    switch (i) {
+//        case 0: __tm_name; break;
+//        case 1: __tmp = m_time;
+//        case 2: __tmp = m_title;
+//        case 3: __tmp = m_artist;
+//        case 4: __tmp = QString::number(static_cast<int>(m_rate));
+////        case 9: return m_rate;
+//        case 5: __tmp = m_genre;
+//        case 6: __tmp = m_album;
+//        case 7: __tmp = QString::number(static_cast<int>(m_year));
+//        case 8: __tmp = QString::number(static_cast<int>(m_track));
+//        case 9: __tmp = m_comment;
+//        case 10: __tmp = m_path;
+//        case 11: __tmp = m_lyrics;
+//        case 12: __tmp = QString::number(static_cast<int>(m_count));
+//        default: __tmp = m_name;
+//    }
+//    return __tmp;
 }
 
 QVector<QString> Music::getMusicInfo() const {
@@ -222,9 +265,9 @@ QVector<QString> Music::getMusicInfo() const {
     info.push_back(m_path);
     info.push_back(m_lyrics);
     info.push_back(m_comment);
-    info.push_back(QString::number(static_cast<int>(m_rate)));
-    info.push_back(QString::number(static_cast<int>(m_year)));
-    info.push_back(QString::number(static_cast<int>(m_track)));
+    info.push_back(m_rate);
+    info.push_back(m_year);
+    info.push_back(m_track);
     info.push_back(QString::number(static_cast<int>(m_count)));
     return info;
 }

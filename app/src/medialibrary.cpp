@@ -84,7 +84,7 @@ void MediaLibrary::add_file(const QString &file_name) {
         m_media_list.push_back(tmp);
 }
 
-QVector<Music> MediaLibrary::data() {
+QVector<Music>& MediaLibrary::data() {
 //    QVector<QVector<QString>> tmp;
 //    for (const auto &media : m_media_list) {
 //        tmp.push_back(media.getMusicInfo());

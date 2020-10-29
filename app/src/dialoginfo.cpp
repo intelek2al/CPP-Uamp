@@ -18,8 +18,8 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui->line_artist->setText(songInfo.m_artist);
     ui->line_album->setText(songInfo.m_album);
     ui->line_genre->setText(songInfo.m_genre);
-    ui->line_year->setText(QString::number(songInfo.m_year));
-    ui->line_track->setText(QString::number(songInfo.m_track));
+    ui->line_year->setText(songInfo.m_year);
+    ui->line_track->setText(songInfo.m_track);
     ui->line_comments->setText(songInfo.m_comment);
     ui->line_path->setText(songInfo.m_path);
     ui->title_large->setText(songInfo.m_title);
@@ -113,15 +113,19 @@ void DialogInfo::accepted() {
 }
 
 Music DialogInfo::get_tag_changes(Music &music_tags) {
-    music_tags.m_name = ui->line_title->text();
+    music_tags.m_name = music_tags.m_name;
+    music_tags.m_time = music_tags.m_time;
+
+    music_tags.m_title = ui->line_title->text();
     music_tags.m_artist = ui->line_artist->text();
     music_tags.m_album = ui->line_album->text();
     music_tags.m_genre = ui->line_genre->text();
-
-    music_tags.m_year = std::stoi(ui->line_year->text().toStdString());
-    music_tags.m_track = std::stoi(ui->line_track->text().toStdString());
-
+//    music_tags.m_year = std::stoi(ui->line_year->text().toStdString());
+//    music_tags.m_track = std::stoi(ui->line_track->text().toStdString());
+    music_tags.m_year = ui->line_year->text();
+    music_tags.m_track = ui->line_track->text();
     music_tags.m_comment = ui->line_comments->text();
+
     music_tags.m_path = m_tagsInfo.m_path;
     return Music();
 }

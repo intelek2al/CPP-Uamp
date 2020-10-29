@@ -11,22 +11,21 @@ class MusicTableModel : public QAbstractTableModel
 {
     Q_OBJECT
  public:
-    explicit MusicTableModel(QWidget *parent = nullptr);
+    explicit MusicTableModel(QWidget *parent = nullptr, QVector<Music> &_media = QVector<Music>());
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-//    bool setTags(const QModelIndex &index, const QVariant &value);
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
-//    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 //
-//    bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
-//    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
+    bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
+    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
@@ -34,6 +33,7 @@ class MusicTableModel : public QAbstractTableModel
 
     void music_list_add(QVector<QVector<QString>> params);
     void music_list_add(const QVector<Music> &params);
+
 
 signals:
     void editCompleted(const QString &);
@@ -46,7 +46,8 @@ private:
 
     QVector<QString> listHeaders = {"Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
     QHash<int, QByteArray> m_roleNames;
-    QVector<Music> music_list;
+    QVector<Music>& music_list;
+
 //    /* QVector<QVector<QString>> music_list/*{{"bbb", "BBB", "R&B", "bbb", "BBB", "R&B"},
 // *                                          {"ccasd", "CCC", "Rock", "ccc", "CCC", "Rock"},
 // *                                          {"aaa", "AAA", "Rock", "aaa", "AAA", "Rock"},
