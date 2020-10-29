@@ -7,7 +7,7 @@ PlayerPlaylist::PlayerPlaylist() {
 
 PlayerPlaylist::PlayerPlaylist(const Playlist &playlist) {
     m_playlist = SoundPlayer::playlist();
-    m_auto = playlist;
+    setPlaylist(playlist);
 }
 
 void PlayerPlaylist::addUserNext(const Music &song) {
@@ -25,7 +25,8 @@ void PlayerPlaylist::skipUser() {
 }
 
 void PlayerPlaylist::setPlaylist(const Playlist &playlist) {
-    m_auto = playlist;
+    m_list = playlist;
+    m_auto = m_list;
 }
 
 void PlayerPlaylist::refresh() {
@@ -43,12 +44,63 @@ void PlayerPlaylist::next() {
     }
 
     m_history.addFrontMusic(m_auto[0]);
-    m_auto.clearMusic(0);
+//    m_auto.clearMusic(0);
     return;
 }
 
 void PlayerPlaylist::setMode(QMediaPlaylist::PlaybackMode mode) {
     m_mode = mode;
 }
+
+void PlayerPlaylist::setStartSong(const Music &song) {
+    int pos = 0;
+    for (; pos < m_list.size(); ++pos) {
+        if (m_list[pos] == song)
+            break;
+    }
+    if (pos == m_list.size())
+        return;
+    for (int i = 0; i < m_list.size(); ++i) {
+        m_auto.addMusic(m_list[(pos++)]);
+        pos = pos == m_list.size() ? 0 : pos;
+    }
+    m_playlist->clear();
+    m_auto.addToMediaPlaylist();
+}
+
+void PlayerPlaylist::setStartSong(const QUrl &song) {
+    int pos = 0;
+    for (; pos < m_list.size(); ++pos) {
+        if (m_list[pos].m_url == song)
+            break;
+    }
+    if (pos == m_list.size())
+        return;
+    for (int i = 0; i < m_list.size(); ++i) {
+        m_auto.addMusic(m_list[(pos++)]);
+        pos = pos == m_list.size() ? 0 : pos;
+    }
+    m_playlist->clear();
+    m_auto.addToMediaPlaylist();
+}
+
+Playlist &PlayerPlaylist::currentPlaylist() {
+    return m_list;
+}
+
+#include <iostream>
+using namespace std;
+
+void PlayerPlaylist::setStartSong(int pos) {
+    for (int i = 0; i < m_list.size(); ++i) {
+        m_auto.addMusic(m_list[(pos++)]);
+        pos = pos == m_list.size() ? 0 : pos;
+    }
+    m_playlist->clear();
+    m_auto.addToMediaPlaylist();
+    cout << m_playlist->isEmpty() << endl;
+}
+
+
 
 

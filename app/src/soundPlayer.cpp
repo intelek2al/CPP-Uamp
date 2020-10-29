@@ -5,12 +5,16 @@ SoundPlayer::SoundPlayer(Ui::MainWindow *child)
 {
     m_player = new QMediaPlayer();
     m_playlist = SoundPlayer::playlist();
+    m_playlist->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
+    m_player->setPlaylist(m_playlist);
     ui = child;
     connect(m_player, &QMediaPlayer::positionChanged, this, &SoundPlayer::setPosition);
     connect(m_player, &QMediaPlayer::stateChanged, this, &SoundPlayer::stateCheck);
     ui->labelSong->setText("");
     ui->labelArtist->setText("");
 }
+
+
 
 SoundPlayer::~SoundPlayer()
 {
@@ -21,14 +25,27 @@ SoundPlayer::~SoundPlayer()
 
 void SoundPlayer::setSound(QString path)
 {
-    m_player->setMedia(QUrl::fromLocalFile(path));
+    if (!isPlaylistExist)
+        return;
+//    m_player->setMedia(QUrl::fromLocalFile(path));
     if (m_player->isMetaDataAvailable())
-        ui->statusbar->showMessage("Audio Avalib ", 2000);
+        ui->statusbar->showMessage(m_player->currentMedia().playlist()->objectName(), 2000);
     else {
         while (!m_player->isMetaDataAvailable()) {
             QCoreApplication::processEvents();
         }
     }
+    QStringList list = m_player->availableMetaData();
+
+    this->setPlay();
+    ui->playButton->click();
+}
+
+void SoundPlayer::setSound(int index) {
+    if (!isPlaylistExist)
+        return;
+
+    m_list.setStartSong(index);
 //    QStringList list = m_player->availableMetaData();
 
     this->setPlay();
@@ -107,4 +124,9 @@ QMediaPlaylist *SoundPlayer::playlist() {
     if (m_playlist == nullptr)
         m_playlist = new QMediaPlaylist();
     return m_playlist;
+}
+
+void SoundPlayer::setPlaylist(const Playlist &playlist) {
+    m_list.setPlaylist(playlist);
+    isPlaylistExist = true;
 }

@@ -15,6 +15,7 @@ public:
 
     bool add_media(const QString& media_path);
     QVector<Music> data();
+    Playlist dataPlaylist() const;
 
 private:
 

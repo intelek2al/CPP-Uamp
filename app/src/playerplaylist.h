@@ -14,7 +14,11 @@ public:
     void clearCustomUser();
     void skipUser();
     void setPlaylist(const Playlist &playlist);
+    void setStartSong(const Music &song);
+    void setStartSong(const QUrl &song);
+    void setStartSong(int pos);
     void setMode(QMediaPlaylist::PlaybackMode mode);
+    Playlist &currentPlaylist();
 
 public slots:
     void next();
@@ -27,6 +31,7 @@ private:
     Playlist m_history;
     Playlist m_user;
     Playlist m_auto;
+    Playlist m_list;
     QMediaPlaylist *m_playlist;
 };
 

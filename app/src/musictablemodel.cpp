@@ -46,7 +46,7 @@ bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, i
 
         qDebug(logDebug()) << "Qvariant " << value.toString();
         music_list[index.row()][index.column()] = value.toString();
-        std::cout << value.toString().toStdString() << " :\t";
+//        std::cout << value.toString().toStdString() << " :\t";
 //        std::cout << music_list[index.row()][index.column()] << " ";
 //        QString result;
 //        for (int row = 0; row < rowCount(); row++) {
@@ -68,7 +68,7 @@ void MusicTableModel::saveTags(const QModelIndex &index, const Music &new_tags) 
 //    qDebug(logDebug()) << "index col  = " << index.column();
     for (int i = 0; i < this->columnCount(); ++i) {
         QModelIndex temp = index.sibling(index.row(), i);
-        std::cout << setData(temp, new_tags[i], Qt::EditRole) << std::endl;
+//        std::cout << setData(temp, new_tags[i], Qt::EditRole) << std::endl;
 //        std::cout << new_tags[index.column()].toStdString() << " ";
 
         qDebug(logDebug()) << "|-------index row  = " << temp.row();

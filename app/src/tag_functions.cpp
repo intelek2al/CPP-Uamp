@@ -35,8 +35,8 @@ void load_lyrics(char *file_name) {
                     dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(frames.front());
             // There could be multiple frames here; you may want to look at language
             // and/or description, instead of just picking the first.
-            if (frame)
-                std::cout << frames.front()->toString() << " here" << std::endl;
+//            if (frame)
+//                std::cout << frames.front()->toString() << " here" << std::endl;
         }
     }
 }
@@ -140,6 +140,7 @@ Music read_tags(char *file_name, char *file_path) {
 //        data.m_track = static_cast<short>(tag->track() != 0 ? tag->track(): -1);
         data.m_path = QString(file_p.data());
         data.m_comment =tag->comment().toCString();
+        data.m_url = QUrl(data.m_path);
 
         /*
         cout << "-- TAG (basic) --" << endl;

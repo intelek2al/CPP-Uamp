@@ -91,3 +91,16 @@ QVector<Music> MediaLibrary::data() {
 //    }
     return m_media_list;
 }
+
+Playlist MediaLibrary::dataPlaylist() const {
+    Playlist list;
+    cout << "!" << endl;
+    for (const auto &music : m_media_list) {
+        cout << "|---!" << endl;
+        list.addMusic(music);
+    }
+    cout << endl;
+    return list;
+}
+
+

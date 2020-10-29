@@ -4,7 +4,7 @@
 #include <QMediaPlayer>
 #include <QTime>
 #include <QMediaPlaylist>
-#
+#include "playerplaylist.h"
 
 namespace Ui {
     class MainWindow;
@@ -16,6 +16,7 @@ public:
     ~SoundPlayer();
 
     void setSound(QString path);
+    void setSound(int index);
 
 public slots:
     void setPlay();
@@ -25,6 +26,7 @@ public slots:
     void setPosition(int position);
     void setMovedPosition(int position);
     void stateCheck(QMediaPlayer::State state);
+    void setPlaylist(const Playlist &playlist);
     static QMediaPlaylist *playlist();
 //    static QMediaPlaylist *getInstance();
 private slots:
@@ -33,11 +35,12 @@ private slots:
     void on_mainMusicTable_pressed(const QModelIndex &index);
 
 private:
-//    static SoundPlayer *singleton_;
+//    QMediaPlayer::State m_state = QMediaPlayer::State::StoppedState;
     QMediaPlayer *m_player;
+    PlayerPlaylist m_list;
     static QMediaPlaylist *m_playlist;
-
     Ui::MainWindow *ui;
+    bool isPlaylistExist = false;
 };
 
 
