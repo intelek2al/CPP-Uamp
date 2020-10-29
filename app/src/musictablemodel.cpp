@@ -29,7 +29,7 @@ int MusicTableModel::columnCount(const QModelIndex &) const
 
 QVariant MusicTableModel::data(const QModelIndex &index, int role) const
 {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == Qt::EditRole)
     {
         if (!music_list.empty())
         {
@@ -37,26 +37,16 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
                 return music_list[index.row()][index.column()];
         }
     }
-    return QVariant();
-//    return QString();
+//    return QVariant();
+    return QString();
 }
 
 
 bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
-
         qDebug(logDebug()) << "Qvariant " << value.toString();
-
         music_list[index.row()][index.column()] = value.toString();
-//        QString result;
-//        for (int row = 0; row < rowCount(); row++) {
-//            for (int col= 0; col < columnCount(); col++)
-//                result += music_list[row][col] + ' ';
-//        }
-//        emit editCompleted(result);
-//        beginResetModel();
         emit dataChanged(index, index);
-//        endResetModel();
         return true;
     }
     return false;
@@ -69,17 +59,15 @@ void MusicTableModel::saveTags(const QModelIndex &index, const Music &new_tags) 
 //    qDebug(logDebug()) << "index col  = " << index.column();
     for (int i = 0; i < this->columnCount(); ++i) {
         QModelIndex temp = index.sibling(index.row(), i);
-        this->setData(temp, new_tags[i], Qt::EditRole);
+
+        setData(temp, new_tags[i], Qt::EditRole);
+
         qDebug(logDebug()) << "|-------index row  = " << temp.row();
         qDebug(logDebug()) << "|-------index col  = " << temp.column();
     }
-
+    emit dataChanged(index, index);
 
 }
-
-
-
-
 
 QVariant MusicTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -132,12 +120,14 @@ void MusicTableModel::music_list_add(const QVector<Music> &params) {
 }
 
 Qt::ItemFlags MusicTableModel::flags(const QModelIndex &index) const {
-    return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+    if (index.isValid())
+        return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
 }
 
 bool MusicTableModel::insertRows(int row, int count, const QModelIndex &parent) {
-
-    return QAbstractItemModel::insertRows(row, count, parent);
+    beginInsertRows(parent, row, row + count - 1);
+    endInsertRows();
+    return true;
 }
 
 

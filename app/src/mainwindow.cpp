@@ -263,21 +263,15 @@ void MainWindow::on_actionInfo_triggered()
 
   if (songInfo->exec() == QDialog::Accepted) {
       qInfo(logInfo()) << "ok DialogInfo";
-//      Music new_tags;
 
       songInfo->get_tag_changes(new_song_info);  // get settings from QDialog
-//        m_settings->set_settings(new_settings);
       if (!(current == new_song_info)) {
           // save new tags;
           if (!(modify_tags(new_song_info))) {
               qInfo(logInfo()) << new_song_info.m_path << " is not writable";
           } else {
               emit editTagsCompleted(m_table_index, new_song_info);
-//              m_tableModel->setData();
-//              ui->mainMusicTable->update()
-//              ui->mainMusicTable->repaint();
-//              emit
-                ui->mainMusicTable->viewport()->repaint();
+//                ui->mainMusicTable->viewport()->repaint();
               qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
           }
       }
@@ -285,8 +279,6 @@ void MainWindow::on_actionInfo_triggered()
   else
     qInfo(logInfo()) << "cancel DialogInfo";
 }
-
-
 
 
 void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
