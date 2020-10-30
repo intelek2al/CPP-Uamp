@@ -62,7 +62,7 @@ Music::Music(const Music &m) {
     m_rate = m.m_rate;
     m_year = m.m_year;
     m_track = m.m_track;
-    m_url.setPath(m_path);
+    m_url = QUrl::fromLocalFile(m_path);
 }
 
 Music::Music(Music &&m) noexcept {
@@ -79,7 +79,7 @@ Music::Music(Music &&m) noexcept {
     m_rate = m.m_rate;
     m_year = m.m_year;
     m_track = m.m_track;
-    m_url.setPath(m_path);
+    m_url = QUrl::fromLocalFile(m_path);
 }
 
 Music& Music::operator=(Music &&m) noexcept {
@@ -96,7 +96,7 @@ Music& Music::operator=(Music &&m) noexcept {
     m_rate = m.m_rate;
     m_year = m.m_year;
     m_track = m.m_track;
-    m_url.setPath(m_path);
+    m_url = QUrl::fromLocalFile(m_path);
     return *this;
 }
 
@@ -114,7 +114,7 @@ Music& Music::operator=(const Music &m) {
     m_rate = m.m_rate;
     m_year = m.m_year;
     m_track = m.m_track;
-    m_url.setPath(m_path);
+    m_url = QUrl::fromLocalFile(m_path);
     return *this;
 }
 
@@ -132,7 +132,7 @@ Music::Music(const QVector<QString> &m) {
     m_rate = m[9].toUInt();
     m_year = static_cast<short>(m[10].toInt());
     m_track = static_cast<short>(m[11].toInt());
-    m_url.setPath(m_path);
+    m_url = QUrl::fromLocalFile(m_path);
 }
 
 Music::Music(QVector<QString> &&m) {
@@ -149,7 +149,7 @@ Music::Music(QVector<QString> &&m) {
     m_rate = m[9].toUInt();
     m_year = static_cast<short>(m[10].toInt());
     m_track = static_cast<short>(m[11].toInt());
-    m_url.setPath(m_path);
+    m_url = QUrl::fromLocalFile(m_path);
     m.clear();
 }
 
@@ -167,7 +167,7 @@ Music& Music::operator=(QVector<QString> &&m) noexcept {
     m_rate = m[9].toUInt();
     m_year = static_cast<short>(m[10].toInt());
     m_track = static_cast<short>(m[11].toInt());
-    m_url.setPath(m_path);
+    m_url = QUrl::fromLocalFile(m_path);
     m.clear();
     return *this;
 }
@@ -186,6 +186,7 @@ Music& Music::operator=(const QVector<QString> &m) {
     m_rate = m[9].toUInt();
     m_year = static_cast<short>(m[10].toInt());
     m_track = static_cast<short>(m[11].toInt());
+    m_url = QUrl::fromLocalFile(m_path);
     return *this;
 }
 
@@ -232,24 +233,6 @@ QString &Music::operator[](int i) {
 //        case 12: return m_count;
         default: return m_name;
     }
-//    switch (i) {
-//        case 0: __tm_name; break;
-//        case 1: __tmp = m_time;
-//        case 2: __tmp = m_title;
-//        case 3: __tmp = m_artist;
-//        case 4: __tmp = QString::number(static_cast<int>(m_rate));
-////        case 9: return m_rate;
-//        case 5: __tmp = m_genre;
-//        case 6: __tmp = m_album;
-//        case 7: __tmp = QString::number(static_cast<int>(m_year));
-//        case 8: __tmp = QString::number(static_cast<int>(m_track));
-//        case 9: __tmp = m_comment;
-//        case 10: __tmp = m_path;
-//        case 11: __tmp = m_lyrics;
-//        case 12: __tmp = QString::number(static_cast<int>(m_count));
-//        default: __tmp = m_name;
-//    }
-//    return __tmp;
 }
 
 //QVector<QString> Music::getMusicInfo() const {
@@ -275,17 +258,7 @@ bool Music::empty() const {
 }
 
 QString Music::getStr() const {
-
-
     QString temp = "name =" + m_name + "  time ="  + m_time + " title =" + m_title +
             " path =" + m_path;
     return temp;
-}
-
-
-QString &operator<<(QString &stream, const Music &m) {
-
-
-
-    return stream;
 }

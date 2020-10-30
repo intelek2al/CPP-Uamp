@@ -17,6 +17,7 @@ Playlist::Playlist(QVector<QUrl> urls, const QString &name) {
     for(const auto &url : urls) {
         m_musicPlaylist.push_back(url);
     }
+    m_playlistName = name;
 }
 
 void Playlist::addMusic(const QUrl &url) {
@@ -45,8 +46,7 @@ Music Playlist::getMusic(int pos) {
 
 void Playlist::addToMediaPlaylist() {
     for(const auto &song : m_musicPlaylist) {
-
-        SoundPlayer::playlist()->addMedia(song.m_url);
+        SoundPlayer::playlist()->addMedia(QUrl::fromLocalFile(song.m_path));
     }
 }
 

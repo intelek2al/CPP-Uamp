@@ -14,8 +14,6 @@ SoundPlayer::SoundPlayer(Ui::MainWindow *child)
     ui->labelArtist->setText("");
 }
 
-
-
 SoundPlayer::~SoundPlayer()
 {
     delete m_player;
@@ -74,13 +72,16 @@ void SoundPlayer::stateCheck(QMediaPlayer::State state) {
         ui->statusPlay->setEnabled(false);
     }
 }
-
+#include <iostream>
 void SoundPlayer::setPlay()
 {
     if (m_player->isMetaDataAvailable()) {
         ui->labelSong->setText(m_player->metaData(QStringLiteral("Title")).toString());
         ui->labelArtist->setText(m_player->metaData(QStringLiteral("ContributingArtist")).toString());
     }
+//    if (m_player->error() == QMediaPlayer::NoError)
+//    m_list.currentPlaylist()-
+        std::cout << "Player errors : " << m_player->errorString().toStdString() << std::endl;
     ui->statusPlay->setEnabled(true);
     m_player->play();
 }

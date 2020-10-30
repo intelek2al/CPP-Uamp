@@ -98,7 +98,9 @@ void PlayerPlaylist::setStartSong(int pos) {
     }
     m_playlist->clear();
     m_auto.addToMediaPlaylist();
-    cout << m_playlist->isEmpty() << endl;
+    m_playlist->setCurrentIndex(3);
+    if (m_playlist->error() == QMediaPlaylist::NoError)
+        cout << "Pos:" << pos << endl;
 }
 
 
