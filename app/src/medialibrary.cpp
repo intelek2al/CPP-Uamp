@@ -18,7 +18,7 @@ MediaLibrary::MediaLibrary() {
 }
 
 bool MediaLibrary::load_media_base() {
-    return true;
+    return false;
 }
 
 MediaLibrary::~MediaLibrary() {

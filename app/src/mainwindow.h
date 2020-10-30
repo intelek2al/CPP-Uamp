@@ -88,6 +88,8 @@ private:
 
     MusicTableModel *m_tableModel;
 
+    QItemSelectionModel *m_selection_model;
+
     SoundPlayer *m_player;
     QString m_path;
     Searcher *m_searcher;

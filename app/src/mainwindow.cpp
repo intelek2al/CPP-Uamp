@@ -5,6 +5,8 @@
 #include "loggingcategories.h"
 #include "dialogpreferences.h"
 #include "dialoginfo.h"
+#include <QAbstractItemView>
+#include <QItemSelectionModel>
 
 #include <QFileDialog>
 #include <algorithm>
@@ -31,6 +33,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     m_tableModel = new MusicTableModel(ui->mainMusicTable);
 
+    m_selection_model = new QItemSelectionModel(m_tableModel);
+    ui->mainMusicTable->setModel(m_tableModel);
+    ui->mainMusicTable->setSelectionModel(m_selection_model);
+
+//    ui->mainMusicTable->setIe
 
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
@@ -258,27 +265,25 @@ void MainWindow::on_actionPreferences_triggered()
 
 void MainWindow::on_actionInfo_triggered()
 {
-  qDebug(logDebug()) << "on_actionInfo_triggered";
-    if (!m_table_index.isValid()) {
+  qInfo(logInfo()) << "on_actionInfo_triggered";
+//    QAbstractItemView::selectionМodel();
+//    QItemSelectionModel::selectedindexes ();
+
+//      Music current = m_library->data()[m_table_index.row()];
+    auto index = m_selection_model->selection().indexes();
+
+    if (!index.front().isValid() && !(m_library->data().empty())) {
+        qDebug(logDebug()) << "on_actionInfo_triggered return";
         return;
     }
 
-//    QitemSelectionМodel::selectedindexes ();
+    Music current = m_library->data()[index.front().row()];
 
-//  QVector<QString> current = m_library->data()[m_table_index.row()];
-  Music current = m_library->data()[m_table_index.row()];
-//  Music current = m_tableModel->data(m_table_index);
-//          m_library->data()[m_table_index.row()];
-
-
-  QModelIndex index;
-
-  DialogInfo songInfo = DialogInfo(current, 0);
-
+    DialogInfo songInfo = DialogInfo(current, 0);
 //  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
-  songInfo.setModal(true);
+    songInfo.setModal(true);
 
-  if (songInfo.exec() == QDialog::Accepted) {
+    if (songInfo.exec() == QDialog::Accepted) {
       qInfo(logInfo()) << "ok DialogInfo";
 
       songInfo.get_tag_changes(new_song_info);  // get settings from QDialog
@@ -287,11 +292,8 @@ void MainWindow::on_actionInfo_triggered()
           if (!(TagFunctions::modify_tags(new_song_info))) {
               qInfo(logInfo()) << new_song_info.m_path << " is not writable";
           } else {
-              emit editTagsCompleted(m_table_index, new_song_info);
-                m_library->setData(m_table_index.row(), new_song_info);
-
-//              m_library->data()[m_table_index.row()] = std::move(new_song_info);
-
+              emit editTagsCompleted(index.front(), new_song_info);
+                m_library->setData(index.front().row(), new_song_info);
               qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
           }
       }
@@ -299,7 +301,6 @@ void MainWindow::on_actionInfo_triggered()
   else
     qInfo(logInfo()) << "cancel DialogInfo";
 }
-
 
 void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 {
