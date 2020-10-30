@@ -24,7 +24,7 @@ class ImageFile;
     Lyrics/text         <full text string according to encoding>
 */
 
-void load_lyrics(char *file_name) {
+void TagFunctions::load_lyrics(char *file_name) {
     TagLib::MPEG::File f1(file_name);
 
     if (f1.ID3v2Tag()) {
@@ -76,7 +76,7 @@ void load_lyrics(char *file_name) {
 
 // deprecated!!!!!!!!!!!!
 
-QImage load_cover_image(char *file_path) {
+QImage TagFunctions::load_cover_image(char *file_path) {
     QImage coverQImg(default_cover);
 
     static const char *IdPicture = "APIC";  //  APIC    [#sec4.15 Attached picture]
@@ -120,7 +120,7 @@ unsigned int str_to_uint(const char* new_value) {
 }
 
 
-Music read_tags(char *file_name, char *file_path) {
+Music TagFunctions::read_tags(char *file_name, char *file_path) {
 //      0       1       2           3      4          5       6       7        8       9
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
     Music data;
@@ -180,7 +180,7 @@ Music read_tags(char *file_name, char *file_path) {
     return data;
 }
 
-void modify_tag_artist(char *file_path, char *new_artist)
+void TagFunctions::modify_tag_artist(char *file_path, char *new_artist)
 {
     TagLib::FileRef f(file_path);
 
@@ -193,7 +193,7 @@ void modify_tag_artist(char *file_path, char *new_artist)
 }
 
 
-void modify_tag_title(char *file_path, char *new_title) {
+void TagFunctions::modify_tag_title(char *file_path, char *new_title) {
     TagLib::FileRef f(file_path);
 
     if (!f.isNull() && f.tag())
@@ -204,7 +204,7 @@ void modify_tag_title(char *file_path, char *new_title) {
     f.save();
 }
 
-void modify_tag_genre(char *file_path, char *new_genre) {
+void TagFunctions::modify_tag_genre(char *file_path, char *new_genre) {
     TagLib::FileRef f(file_path);
 
     if (!f.isNull() && f.tag())
@@ -215,7 +215,7 @@ void modify_tag_genre(char *file_path, char *new_genre) {
     f.save();
 }
 
-void modify_tag_album(char *file_path, char *new_album) {
+void TagFunctions::modify_tag_album(char *file_path, char *new_album) {
     TagLib::FileRef f(file_path);
 
     if (!f.isNull() && f.tag())
@@ -226,7 +226,7 @@ void modify_tag_album(char *file_path, char *new_album) {
     f.save();
 }
 
-void modify_tag_comment(char *file_path, char *new_comment) {
+void TagFunctions::modify_tag_comment(char *file_path, char *new_comment) {
     TagLib::FileRef f(file_path);
 
     if (!f.isNull() && f.tag())
@@ -237,7 +237,7 @@ void modify_tag_comment(char *file_path, char *new_comment) {
     f.save();
 }
 
-void modify_tag_year(const Music& changes) {
+void TagFunctions::modify_tag_year(const Music& changes) {
     TagLib::FileRef f(changes.m_path.toStdString().data());
 
     unsigned int n_year;
@@ -257,7 +257,7 @@ void modify_tag_year(const Music& changes) {
     f.save();
 }
 
-void modify_tag_track(const Music& changes) {
+void TagFunctions::modify_tag_track(const Music& changes) {
     TagLib::FileRef f(changes.m_path.toStdString().data());
     unsigned int n_track;
 
@@ -276,7 +276,7 @@ void modify_tag_track(const Music& changes) {
     f.save();
 }
 
-bool modify_tags(const Music& changes) {
+bool TagFunctions::modify_tags(const Music& changes) {
     if (QFileInfo file(changes.m_path); !file.isWritable()) {
         return false;
     }
@@ -298,7 +298,7 @@ bool modify_tags(const Music& changes) {
     return true;
 }
 
-QImage load_cover_image_mpeg(char *file_path)
+QImage TagFunctions::load_cover_image_mpeg(char *file_path)
 {
     static const char *IdPicture = "APIC";  //  APIC    [#sec4.15 Attached picture]
     TagLib::MPEG::File mpegFile(file_path);
@@ -318,7 +318,7 @@ QImage load_cover_image_mpeg(char *file_path)
 }
 
 
-QImage load_cover_image_m4a(char *file_path)
+QImage TagFunctions::load_cover_image_m4a(char *file_path)
 {
     QImage image;
     TagLib::MP4::File file(file_path);
@@ -342,11 +342,11 @@ QImage load_cover_image_m4a(char *file_path)
     }
 }
 
-QImage load_cover_image_ogg(char *file_path) {
+QImage TagFunctions::load_cover_image_ogg(char *file_path) {
     return QImage();
 }
 
-bool set_image_mpeg(char *file_path, char *image_path)
+bool TagFunctions::set_image_mpeg(char *file_path, char *image_path)
 {
     QFileInfo file(file_path);
     if (!file.isWritable()) {

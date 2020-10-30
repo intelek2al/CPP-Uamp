@@ -28,6 +28,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_player = new SoundPlayer(ui);
     m_library = new MediaLibrary();
 
+
+    m_tableModel = new MusicTableModel(ui->mainMusicTable);
+
+
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
@@ -258,8 +262,15 @@ void MainWindow::on_actionInfo_triggered()
     if (!m_table_index.isValid()) {
         return;
     }
+
+//    QitemSelectionМodel::selectedindexes ();
+
 //  QVector<QString> current = m_library->data()[m_table_index.row()];
   Music current = m_library->data()[m_table_index.row()];
+//  Music current = m_tableModel->data(m_table_index);
+//          m_library->data()[m_table_index.row()];
+
+
   QModelIndex index;
 
   DialogInfo songInfo = DialogInfo(current, 0);
@@ -273,7 +284,7 @@ void MainWindow::on_actionInfo_triggered()
       songInfo.get_tag_changes(new_song_info);  // get settings from QDialog
       if (!(current == new_song_info)) {
           // save new tags;
-          if (!(modify_tags(new_song_info))) {
+          if (!(TagFunctions::modify_tags(new_song_info))) {
               qInfo(logInfo()) << new_song_info.m_path << " is not writable";
           } else {
               emit editTagsCompleted(m_table_index, new_song_info);
@@ -300,7 +311,7 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 
     if (!m_tableModel)
         delete m_tableModel;
-    m_tableModel = new MusicTableModel(ui->mainMusicTable);
+//    m_tableModel = new MusicTableModel(ui->mainMusicTable);
 
     m_tableModel->music_list_add(m_library->data());
     ui->mainMusicTable->setModel(m_tableModel);
@@ -317,11 +328,11 @@ void MainWindow::loadCoverImage(const QModelIndex &index) {
     QImage coverQImg;
 
     if (fileType == "mp3") {
-        coverQImg = load_cover_image_mpeg(m_library->data()[index.row()].m_path.toStdString().data());
+        coverQImg = TagFunctions::load_cover_image_mpeg(m_library->data()[index.row()].m_path.toStdString().data());
         ui->statusbar->showMessage(tr( " loaded"), 200);
     }
     else if (fileType == "m4a") {
-        coverQImg = load_cover_image_m4a(m_library->data()[index.row()].m_path.toStdString().data());
+        coverQImg = TagFunctions::load_cover_image_m4a(m_library->data()[index.row()].m_path.toStdString().data());
         ui->statusbar->showMessage(tr( " loaded"), 200);
     }
     else {

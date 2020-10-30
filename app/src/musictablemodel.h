@@ -33,7 +33,7 @@ class MusicTableModel : public QAbstractTableModel
 
     void music_list_add(QVector<QVector<QString>> params);
     void music_list_add(const QVector<Music> &params);
-
+    Music rowData(const QModelIndex &index);
 
 signals:
     void editCompleted(const QString &);
@@ -55,3 +55,30 @@ private:
 };
 
 #endif // MUSICTABLEMODEL_H
+
+
+
+///  for sql
+
+/*
+void showTable()
+{
+    connOpen();
+    QSqlQueryModel * myModel=new QSqlQueryModel(ui->tableView);
+    QSqlQuery select;
+    if (!select.exec("select * from tab")) {
+        QMessageBox::critical(this, tr("Error"), select.lastError().text());
+    }
+    else {
+        myModel->setQuery(select);
+        QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(myModel); // create proxy
+        proxyModel->setSourceModel(myModel);
+        ui->tableView->setSortingEnabled(true); // enable sortingEnabled
+        ui->tableView->setModel(proxyModel);
+    }
+    connClose();
+}
+
+*/
+
+

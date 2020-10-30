@@ -20,7 +20,7 @@ Playlist::Playlist(QVector<QUrl> urls, const QString &name) {
 }
 
 void Playlist::addMusic(const QUrl &url) {
-    Music song = read_tags(toChar(url.fileName()), toChar(url.path()));
+    Music song = TagFunctions::read_tags(toChar(url.fileName()), toChar(url.path()));
     m_musicPlaylist.push_back(std::move(song));
 }
 
@@ -91,7 +91,7 @@ Music Playlist::operator[](int index) {
 }
 
 void Playlist::addFrontMusic(const QUrl &url) {
-    Music song = read_tags(toChar(url.fileName()), toChar(url.path()));
+    Music song = TagFunctions::read_tags(toChar(url.fileName()), toChar(url.path()));
     m_musicPlaylist.push_front(std::move(song));
 }
 

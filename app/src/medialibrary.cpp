@@ -73,8 +73,8 @@ void MediaLibrary::add_file(const QString &file_name) {
     {
 //            Sound_tags current;
 
-        tmp = read_tags(toChar(QString(fileInfo.fileName())),
-                        toChar(QString(fileInfo.filePath())));
+        tmp = TagFunctions::read_tags(toChar(QString(fileInfo.fileName())),
+                                      toChar(QString(fileInfo.filePath())));
     }
     catch (std::exception &e)
     {

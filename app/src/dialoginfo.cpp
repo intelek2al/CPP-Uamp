@@ -34,10 +34,10 @@ void DialogInfo::load_cover() {
     QImage coverQImg(":/def_cover_color.png");
 
     if (fileType == "mp3") {
-        coverQImg = load_cover_image_mpeg(m_tagsInfo.m_path.toStdString().data());
+        coverQImg = TagFunctions::load_cover_image_mpeg(m_tagsInfo.m_path.toStdString().data());
     }
     if (fileType == "m4a") {
-        coverQImg = load_cover_image_m4a(m_tagsInfo.m_path.toStdString().data());
+        coverQImg = TagFunctions::load_cover_image_m4a(m_tagsInfo.m_path.toStdString().data());
     }
 
     QPixmap pix(QPixmap::fromImage(coverQImg));
@@ -69,7 +69,7 @@ void DialogInfo::coverInfoDoubleclicked() {
         );
         qDebug(logDebug()) << "new file name cover" << file_image;
 
-        if (!(set_image_mpeg(m_tagsInfo.m_path.toStdString().data(), file_image.toStdString().data()))) {
+        if (!(TagFunctions::set_image_mpeg(m_tagsInfo.m_path.toStdString().data(), file_image.toStdString().data()))) {
             qInfo(logInfo()) << m_tagsInfo.m_name <<  " not editable";
 //            ui->statusbar->showMessage(m_tagsInfo[0] + "not editable", 2000);
         }

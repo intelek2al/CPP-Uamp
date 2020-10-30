@@ -43,30 +43,42 @@ private:
 using std::cout;
 using std::endl;
 
-Music read_tags(char *file_name, char *file_path);
-void load_lyrics(char *file_name);
-void load_cover(char *file_name);
+namespace TagFunctions {
 
-QImage load_cover_image(char *file_path);
-QImage load_cover_image_mpeg(char *file_path);
-QImage load_cover_image_m4a(char *file_path);
-QImage load_cover_image_ogg(char *file_path);
+    Music read_tags(char *file_name, char *file_path);
 
-bool set_image_mpeg(char *file_path, char *image_path);
+    void load_lyrics(char *file_name);
 
-void modify_tag_artist(char *file_path, char *new_artist);
+    void load_cover(char *file_name);
 
-void modify_tag(char *file_path, char field, char *new_value);
-void modify_tag_title(char *file_path, char *new_title);
-void modify_tag_genre(char *file_path, char *new_genre);
-void modify_tag_album(char *file_path, char *new_album);
-void modify_tag_comment(char *file_path, char *new_comment);
+    QImage load_cover_image(char *file_path);
 
-void modify_tag_year(const Music& changes);
-void modify_tag_track(const Music& changes);
+    QImage load_cover_image_mpeg(char *file_path);
 
-bool modify_tags(const Music& changes);
+    QImage load_cover_image_m4a(char *file_path);
 
+    QImage load_cover_image_ogg(char *file_path);
+
+    bool set_image_mpeg(char *file_path, char *image_path);
+
+    void modify_tag_artist(char *file_path, char *new_artist);
+
+    void modify_tag(char *file_path, char field, char *new_value);
+
+    void modify_tag_title(char *file_path, char *new_title);
+
+    void modify_tag_genre(char *file_path, char *new_genre);
+
+    void modify_tag_album(char *file_path, char *new_album);
+
+    void modify_tag_comment(char *file_path, char *new_comment);
+
+    void modify_tag_year(const Music &changes);
+
+    void modify_tag_track(const Music &changes);
+
+    bool modify_tags(const Music &changes);
+}
 
 
 #endif //UTAG_TAG_FUNCTIONS_H
