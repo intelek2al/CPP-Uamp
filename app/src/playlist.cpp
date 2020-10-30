@@ -1,6 +1,9 @@
 #include "playlist.h"
 #include "tag_functions.h"
 #include "soundPlayer.h"
+#include <random>
+#include <algorithm>
+#include <iterator>
 
 static char *toChar(QString str)
 {
@@ -30,6 +33,12 @@ void Playlist::addMusic(const Music &music) {
 //    std::cout << music.m_url.path().toStdString() <<std::endl;
 }
 
+void Playlist::addMusic(Playlist &playlist) {
+    for (int i = 0; i < playlist.size(); ++i) {
+        addMusic(playlist[i]);
+    }
+}
+
 void Playlist::setPlaylistName(const QString &name) {
     m_playlistName = name;
 }
@@ -51,6 +60,13 @@ void Playlist::addToMediaPlaylist() {
 }
 
 void Playlist::clearMusic(int pos) {
+    if (pos == 0) {
+        m_musicPlaylist.pop_front();
+        return;
+    } else if (pos == size() - 1) {
+        m_musicPlaylist.pop_back();
+        return;
+    }
     int i = 0;
     for(auto it = m_musicPlaylist.begin(); it != m_musicPlaylist.end();){
         if(i == pos){
@@ -103,3 +119,13 @@ size_t Playlist::size() const {
     return m_musicPlaylist.size();
 }
 
+void Playlist::shuffle() {
+    m_unshuff = m_musicPlaylist;
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(m_musicPlaylist.begin(), m_musicPlaylist.end(), g);
+}
+
+void Playlist::unshuffle() {
+    m_musicPlaylist = m_unshuff;
+}

@@ -29,6 +29,9 @@ public slots:
     void setPlaylist(const Playlist &playlist);
     static QMediaPlaylist *playlist();
 //    static QMediaPlaylist *getInstance();
+    void next();
+    void previous();
+
 private slots:
 
     void on_statusPlay_valueChanged(int value);

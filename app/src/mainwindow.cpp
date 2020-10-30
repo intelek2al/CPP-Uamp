@@ -187,12 +187,14 @@ void MainWindow::on_playButton_clicked()
 
 void MainWindow::on_pauseButton_clicked()
 {
-    m_player->setPause();
+    m_player->previous();
+//    m_player->setPause();
 }
 
 void MainWindow::on_stopButton_clicked()
 {
-    m_player->setStop();
+    m_player->next();
+//    m_player->setStop();
 }
 
 void MainWindow::on_statusPlay_valueChanged(int value)

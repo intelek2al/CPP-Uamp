@@ -51,26 +51,26 @@ void SoundPlayer::setSound(int index) {
 }
 
 void SoundPlayer::stateCheck(QMediaPlayer::State state) {
-    if(state == QMediaPlayer::PlayingState) {
-        ui->playButton->setEnabled(false);
-        ui->pauseButton->setEnabled(true);
-        ui->stopButton->setEnabled(true);
-    }
-    else if(state == QMediaPlayer::PausedState) {
-        ui->playButton->setEnabled(true);
-        ui->pauseButton->setEnabled(false);
-        ui->stopButton->setEnabled(true);
-    }
-    else if(state == QMediaPlayer::StoppedState) {
-        ui->playButton->setEnabled(true);
-        ui->pauseButton->setEnabled(false);
-        ui->stopButton->setEnabled(false);
-        ui->labelTime->setText("00:00:00");
-        ui->statusPlay->setValue(0);
-        ui->labelSong->setText("");
-        ui->labelArtist->setText("");
-        ui->statusPlay->setEnabled(false);
-    }
+//    if(state == QMediaPlayer::PlayingState) {
+//        ui->playButton->setEnabled(false);
+//        ui->pauseButton->setEnabled(true);
+//        ui->stopButton->setEnabled(true);
+//    }
+//    else if(state == QMediaPlayer::PausedState) {
+//        ui->playButton->setEnabled(true);
+//        ui->pauseButton->setEnabled(false);
+//        ui->stopButton->setEnabled(true);
+//    }
+//    else if(state == QMediaPlayer::StoppedState) {
+//        ui->playButton->setEnabled(true);
+//        ui->pauseButton->setEnabled(false);
+//        ui->stopButton->setEnabled(false);
+//        ui->labelTime->setText("00:00:00");
+//        ui->statusPlay->setValue(0);
+//        ui->labelSong->setText("");
+//        ui->labelArtist->setText("");
+//        ui->statusPlay->setEnabled(false);
+//    }
 }
 #include <iostream>
 void SoundPlayer::setPlay()
@@ -130,4 +130,25 @@ QMediaPlaylist *SoundPlayer::playlist() {
 void SoundPlayer::setPlaylist(const Playlist &playlist) {
     m_list.setPlaylist(playlist);
     isPlaylistExist = true;
+}
+
+void SoundPlayer::next() {
+    m_list.next();
+    setPlay();
+    auto test = m_list.upNext();
+    std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
+    for (int i = 0; i < test.size(); i++) {
+        std::cout << test[i].getStr().toStdString() << std::endl;
+    }
+}
+
+
+void SoundPlayer::previous() {
+    m_list.previous();
+    setPlay();
+    auto test = m_list.upNext();
+    std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
+    for (int i = 0; i < test.size(); i++) {
+        std::cout << test[i].getStr().toStdString() << std::endl;
+    }
 }

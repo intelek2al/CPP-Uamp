@@ -14,10 +14,13 @@ public:
     Playlist(QVector<QUrl> urls, const QString& name);
     void addMusic(const QUrl& url);
     void addMusic(const Music& music);
+    void addMusic(Playlist& playlist);
     void addFrontMusic(const QUrl& url);
     void addFrontMusic(const Music& music);
     void setPlaylistName(const QString& name);
     QString playlistName() const;
+    void shuffle();
+    void unshuffle();
     Music getMusic(int pos);
     bool empty() const;
     void addToMediaPlaylist();
@@ -30,6 +33,7 @@ public:
 private:
     QString m_playlistName;
     std::deque<Music> m_musicPlaylist;
+    std::deque<Music> m_unshuff;
 };
 
 #endif // PLAYLIST_H
