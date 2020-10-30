@@ -73,9 +73,12 @@ private slots:
 
     void on_actionAdd_to_Library_triggered();  // cmd + O
 
+    void on_actionDelete_from_Library_triggered();  // delete song from library
+
 
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);
+    void deleteSong(const QModelIndex &);
 
 private:
     void readSettings();

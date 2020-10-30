@@ -24,8 +24,8 @@ class MusicTableModel : public QAbstractTableModel
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 //
-    bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
-    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
+//    bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
+//    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
@@ -34,6 +34,7 @@ class MusicTableModel : public QAbstractTableModel
     void music_list_add(QVector<QVector<QString>> params);
     void music_list_add(const QVector<Music> &params);
     Music rowData(const QModelIndex &index);
+
 
 signals:
     void editCompleted(const QString &);
@@ -44,7 +45,8 @@ public slots:
 private:
     QWidget *m_parent;
 
-    QVector<QString> listHeaders = {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
+    QVector<QString> listHeaders = {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment",
+                                    "Name","Path"};
 //    QHash<int, QByteArray> m_roleNames;
     QVector<Music>& m_media_library;
 };

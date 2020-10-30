@@ -10,7 +10,12 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui(new Ui::DialogInfo)
 {
     ui->setupUi(this);
+
     m_tagsInfo = songInfo;
+
+    qInfo(logInfo()) << "DialogInfo()";
+    qDebug(logDebug()) << "m_tagsInfo.m_name " << m_tagsInfo.m_name;
+    qDebug(logDebug()) << "m_tagsInfo.m_time " << m_tagsInfo.m_time;
 
     ui->line_title->setText(songInfo.m_title);
     ui->line_artist->setText(songInfo.m_artist);
@@ -24,7 +29,7 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui->artisti_large->setText(songInfo.m_artist);
     connect(ui->coverInfo, &ClickedLabel::doubleClicked, this, &DialogInfo::coverInfoDoubleclicked);
     load_cover();
-    qDebug(logDebug()) << "DialogInfo constuctor 4";
+//    qDebug(logDebug()) << "DialogInfo constuctor 4";
 }
 
 
@@ -103,8 +108,12 @@ void DialogInfo::accepted() {
 }
 
 Music DialogInfo::get_tag_changes(Music &music_tags) {
-    music_tags.m_name = music_tags.m_name;
-    music_tags.m_time = music_tags.m_time;
+
+    qDebug(logDebug()) << "music_tags.m_name " << music_tags.m_name;
+    qDebug(logDebug()) << "music_tags.m_time " << music_tags.m_time;
+
+    music_tags.m_name = m_tagsInfo.m_name;
+    music_tags.m_time = m_tagsInfo.m_time;
 
     music_tags.m_title = ui->line_title->text();
     music_tags.m_artist = ui->line_artist->text();
@@ -117,6 +126,8 @@ Music DialogInfo::get_tag_changes(Music &music_tags) {
     music_tags.m_comment = ui->line_comments->text();
 
     music_tags.m_path = m_tagsInfo.m_path;
+
+    qInfo(logInfo()) << "music_tags " << music_tags.getStr();
     return Music();
 }
 

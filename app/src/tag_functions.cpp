@@ -1,6 +1,7 @@
 #include <regex>
 #include <QImage>
 #include <mp4/mp4file.h>
+#include <QTime>
 #include "tag_functions.h"
 #include "loggingcategories.h"
 #include "music.h"
@@ -164,9 +165,14 @@ Music TagFunctions::read_tags(char *file_name, char *file_path) {
             TagLib::AudioProperties *properties = f.audioProperties();
             int seconds = properties->length() % 60;
             int minutes = (properties->length() - seconds) / 60;
+            int hours = (properties->length() - minutes) / 60;
+//            QTime time(hours, minutes, seconds);
+            QTime time(hours, minutes, seconds);
 
-            data.m_time =(QString::fromStdString(std::to_string(minutes) +
-                                             ":" + std::to_string(seconds)));
+//            data.m_time =(QString::fromStdString(std::to_string(minutes) +
+//                                             ":" + std::to_string(seconds)));
+            QString str_seconds = seconds < 9 ? "0" + QString::number(time.second()) : QString::number(time.second());
+            data.m_time = QString::number(time.minute()) + ":" + str_seconds;
             /*
             cout << "-- AUDIO --" << endl;
             cout << "bitrate     - " << properties->bitrate() << endl;
