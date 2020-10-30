@@ -17,7 +17,6 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     qDebug(logDebug()) << "m_tagsInfo.m_name " << m_tagsInfo.m_name;
     qDebug(logDebug()) << "m_tagsInfo.m_time " << m_tagsInfo.m_time;
 
-
     ui->line_title->setText(songInfo.m_title);
     ui->line_artist->setText(songInfo.m_artist);
     ui->line_album->setText(songInfo.m_album);

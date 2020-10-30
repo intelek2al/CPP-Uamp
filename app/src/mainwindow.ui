@@ -764,6 +764,9 @@ color: rgb(132, 130, 133);</string>
    <property name="text">
     <string>Delete from Library</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+D</string>
+   </property>
   </action>
   <action name="actionShow_Lyrics">
    <property name="text">
