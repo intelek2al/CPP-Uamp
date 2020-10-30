@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
 set(SOURCES mainwindow.cpp
-#        sound_tags.cpp
         musictablemodel.cpp
         tag_functions.cpp
         tableviewer.cpp
@@ -18,10 +17,12 @@ set(SOURCES mainwindow.cpp
         music.cpp
         playlist.cpp
         playerplaylist.cpp
+        starrating.cpp
+        stardelegate.cpp
+        stareditor.cpp
         )
 
 set(HEADERS mainwindow.h
-#        sound_tags.h
         tag_functions.h
         musictablemodel.h
         tableviewer.h
@@ -38,9 +39,12 @@ set(HEADERS mainwindow.h
         music.h
         playlist.h
         playerplaylist.h
+        starrating.h
+        stardelegate.h
+        stareditor.h
         )
 
-set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui)
+set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui )
 
 link_directories(../../build/3dparty/taglib/)
 

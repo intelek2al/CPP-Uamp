@@ -5,6 +5,7 @@
 #include "loggingcategories.h"
 #include "dialogpreferences.h"
 #include "dialoginfo.h"
+#include "stardelegate.h"
 #include <QAbstractItemView>
 #include <QItemSelectionModel>
 
@@ -34,6 +35,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_selection_model = new QItemSelectionModel(m_tableModel);
     ui->mainMusicTable->setModel(m_tableModel);
     ui->mainMusicTable->setSelectionModel(m_selection_model);
+
+
+
+  ui->mainMusicTable->setItemDelegate(new StarDelegate);
+  ui->mainMusicTable->setEditTriggers(QAbstractItemView::DoubleClicked
+                                  | QAbstractItemView::SelectedClicked);
+  ui->mainMusicTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
 
