@@ -55,8 +55,8 @@ void MusicTableModel::saveTags(const QModelIndex &index, const Music &new_tags) 
     for (int i = 0; i < 9; ++i) {
         QModelIndex temp = index.sibling(index.row(), i);
         setData(temp, new_tags[i], Qt::EditRole);
-        qInfo(logInfo()) << "|-------index row  = " << temp.row();
-        qInfo(logInfo()) << "|-------index col  = " << temp.column();
+//        qInfo(logInfo()) << "|-------index row  = " << temp.row();
+//        qInfo(logInfo()) << "|-------index col  = " << temp.column();
     }
 }
 

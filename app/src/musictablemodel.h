@@ -44,7 +44,8 @@ public slots:
 private:
     QWidget *m_parent;
 
-    QVector<QString> listHeaders = {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
+    QVector<QString> listHeaders = {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment",
+                                    "Name","Path"};
 //    QHash<int, QByteArray> m_roleNames;
     QVector<Music>& m_media_library;
 };

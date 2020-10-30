@@ -56,7 +56,7 @@ void MediaLibrary::add_dir(const QString &dir_name) {
         add_file(list.at(i).filePath());
     }
 
-    qInfo(logInfo()) << "m_media_list size =" << m_media_list.size();
+//    qInfo(logInfo()) << "m_media_list size =" << m_media_list.size();
 }
 
 void MediaLibrary::add_file(const QString &file_name) {

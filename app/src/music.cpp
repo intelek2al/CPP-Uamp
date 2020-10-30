@@ -215,7 +215,7 @@ QString Music::operator[](int i) const {
 
 QString &Music::operator[](int i) {
     switch (i) {
-        case 0: return m_name;
+        case 0: return m_title;
         case 1: return m_time;
         case 2: return m_artist;
         case 3: return m_rate;
@@ -277,7 +277,7 @@ bool Music::empty() const {
 QString Music::getStr() const {
 
 
-    QString temp = "name =" + m_name + "  title =" + m_title +
+    QString temp = "name =" + m_name + "  time ="  + m_time + " title =" + m_title +
             " path =" + m_path;
     return temp;
 }

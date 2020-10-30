@@ -278,7 +278,7 @@ void MainWindow::on_actionInfo_triggered()
 
     Music current = m_library->data()[index.front().row()];
 
-    qInfo (logInfo()) << "current Music = " << current.getStr();
+    qInfo (logInfo()) << "   !!!!!current Music = " << current.getStr();
 
     DialogInfo songInfo = DialogInfo(current, 0);
 //  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
@@ -288,6 +288,9 @@ void MainWindow::on_actionInfo_triggered()
       qInfo(logInfo()) << "ok DialogInfo";
 
       songInfo.get_tag_changes(new_song_info);  // get settings from QDialog
+
+      qInfo (logInfo()) << "    !!!!!new_song_info Music = " << new_song_info.getStr();
+
       if (!(current == new_song_info)) {
           // save new tags;
           if (!(TagFunctions::modify_tags(new_song_info))) {
