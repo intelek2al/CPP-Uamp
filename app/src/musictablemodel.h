@@ -11,7 +11,7 @@ class MusicTableModel : public QAbstractTableModel
 {
     Q_OBJECT
  public:
-    explicit MusicTableModel(QWidget *parent = nullptr);
+    explicit MusicTableModel(QVector<Music>& _m_media_library, QWidget *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -44,14 +44,9 @@ public slots:
 private:
     QWidget *m_parent;
 
-    QVector<QString> listHeaders = {"Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
+    QVector<QString> listHeaders = {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
 //    QHash<int, QByteArray> m_roleNames;
-    QVector<Music> music_list;
-
-//    /* QVector<QVector<QString>> music_list/*{{"bbb", "BBB", "R&B", "bbb", "BBB", "R&B"},
-// *                                          {"ccasd", "CCC", "Rock", "ccc", "CCC", "Rock"},
-// *                                          {"aaa", "AAA", "Rock", "aaa", "AAA", "Rock"},
-// *                                          {"Killer", "Queen", "Jass", "aaa", "AAA", "Rock"}};*/
+    QVector<Music>& m_media_library;
 };
 
 #endif // MUSICTABLEMODEL_H

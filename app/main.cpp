@@ -55,7 +55,8 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
             out << QString(" Debug: %1 (%2:%3, %4)\n").arg(localMsg.constData()).arg(file).arg(context.line).arg(function);
             break;
         case QtInfoMsg:
-            out << QString(" Info: %1 (%2:%3, %4)\n").arg(localMsg.constData()).arg(file).arg(context.line).arg(function);
+//            out << QString(" Info: %1 (%2:%3, %4)\n").arg(localMsg.constData()).arg(file).arg(context.line).arg(function);
+            out << QString(" Info: %1)\n").arg(localMsg.constData());
             break;
         case QtWarningMsg:
             out << QString(" Warning: %1 (%2:%3, %4)\n").arg(localMsg.constData()).arg(file).arg(context.line).arg(function);

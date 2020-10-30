@@ -21,11 +21,13 @@ public:
     Music& operator=(const Music &m);
     QString &operator[](int i);
     QString operator[](int i) const;
-    QVector<QString> getMusicInfo() const;
+    QString getStr() const;
+
+//    QVector<QString> getMusicInfo() const;
     bool operator==(const Music &m) const;
     bool empty() const;
 
-    //     "Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
+//    {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
     QString m_name;
     QString m_time;
     QString m_title;
@@ -41,5 +43,7 @@ public:
     quint8 m_count;
     QUrl m_url;
 };
+
+QString& operator<<(QString& stream, const Music &m);
 
 #endif

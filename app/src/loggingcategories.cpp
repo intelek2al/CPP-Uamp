@@ -4,7 +4,7 @@ Q_LOGGING_CATEGORY(logDebug,    "Debug")
 Q_LOGGING_CATEGORY(logInfo,     "Info")
 Q_LOGGING_CATEGORY(logWarning,  "Warning")
 Q_LOGGING_CATEGORY(logCritical, "Critical")
-Q_LOGGING_CATEGORY(log_text_window, "text_window", QtDebugMsg)
+Q_LOGGING_CATEGORY(log_short_Info, "short_Info")
 
 //#define logDebug    QMessageLogger(__FILE__,__LINE__, QT_MESSAGELOG_FUNC).debug
 //#define logInfo     QMessageLogger(__FILE__,__LINE__, QT_MESSAGELOG_FUNC).info

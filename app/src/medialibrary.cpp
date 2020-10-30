@@ -108,4 +108,3 @@ Playlist MediaLibrary::dataPlaylist() const {
     return list;
 }
 
-

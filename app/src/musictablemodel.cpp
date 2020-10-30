@@ -4,14 +4,14 @@
 #include "loggingcategories.h"
 //#include "music.h"
 
-MusicTableModel::MusicTableModel(QWidget *parent)
-        : m_parent(parent)
+MusicTableModel::MusicTableModel(QVector<Music>& _m_media_library, QWidget *parent)
+        : m_parent(parent), m_media_library(_m_media_library)
 {
 }
 
 int MusicTableModel::rowCount(const QModelIndex &) const
 {
-    return music_list.size();
+    return m_media_library.size();
 }
 
 int MusicTableModel::columnCount(const QModelIndex &) const {
@@ -23,10 +23,10 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole)
     {
-        if (!music_list.empty())
+        if (!m_media_library.empty())
         {
-            if (!music_list[index.row()][index.column()].isEmpty())
-                return music_list[index.row()][index.column()];
+            if (!m_media_library[index.row()][index.column()].isEmpty())
+                return m_media_library[index.row()][index.column()];
         }
     }
 //    return QVariant();
@@ -35,7 +35,7 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
 
 bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
-        music_list[index.row()][index.column()] = value.toString();
+        m_media_library[index.row()][index.column()] = value.toString();
         emit dataChanged(index, index);
 
 //        qDebug(logDebug()) << "new data value before" << value.toString();
@@ -50,13 +50,13 @@ bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, i
 void MusicTableModel::saveTags(const QModelIndex &index, const Music &new_tags) {
     qDebug(logDebug()) << "saveTags" << new_tags.m_name;
 //        0       1      2           3         4        5       6       7         8         9       10
-//     "Name", "Time", "Title", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Path"};
+//      {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
 
-    for (int i = 2; i < 10; ++i) {
+    for (int i = 0; i < 9; ++i) {
         QModelIndex temp = index.sibling(index.row(), i);
         setData(temp, new_tags[i], Qt::EditRole);
-//        qDebug(logDebug()) << "|-------index row  = " << temp.row();
-//        qDebug(logDebug()) << "|-------index col  = " << temp.column();
+        qInfo(logInfo()) << "|-------index row  = " << temp.row();
+        qInfo(logInfo()) << "|-------index col  = " << temp.column();
     }
 }
 
@@ -81,10 +81,10 @@ void MusicTableModel::sort(int column, Qt::SortOrder order)
     beginResetModel();
     if (order == Qt::AscendingOrder)
     {
-        std::sort(music_list.begin(), music_list.end(), [=](auto a, auto b) { return a[column] < b[column]; });
+        std::sort(m_media_library.begin(), m_media_library.end(), [=](auto a, auto b) { return a[column] < b[column]; });
     }
     else
-        std::sort(music_list.begin(), music_list.end(), [=](auto a, auto b) { return a[column] > b[column]; });
+        std::sort(m_media_library.begin(), m_media_library.end(), [=](auto a, auto b) { return a[column] > b[column]; });
     endResetModel();
     // if (m_parent)
     //     m_parent->update();
@@ -95,7 +95,7 @@ void MusicTableModel::music_list_add(QVector<QVector<QString>> params)
     qDebug(logDebug()) <<  "music_list_add";
     auto iter = params.begin();
 
-    for (auto &el : music_list) {
+    for (auto &el : m_media_library) {
         if (iter == params.end())
             break;
         el = std::move(*(iter++));
@@ -104,7 +104,7 @@ void MusicTableModel::music_list_add(QVector<QVector<QString>> params)
 
 void MusicTableModel::music_list_add(const QVector<Music> &params) {
     qDebug(logDebug()) <<  "music_list_add Qvector<music>";
-    music_list = std::move(params);
+    m_media_library = std::move(params);
 }
 
 Qt::ItemFlags MusicTableModel::flags(const QModelIndex &index) const {

@@ -31,13 +31,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_library = new MediaLibrary();
 
 
-    m_tableModel = new MusicTableModel(ui->mainMusicTable);
+    m_tableModel = new MusicTableModel(m_library->data(), ui->mainMusicTable);
 
     m_selection_model = new QItemSelectionModel(m_tableModel);
     ui->mainMusicTable->setModel(m_tableModel);
     ui->mainMusicTable->setSelectionModel(m_selection_model);
 
-//    ui->mainMusicTable->setIe
+    connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
+
 
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
@@ -266,18 +267,18 @@ void MainWindow::on_actionPreferences_triggered()
 void MainWindow::on_actionInfo_triggered()
 {
   qInfo(logInfo()) << "on_actionInfo_triggered";
-//    QAbstractItemView::selectionМodel();
-//    QItemSelectionModel::selectedindexes ();
 
 //      Music current = m_library->data()[m_table_index.row()];
     auto index = m_selection_model->selection().indexes();
 
-    if (!index.front().isValid() && !(m_library->data().empty())) {
+    if (!index.front().isValid() && (!(m_library->data().empty()))) {
         qDebug(logDebug()) << "on_actionInfo_triggered return";
         return;
     }
 
     Music current = m_library->data()[index.front().row()];
+
+    qInfo (logInfo()) << "current Music = " << current.getStr();
 
     DialogInfo songInfo = DialogInfo(current, 0);
 //  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
@@ -315,10 +316,17 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 //    m_tableModel = new MusicTableModel(ui->mainMusicTable);
 
     m_tableModel->music_list_add(m_library->data());
-    ui->mainMusicTable->setModel(m_tableModel);
+//    ui->mainMusicTable->setModel(m_tableModel);
+
+//    emit dataChanged(index, index); !!!
+
     ui->mainMusicTable->viewport()->update();
+
+    ui->mainMusicTable->update();
+//    ui->mainMusicTable->
+
     m_player->setPlaylist(m_library->dataPlaylist());
-    connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
+
 }
 
 void MainWindow::loadCoverImage(const QModelIndex &index) {
