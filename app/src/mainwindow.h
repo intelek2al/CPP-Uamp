@@ -10,6 +10,7 @@
 #include "searcher.h"
 #include "settings.h"
 #include "medialibrary.h"
+#include "stardelegate.h"
 
 #include <stdexcept>
 #include <QMainWindow>
@@ -100,6 +101,8 @@ private:
 
     QModelIndex m_table_index {};
     Music new_song_info;
+
+    StarDelegate *m_star_delegate;
 
 //    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);

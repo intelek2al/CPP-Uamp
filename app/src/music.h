@@ -32,7 +32,8 @@ public:
     QString m_time;
     QString m_title;
     QString m_artist;
-    QString m_rate;
+    QString m_rate = "1";
+    int m_rate_int;
     QString m_genre;
     QString m_album;
     QString m_year;

@@ -3,7 +3,7 @@
 
 #include "starrating.h"
 
-const int PaintingScaleFactor = 20;
+const int PaintingScaleFactor = 15;
 
 StarRating::StarRating(int starCount, int maxStarCount)
     : myStarCount(starCount),

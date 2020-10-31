@@ -33,15 +33,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_tableModel = new MusicTableModel(m_library->data(), ui->mainMusicTable);
 
     m_selection_model = new QItemSelectionModel(m_tableModel);
+
+//    m_star_delegate = new StarDelegate(ui->mainMusicTable);
+
+
     ui->mainMusicTable->setModel(m_tableModel);
-    ui->mainMusicTable->setSelectionModel(m_selection_model);
 
+//    ui->mainMusicTable->setItemDelegateForColumn(3, m_star_delegate);
+    ui->mainMusicTable->setItemDelegateForColumn(3, new StarDelegate(ui->mainMusicTable));
 
-
-  ui->mainMusicTable->setItemDelegate(new StarDelegate);
-  ui->mainMusicTable->setEditTriggers(QAbstractItemView::DoubleClicked
+    ui->mainMusicTable->setEditTriggers(QAbstractItemView::DoubleClicked
                                   | QAbstractItemView::SelectedClicked);
-  ui->mainMusicTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    ui->mainMusicTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+  ui->mainMusicTable->setSelectionModel(m_selection_model);
 
     connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
 

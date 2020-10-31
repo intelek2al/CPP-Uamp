@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "iostream"
 #include "loggingcategories.h"
+#include "starrating.h"
 //#include "music.h"
 
 MusicTableModel::MusicTableModel(QVector<Music>& _m_media_library, QWidget *parent)
@@ -26,6 +27,11 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
         if (!m_media_library.empty())
         {
             if (!m_media_library[index.row()][index.column()].isEmpty())
+              if (index.column() == 3) {
+                int rate = m_media_library[index.row()][index.column()].toInt();
+                return rate;
+//                this->setData(index, QVariant::fromValue(StarRating(m_media_library[index.row()].m_rate)));
+              }
                 return m_media_library[index.row()][index.column()];
         }
     }
