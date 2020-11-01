@@ -8,13 +8,13 @@
 void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
 {
-  qDebug(logDebug()) << "StarDelegate::paint";
-  qDebug(logDebug()) << "index collumn = " << index.column();
-  qDebug(logDebug()) << "index row = " << index.row();
-  qDebug(logDebug()) << "index data = " << index.data();
+//  qDebug(logDebug()) << "StarDelegate::paint";
+//  qDebug(logDebug()) << "index collumn = " << index.column();
+//  qDebug(logDebug()) << "index row = " << index.row();
+//  qDebug(logDebug()) << "index data = " << index.data();
 
 //  if (index.data().canConvert<StarRating>()) {
-    qDebug(logDebug()) << "StarDelegate::paint 2";
+//    qDebug(logDebug()) << "StarDelegate::paint 2";
 
 //    StarRating starRating = qvariant_cast<StarRating>(index.data());
     StarRating starRating;
@@ -79,7 +79,6 @@ void StarDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
     QStyledItemDelegate::setModelData(editor, model, index);
   }
 }
-
 QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option,
                              const QModelIndex &index) const
 {

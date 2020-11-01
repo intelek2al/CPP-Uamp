@@ -5,13 +5,13 @@
 #include <QAbstractItemModel>
 #include <QVector>
 #include "music.h"
-
+#include "medialibrary.h"
 
 class MusicTableModel : public QAbstractTableModel
 {
     Q_OBJECT
  public:
-    explicit MusicTableModel(QVector<Music>& _m_media_library, QWidget *parent = nullptr);
+    explicit MusicTableModel(MediaLibrary& _m_library, QWidget *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -29,13 +29,7 @@ class MusicTableModel : public QAbstractTableModel
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
-
-    void music_list_add(QVector<QVector<QString>> params);
-    void music_list_add(const QVector<Music> &params);
-    Music rowData(const QModelIndex &index);
-
-
+//    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 signals:
     void editCompleted(const QString &);
 
@@ -47,8 +41,7 @@ private:
 
     QVector<QString> listHeaders = {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment",
                                     "Name","Path"};
-//    QHash<int, QByteArray> m_roleNames;
-    QVector<Music>& m_media_library;
+    MediaLibrary& m_class_library;
 };
 
 #endif // MUSICTABLEMODEL_H
@@ -57,6 +50,8 @@ private:
 
 ///  for sql
 
+//    QVector<Music>& m_media_library;
+//MediaLibrary& m_class_library;
 /*
 void showTable()
 {

@@ -8,9 +8,10 @@
 
 class MediaLibrary {
 
-public:
-    MediaLibrary();
+friend class MusicTableModel;
 
+ public:
+    MediaLibrary();
     ~MediaLibrary();
 
     bool add_media(const QString& media_path);
@@ -21,9 +22,7 @@ public:
     Playlist dataPlaylist() const;
 
 private:
-
     bool load_media_base();
-
     void add_file(const QString& file_name);
     void add_dir(const QString& dir_name);
      QVector<Music> m_media_list;

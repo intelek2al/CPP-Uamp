@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_player = new SoundPlayer(ui);
     m_library = new MediaLibrary();
 
-    m_tableModel = new MusicTableModel(m_library->data(), ui->mainMusicTable);
+    m_tableModel = new MusicTableModel(*m_library,  ui->mainMusicTable);
 
     m_selection_model = new QItemSelectionModel(m_tableModel);
 
@@ -112,7 +112,6 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
     QAction action_del_from_library("Delete from Library", this);
     connect(&action_del_from_library, &QAction::triggered, this, &MainWindow::on_actionDelete_from_Library_triggered);
     contextMenu.addAction(&action_del_from_library);
-
 
     contextMenu.exec(mapToGlobal(point));
 }
@@ -331,11 +330,10 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 {
     QString f_name = QFileDialog::getExistingDirectory(this, "Add media", "");
     m_library->add_media(f_name);
+
     qDebug(logDebug()) << "m_library size=" << m_library->data().size();
     emit m_tableModel->layoutChanged();
     emit m_tableModel->sort(0, Qt::AscendingOrder);
-//    m_tableModel->music_list_add(m_library->data());
-//    ui->mainMusicTable->setModel(m_tableModel);
 
     m_player->setPlaylist(m_library->dataPlaylist());
 }

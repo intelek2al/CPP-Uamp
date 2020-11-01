@@ -5,14 +5,14 @@
 #include "starrating.h"
 //#include "music.h"
 
-MusicTableModel::MusicTableModel(QVector<Music>& _m_media_library, QWidget *parent)
-        : m_parent(parent), m_media_library(_m_media_library)
+MusicTableModel::MusicTableModel(MediaLibrary& _m_library, QWidget *parent)
+        : m_class_library(_m_library), m_parent(parent)
 {
 }
 
 int MusicTableModel::rowCount(const QModelIndex &) const
 {
-    return m_media_library.size();
+    return m_class_library.m_media_list.size();
 }
 
 int MusicTableModel::columnCount(const QModelIndex &) const {
@@ -24,15 +24,15 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole)
     {
-        if (!m_media_library.empty())
+        if (!m_class_library.m_media_list.empty())
         {
-            if (!m_media_library[index.row()][index.column()].isEmpty())
+            if (!m_class_library.m_media_list[index.row()][index.column()].isEmpty())
               if (index.column() == 3) {
-                int rate = m_media_library[index.row()][index.column()].toInt();
+                int rate = m_class_library.m_media_list[index.row()][index.column()].toInt();
                 return rate;
 //                this->setData(index, QVariant::fromValue(StarRating(m_media_library[index.row()].m_rate)));
               }
-                return m_media_library[index.row()][index.column()];
+                return m_class_library.m_media_list[index.row()][index.column()];
         }
     }
 //    return QVariant();
@@ -41,7 +41,7 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
 
 bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
-        m_media_library[index.row()][index.column()] = value.toString();
+      m_class_library.m_media_list[index.row()][index.column()] = value.toString();
         emit dataChanged(index, index);
 
 //        qDebug(logDebug()) << "new data value before" << value.toString();
@@ -79,39 +79,6 @@ QVariant MusicTableModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
-void MusicTableModel::sort(int column, Qt::SortOrder order)
-{
-    beginResetModel();
-    if (order == Qt::AscendingOrder)
-    {
-        std::sort(m_media_library.begin(), m_media_library.end(), [=](auto a, auto b) { return a[column] < b[column]; });
-    }
-    else
-        std::sort(m_media_library.begin(), m_media_library.end(), [=](auto a, auto b) { return a[column] > b[column]; });
-    endResetModel();
-    // if (m_parent)
-    //     m_parent->update();
-}
-
-void MusicTableModel::music_list_add(QVector<QVector<QString>> params)
-{
-    qDebug(logDebug()) <<  "music_list_add";
-    auto iter = params.begin();
-
-    for (auto &el : m_media_library) {
-        if (iter == params.end())
-            break;
-        el = std::move(*(iter++));
-    }
-}
-
-void MusicTableModel::music_list_add(const QVector<Music> &params) {
-    qDebug(logDebug()) <<  "music_list_add Qvector<music>";
-    layoutChanged();
-//    m_media_library = std::move(params);
-
-}
-
 Qt::ItemFlags MusicTableModel::flags(const QModelIndex &index) const {
     if (index.isValid())
 //        return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
@@ -123,7 +90,7 @@ bool MusicTableModel::insertRows(int row, int count, const QModelIndex &parent) 
         return false;
 
     beginInsertRows(parent, row, row + count - 1);
-    m_media_library[row] = Music();
+  m_class_library.m_media_list[row] = Music();
     endInsertRows();
     layoutChanged();
     return true;
@@ -134,25 +101,51 @@ bool MusicTableModel::removeRows(int row, int count, const QModelIndex &parent) 
         return false;
 
     beginRemoveRows(parent, row, row + count - 1);
-    m_media_library.remove(row);
+    qDebug(logDebug()) << "m_class_library.m_media_list size =" << m_class_library.m_media_list.size();
+    m_class_library.m_media_list.remove(row);
+
+    qDebug(logDebug()) << "m_class_library.m_media_list size after delrow =" << m_class_library.m_media_list.size();
     endRemoveRows();
     layoutChanged();
     return true;
 }
 
+//void MusicTableModel::sort(int column, Qt::SortOrder order)
+//{
+//    beginResetModel();
+//    if (order == Qt::AscendingOrder)
+//    {
+//        std::sort(m_media_library.begin(), m_media_library.end(), [=](auto a, auto b) { return a[column] < b[column]; });
+//    }
+//    else
+//        std::sort(m_media_library.begin(), m_media_library.end(), [=](auto a, auto b) { return a[column] > b[column]; });
+//    endResetModel();
+//    // if (m_parent)
+//    //     m_parent->update();
+//}
+
+//
 
 
-// QModelIndex index(int row, int column, const QModelIndex &parent)
-// {
-//     return createIndex(row, column, /*&(music_list[index.row()].title)*/ "hello");
-// }
 
-// QModelIndex MusicTableModel::parent(const QModelIndex &child) const
-// {
-//     return QModelIndex();
-// }
+//void MusicTableModel::music_list_add(const QVector<Music> &params) {
+//    qDebug(logDebug()) <<  "music_list_add Qvector<music>";
+//    layoutChanged();
+////    m_media_library = std::move(params);
+//
+//}
 
-// QHash<int, QByteArray> MusicTableModel::roleNames() const
-// {
-//     return m_roleNames;
-// }
+
+
+//void MusicTableModel::music_list_add(QVector<QVector<QString>> params)
+//{
+//    qDebug(logDebug()) <<  "music_list_add";
+//    auto iter = params.begin();
+//
+//    for (auto &el : m_media_library) {
+//        if (iter == params.end())
+//            break;
+//        el = std::move(*(iter++));
+//    }
+//}
+

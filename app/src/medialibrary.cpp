@@ -1,6 +1,5 @@
 #include "medialibrary.h"
 #include "loggingcategories.h"
-//#include "sound_tags.h"
 #include "tag_functions.h"
 #include <QDir>
 
@@ -65,14 +64,10 @@ void MediaLibrary::add_file(const QString &file_name) {
     if (!fileInfo.isReadable()) {
         qWarning(logWarning()) << fileInfo.fileName() << " not readable";
     }
-
-//    QVector<QString> tmp;
     Music tmp;
-
     try
     {
 //            Sound_tags current;
-
         tmp = TagFunctions::read_tags(toChar(QString(fileInfo.fileName())),
                                       toChar(QString(fileInfo.filePath())));
     }
@@ -85,16 +80,11 @@ void MediaLibrary::add_file(const QString &file_name) {
 }
 
 QVector<Music>& MediaLibrary::data() {
-//    QVector<QVector<QString>> tmp;
-//    for (const auto &media : m_media_list) {
-//        tmp.push_back(media.getMusicInfo());
-//    }
     return m_media_list;
 }
 
 void MediaLibrary::setData(int index, Music _new_music) {
     m_media_list[index] = _new_music;
-
 }
 
 Playlist MediaLibrary::dataPlaylist() const {
