@@ -35,6 +35,8 @@ QWidget *StarDelegate::createEditor(QWidget *parent,
                                     const QStyleOptionViewItem &option,
                                     const QModelIndex &index) const
 {
+  qDebug(logDebug()) << "StarDelegate::createEditor";
+
   if (index.data().canConvert<StarRating>()) {
     StarEditor *editor = new StarEditor(parent);
     connect(editor, &StarEditor::editingFinished,
@@ -54,9 +56,11 @@ void StarDelegate::commitAndCloseEditor()
 void StarDelegate::setEditorData(QWidget *editor,
                                  const QModelIndex &index) const
 {
+  qDebug(logDebug()) << "StarDelegate::setEditorData";
+
   if (index.data().canConvert<StarRating>()) {
 
-    qDebug(logDebug()) << "setEditorData";
+    qDebug(logDebug()) << "StarDelegate::setEditorData if true";
 
     QVariant tmp =  index.data();
     qDebug(logDebug()) << " index.data() =" << index.data();
@@ -72,6 +76,8 @@ void StarDelegate::setEditorData(QWidget *editor,
 void StarDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                 const QModelIndex &index) const
 {
+    qDebug(logDebug()) << "StarDelegate::setModelData";
+
   if (index.data().canConvert<StarRating>()) {
     StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
     model->setData(index, QVariant::fromValue(starEditor->starRating()));
@@ -82,6 +88,7 @@ void StarDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option,
                              const QModelIndex &index) const
 {
+  qDebug(logDebug()) << "StarDelegate::sizeHint";
   if (index.data().canConvert<StarRating>()) {
     StarRating starRating = qvariant_cast<StarRating>(index.data());
     return starRating.sizeHint();

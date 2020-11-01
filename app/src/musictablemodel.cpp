@@ -27,11 +27,11 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
         if (!m_class_library.m_media_list.empty())
         {
             if (!m_class_library.m_media_list[index.row()][index.column()].isEmpty())
-              if (index.column() == 3) {
-                int rate = m_class_library.m_media_list[index.row()][index.column()].toInt();
-                return rate;
-//                this->setData(index, QVariant::fromValue(StarRating(m_media_library[index.row()].m_rate)));
-              }
+//              if (index.column() == 3) {
+//                int rate = m_class_library.m_media_list[index.row()][index.column()].toInt();
+//                return rate;
+////                this->setData(index, QVariant::fromValue(StarRating(m_media_library[index.row()].m_rate)));
+//              }
                 return m_class_library.m_media_list[index.row()][index.column()];
         }
     }
