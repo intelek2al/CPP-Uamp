@@ -3,6 +3,7 @@
 #include "iostream"
 #include "loggingcategories.h"
 #include "starrating.h"
+#include "stardelegate.h"
 //#include "music.h"
 
 MusicTableModel::MusicTableModel(MediaLibrary& _m_library, QWidget *parent)
@@ -27,11 +28,14 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
         if (!m_class_library.m_media_list.empty())
         {
             if (!m_class_library.m_media_list[index.row()][index.column()].isEmpty())
-//              if (index.column() == 3) {
-//                int rate = m_class_library.m_media_list[index.row()][index.column()].toInt();
-//                return rate;
-////                this->setData(index, QVariant::fromValue(StarRating(m_media_library[index.row()].m_rate)));
-//              }
+              if (index.column() == 3) {
+//                  QTableWidgetItem *item3 = new QTableWidgetItem;
+//                  item3->setData((0, QVariant::fromValue(StarRating(m_class_library.m_media_list[index.row()].m_rate.toInt())));
+//                  m_parent->setItem(row, 3, item3);
+//                  setData(0, QVariant::fromValue(StarRating(m_class_library.m_media_list[index.row()].m_rate.toInt())));
+//                int rate =
+                return m_class_library.m_media_list[index.row()][index.column()].toInt();
+              }
                 return m_class_library.m_media_list[index.row()][index.column()];
         }
     }
@@ -39,13 +43,20 @@ QVariant MusicTableModel::data(const QModelIndex &index, int role) const
     return QString();
 }
 
+
+//item3->setData(0,QVariant::fromValue(StarRating(staticData[row].rating)));
+
+
 bool MusicTableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
-      m_class_library.m_media_list[index.row()][index.column()] = value.toString();
+        m_class_library.m_media_list[index.row()][index.column()] = value.toString();
+        if (index.column() == 3) {
+            qDebug(logDebug()) << "new data value rate =" << value.toString();
+        }
+//        setData(0, QVariant::fromValue(StarRating(m_class_library.m_media_list[index.row()].m_rate.toInt())));
         emit dataChanged(index, index);
 
 //        qDebug(logDebug()) << "new data value before" << value.toString();
-
 //        qDebug(logDebug()) << "new data after   save" << music_list[index.row()][index.column()];
 
         return true;
@@ -110,19 +121,22 @@ bool MusicTableModel::removeRows(int row, int count, const QModelIndex &parent) 
     return true;
 }
 
-//void MusicTableModel::sort(int column, Qt::SortOrder order)
-//{
-//    beginResetModel();
-//    if (order == Qt::AscendingOrder)
-//    {
-//        std::sort(m_media_library.begin(), m_media_library.end(), [=](auto a, auto b) { return a[column] < b[column]; });
-//    }
-//    else
-//        std::sort(m_media_library.begin(), m_media_library.end(), [=](auto a, auto b) { return a[column] > b[column]; });
-//    endResetModel();
-//    // if (m_parent)
-//    //     m_parent->update();
-//}
+void MusicTableModel::sort(int column, Qt::SortOrder order)
+{
+    beginResetModel();
+    if (order == Qt::AscendingOrder)
+    {
+        std::sort(m_class_library.m_media_list.begin(), m_class_library.m_media_list.end(),
+                  [=] (auto a, auto b) { return a[column] < b[column]; });
+    }
+    else
+        std::sort(m_class_library.m_media_list.begin(), m_class_library.m_media_list.end(),
+                  [=](auto a, auto b) { return a[column] > b[column]; });
+    endResetModel();
+    emit layoutChanged();
+    // if (m_parent)
+    //     m_parent->update();
+}
 
 //
 

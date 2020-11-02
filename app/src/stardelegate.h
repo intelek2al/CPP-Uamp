@@ -21,7 +21,11 @@ class StarDelegate : public QStyledItemDelegate
   void setModelData(QWidget *editor, QAbstractItemModel *model,
                     const QModelIndex &index) const override;
 
- private slots:
+
+    void updateEditorGeometry(QWidget * editor, const QStyleOptionViewItem & option,
+                             const QModelIndex & index) const;
+
+private slots:
   void commitAndCloseEditor();
 };
 

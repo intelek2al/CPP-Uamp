@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "starrating.h"
+#include "loggingcategories.h"
 
 const int PaintingScaleFactor = 15;
 
@@ -9,6 +10,8 @@ StarRating::StarRating(int starCount, int maxStarCount)
     : myStarCount(starCount),
       myMaxStarCount(maxStarCount)
 {
+    qDebug(logDebug()) << "StarRating::StarRating";
+
   starPolygon << QPointF(1.0, 0.5);
   for (int i = 1; i < 5; ++i)
     starPolygon << QPointF(0.5 + 0.5 * std::cos(0.8 * i * 3.14),
@@ -22,6 +25,7 @@ StarRating::StarRating(int starCount, int maxStarCount)
 void StarRating::paint(QPainter *painter, const QRect &rect,
                        const QPalette &palette, EditMode mode) const
 {
+    qDebug(logDebug()) << "StarRating::paint";
   painter->save();
 
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -47,6 +51,8 @@ void StarRating::paint(QPainter *painter, const QRect &rect,
 
 QSize StarRating::sizeHint() const
 {
+    qDebug(logDebug()) << "StarRating::sizeHint";
+
   return PaintingScaleFactor * QSize(myMaxStarCount, 1);
 }
 

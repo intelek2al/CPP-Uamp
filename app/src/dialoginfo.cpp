@@ -23,6 +23,7 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui->line_genre->setText(songInfo.m_genre);
     ui->line_year->setText(songInfo.m_year);
     ui->line_track->setText(songInfo.m_track);
+    ui->line_raiting->setText(songInfo.m_rate);
     ui->line_comments->setText(songInfo.m_comment);
     ui->line_path->setText(songInfo.m_path);
     ui->title_large->setText(songInfo.m_title);
@@ -114,6 +115,8 @@ Music DialogInfo::get_tag_changes(Music &music_tags) {
 
     music_tags.m_name = m_tagsInfo.m_name;
     music_tags.m_time = m_tagsInfo.m_time;
+
+    music_tags.m_rate = ui->line_raiting->text();
 
     music_tags.m_title = ui->line_title->text();
     music_tags.m_artist = ui->line_artist->text();

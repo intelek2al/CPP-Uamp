@@ -34,16 +34,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     m_selection_model = new QItemSelectionModel(m_tableModel);
 
-//    m_star_delegate = new StarDelegate(ui->mainMusicTable);
-
+    m_star_delegate = new StarDelegate(ui->mainMusicTable);
 
     ui->mainMusicTable->setModel(m_tableModel);
 
-//    ui->mainMusicTable->setItemDelegateForColumn(3, m_star_delegate);
-    ui->mainMusicTable->setItemDelegateForColumn(3, new StarDelegate(ui->mainMusicTable));
+    ui->mainMusicTable->setItemDelegateForColumn(3, m_star_delegate);
 
-    ui->mainMusicTable->setEditTriggers(QAbstractItemView::DoubleClicked
-                                  | QAbstractItemView::SelectedClicked);
+//    ui->mainMusicTable->setItemDelegateForColumn(3, new StarDelegate(ui->mainMusicTable));
+
+    ui->mainMusicTable->setEditTriggers(
+//            QAbstractItemView::DoubleClicked |
+                                  QAbstractItemView::SelectedClicked);
 
     ui->mainMusicTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -68,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 //    m_searcher = new Searcher{ui->search_line, ui->filterBox, &m_music_list};
     ui->statusbar->hide();
     ui->mainMusicTable->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->filterBox, SIGNAL(activated(int)), this, SLOT(on_search_line_editingFinished()));
+//    connect(ui->filterBox, SIGNAL(activated(int)), this, SLOT(on_search_line_editingFinished()));
     // context menu for music table
     connect(ui->mainMusicTable, SIGNAL(customContextMenuRequested(const QPoint &)), this,
             SLOT(onMusicTableContextMenu(const QPoint &)));
