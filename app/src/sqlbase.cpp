@@ -6,20 +6,8 @@
 SqlBase::SqlBase() {
 
     if (!createConnection()) {
-
+      createNewBase();
     }
-    QSqlDatabase dbase = QSqlDatabase::addDatabase("QSQLITE");
-
-    dbase.setDatabaseName("media_db.sqlite");
-    dbase.setUserName("master");
-    dbase.setPassword("12345");
-
-    if (!dbase.open()) {
-        qDebug() << "Что-то пошло не так!";
-//        return -1;
-    }
-//    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-
 }
 
 bool SqlBase::createConnection() {
@@ -33,4 +21,34 @@ bool SqlBase::createConnection() {
         return false;
     }
     return true;
+}
+bool SqlBase::createNewBase() {
+  // Создаем базу
+
+  //    {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
+
+  /* Create SQL statement */
+  QSqlQuery query;
+  QString str = "CREATE TABLE SONGS ("  \
+      "ID INT PRIMARY KEY     NOT NULL auto_increment ," \
+      "Title          TEXT    NOT NULL," \
+//      "Time            INT     NOT NULL," \ !!!!
+      "Artist         TEXT    NOT NULL," \
+      "Rating         TEXT    NOT NULL," \
+      "Genre          TEXT    NOT NULL," \
+      "Album          TEXT    NOT NULL," \
+      "Year           TEXT    NOT NULL," \
+      "Track          TEXT    NOT NULL," \
+      "Comment        TEXT    NOT NULL," \
+      "Name           TEXT    NOT NULL," \
+      "Path           TEXT    NOT NULL);";
+
+  if (!query.exec(str)) {
+    qDebug() << "SQL error: %s\n";
+  }
+  else {
+    qDebug() <<  "Table created successfully\n";
+  }
+
+    return false;
 }

@@ -14,9 +14,10 @@ public:
 private:
 
     bool createConnection();
+    bool createNewBase();
 
 //    QString m_library_name;
-    QSqlDatabase m_media_base
+    QSqlDatabase m_media_base;
 
 };
 
