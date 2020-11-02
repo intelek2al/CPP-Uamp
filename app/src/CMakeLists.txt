@@ -20,6 +20,7 @@ set(SOURCES mainwindow.cpp
         starrating.cpp
         stardelegate.cpp
         stareditor.cpp
+        sqlbase.cpp
         )
 
 set(HEADERS mainwindow.h
@@ -42,6 +43,7 @@ set(HEADERS mainwindow.h
         starrating.h
         stardelegate.h
         stareditor.h
+        sqlbase.h
         )
 
 set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui )
@@ -55,5 +57,6 @@ target_link_libraries(src PRIVATE Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::Widgets
         Qt${QT_VERSION_MAJOR}::Gui
         Qt${QT_VERSION_MAJOR}::Multimedia
+        Qt${QT_VERSION_MAJOR}::Sql
         tag
 )

@@ -18,6 +18,7 @@
 #include <QLabel>
 #include <QStringList>
 #include <QDir>
+//#include <Q
 
 QScopedPointer<QFile>   m_logFile;
 
@@ -33,6 +34,14 @@ int main(int argc, char **argv)
     m_logFile.data()->open(QFile::Append | QFile::Text);
     // Устанавливаем обработчик. To restore the message handler, call qInstallMessageHandler(0).
     qInstallMessageHandler(messageHandler);
+
+//    QSqlDatabase dbase = QSqlDatabase::addDatabase("QSQLITE");
+//    dbase.setDatabaseName("my_db.sqlite");
+//    if (!dbase.open()) {
+//        qDebug() << "Что-то пошло не так!";
+//        return -1;
+//    }
+
 
     MainWindow window;
     window.show();

@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_player = new SoundPlayer(ui);
     m_library = new MediaLibrary();
 
+    m_base = new SqlBase();
+
     m_tableModel = new MusicTableModel(*m_library,  ui->mainMusicTable);
 
     m_selection_model = new QItemSelectionModel(m_tableModel);

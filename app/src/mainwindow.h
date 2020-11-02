@@ -11,6 +11,7 @@
 #include "settings.h"
 #include "medialibrary.h"
 #include "stardelegate.h"
+#include "sqlbase.h"
 
 #include <stdexcept>
 #include <QMainWindow>
@@ -101,6 +102,8 @@ private:
 
     QModelIndex m_table_index {};
     Music new_song_info;
+
+    SqlBase *m_base;
 
     StarDelegate *m_star_delegate;
 
