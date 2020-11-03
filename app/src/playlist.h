@@ -18,6 +18,7 @@ public:
     void addFrontMusic(const QUrl& url);
     void addFrontMusic(const Music& music);
     void setPlaylistName(const QString& name);
+    void clearEmpty();
     QString playlistName() const;
     void shuffle();
     void unshuffle();

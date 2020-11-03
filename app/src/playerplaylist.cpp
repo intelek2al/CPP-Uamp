@@ -25,8 +25,10 @@ void PlayerPlaylist::skipUser() {
 }
 
 void PlayerPlaylist::setPlaylist(const Playlist &playlist) {
+    m_user.clear();
+    m_auto.clear();
     m_list = playlist;
-    m_auto = m_list;
+//    m_auto = m_list;
 }
 
 #include <iostream>
@@ -35,28 +37,31 @@ void PlayerPlaylist::refresh() {
     m_playlist->clear();
     m_user.addToMediaPlaylist();
     m_auto.addToMediaPlaylist();
-    std::cout << " = = = = = = Playlist = = = = = = = \n";
-    for (int i = 0; i < m_user.size(); i++) {
-        std::cout << m_user[i].getStr().toStdString() << std::endl;
-    }
-    for (int i = 0; i < m_auto.size(); i++) {
-        std::cout << m_auto[i].getStr().toStdString() << std::endl;
-    }
+//    std::cout << " = = = = = = Playlist = = = = = = = \n";
+//    std::cout << " : : : : User : : : : \n";
+//    for (int i = 0; i < m_user.size(); i++) {
+//        std::cout << m_user[i].getStr().toStdString() << std::endl;
+//    }
+//    std::cout << " : : : : Auto : : : : \n";
+//    for (int i = 0; i < m_auto.size(); i++) {
+//        std::cout << m_auto[i].getStr().toStdString() << std::endl;
+//    }
 }
-
+#include <iostream>
 void PlayerPlaylist::next() {
     if (!m_user.empty()) {
         m_history.addFrontMusic(m_user[0], Own::User);
         if (m_mode != QMediaPlaylist::CurrentItemInLoop)
             m_user.clearMusic(0);
         refresh();
-
         return;
     }
     Music _tmp = m_auto[0];
     m_history.addFrontMusic(_tmp, Own::Auto);
+//    std::cout << "======== Debug ========\n" << m_auto[0].getStr().toStdString() << std::endl;
     m_auto.clearMusic(0);
-    m_auto.addFrontMusic(_tmp);
+//    std::cout << "======== Debug ========\n" << m_auto[0].getStr().toStdString() << std::endl;
+//    m_auto.addFrontMusic(_tmp);
     refresh();
 }
 
@@ -65,6 +70,8 @@ void PlayerPlaylist::setMode(QMediaPlaylist::PlaybackMode mode) {
 }
 
 void PlayerPlaylist::setStartSong(const Music &song) {
+//    if (!m_auto.empty())
+//        m_history.addFrontMusic(m_auto[0], Auto);
     int pos = 0;
     for (; pos < m_list.size(); ++pos) {
         if (m_list[pos] == song)
@@ -81,6 +88,8 @@ void PlayerPlaylist::setStartSong(const Music &song) {
 }
 
 void PlayerPlaylist::setStartSong(const QUrl &song) {
+//    if (!m_auto.empty())
+//        m_history.addFrontMusic(m_auto[0], Auto);
     int pos = 0;
     for (; pos < m_list.size(); ++pos) {
         if (m_list[pos].m_url == song)
@@ -104,17 +113,19 @@ Playlist &PlayerPlaylist::currentPlaylist() {
 using namespace std;
 
 void PlayerPlaylist::setStartSong(int pos) {
+    if (!m_auto.empty())
+        m_history.addFrontMusic(m_auto[0], Auto);
     m_auto.clear();
     for (int i = 0; i < m_list.size(); ++i) {
-        cout << "Mus added:" << m_list[pos].getStr().toStdString() << endl;
+//        cout << "Mus added:" << m_list[pos].getStr().toStdString() << endl;
         m_auto.addMusic(m_list[(pos++)]);
         pos = pos == m_list.size() ? 0 : pos;
     }
     m_playlist->clear();
     m_auto.addToMediaPlaylist();
     m_playlist->setCurrentIndex(0);
-    if (m_playlist->error() == QMediaPlaylist::NoError)
-        cout << "Pos:" << pos << endl;
+//    if (m_playlist->error() == QMediaPlaylist::NoError)
+//        cout << "Pos:" << pos << endl;
 }
 
 void PlayerPlaylist::setPlaybackMode(QMediaPlaylist::PlaybackMode mode) {
@@ -146,4 +157,8 @@ void PlayerPlaylist::previous() {
     m_user.addFrontMusic(_tmp);
     m_history.clearMusic(0);
     refresh();
+}
+
+Playlist PlayerPlaylist::history() {
+    return m_history.history;
 }

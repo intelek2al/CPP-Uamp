@@ -20,6 +20,7 @@ public:
     void setMode(QMediaPlaylist::PlaybackMode mode);
     Playlist &currentPlaylist();
     Playlist upNext();
+    Playlist history();
 
 public slots:
     void next();

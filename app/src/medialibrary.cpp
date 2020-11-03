@@ -85,9 +85,9 @@ void MediaLibrary::setData(int index, Music _new_music) {
 
 Playlist MediaLibrary::dataPlaylist() const {
     Playlist list;
-    cout << "!" << endl;
+//    cout << "!" << endl;
     for (const auto &music : m_media_list) {
-        cout << "|---!" << endl;
+//        cout << "---- " << music.getStr().toStdString() << endl;
         list.addMusic(music);
     }
     cout << endl;
