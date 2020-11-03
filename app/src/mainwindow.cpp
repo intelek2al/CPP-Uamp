@@ -22,27 +22,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     m_settings = new Settings();
     m_player = new SoundPlayer(ui);
-    m_library = new MediaLibrary();
+    m_library = new MediaLibrary(); //!!!!!!!!!!!!!
 
     m_base = new SqlBase();
 
-//    QSqlRelationalTableModel
-
     m_tableModel = new MusicTableModel(*m_library,  ui->mainMusicTable);
 
-    QSqlTableModel m_SQL_model;
+    m_SQL_model = new QSqlTableModel;
 
-    m_SQL_model.setTable("SONGS");
-    m_SQL_model.select();
+    m_SQL_model->setTable("SONGS");
+    m_SQL_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    m_SQL_model->select();
 
-//    ui->mainMusicTable->setModel(&m_SQL_model);
+    ui->mainMusicTable->setModel(m_SQL_model);
 
     m_selection_model = new QItemSelectionModel(m_tableModel);
 
     m_star_delegate = new StarDelegate(ui->mainMusicTable);
 
 
-    ui->mainMusicTable->setModel(m_tableModel);
+//    ui->mainMusicTable->setModel(m_tableModel);
 
     ui->mainMusicTable->setItemDelegateForColumn(3, m_star_delegate);
 
@@ -52,14 +51,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->mainMusicTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-  ui->mainMusicTable->setSelectionModel(m_selection_model);
+    ui->mainMusicTable->setSelectionModel(m_selection_model);
 
     connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
+
 
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
 
+    
     // default cover in player
     QImage def_cover(":/def_cover_color.png");
     QPixmap pix(QPixmap::fromImage(def_cover));

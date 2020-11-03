@@ -27,6 +27,7 @@
 #include <QtMultimedia>
 #include <QMediaMetaData>
 #include <QMetaDataReaderControl>
+#include <QSqlTableModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -104,6 +105,8 @@ private:
     Music new_song_info;
 
     SqlBase *m_base;
+
+    QSqlTableModel *m_SQL_model;
 
     StarDelegate *m_star_delegate;
 
