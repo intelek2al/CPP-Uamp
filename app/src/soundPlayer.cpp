@@ -135,20 +135,33 @@ void SoundPlayer::setPlaylist(const Playlist &playlist) {
 void SoundPlayer::next() {
     m_list.next();
     setPlay();
-    auto test = m_list.upNext();
-    std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
-    for (int i = 0; i < test.size(); i++) {
-        std::cout << test[i].getStr().toStdString() << std::endl;
+    system("clear");
+    auto test_up = m_list.upNext();
+    auto test_hs = m_list.history();
+    std::cout << " = = = = = = = = =  History  = = = = = = = = = \n";
+    for (int i = test_hs.size() - 1; i >= 0; --i) {
+        std::cout << test_hs[i].getStr().toStdString() << std::endl;
     }
-}
+    std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
+    for (int i = 0; i < test_up.size(); i++) {
+        std::cout << test_up[i].getStr().toStdString() << std::endl;
+    }
 
+}
 
 void SoundPlayer::previous() {
     m_list.previous();
     setPlay();
+    system("clear");
     auto test = m_list.upNext();
+    auto test_up = m_list.upNext();
+    auto test_hs = m_list.history();
+    std::cout << " = = = = = = = = =  History  = = = = = = = = = \n";
+    for (int i = test_hs.size() - 1; i >= 0; --i) {
+        std::cout << test_hs[i].getStr().toStdString() << std::endl;
+    }
     std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
-    for (int i = 0; i < test.size(); i++) {
-        std::cout << test[i].getStr().toStdString() << std::endl;
+    for (int i = 0; i < test_up.size(); i++) {
+        std::cout << test_up[i].getStr().toStdString() << std::endl;
     }
 }

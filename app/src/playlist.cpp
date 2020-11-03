@@ -101,7 +101,7 @@ bool Playlist::empty() const {
 }
 
 Music Playlist::operator[](int index) {
-    if (index > 0 && index < m_musicPlaylist.size())
+    if (index >= 0 && index < m_musicPlaylist.size())
         return m_musicPlaylist[index];
     return Music();
 }
@@ -128,4 +128,14 @@ void Playlist::shuffle() {
 
 void Playlist::unshuffle() {
     m_musicPlaylist = m_unshuff;
+}
+
+void Playlist::clearEmpty() {
+    for (size_t i = 0; i < m_musicPlaylist.size();) {
+        if (m_musicPlaylist[i].m_path.isEmpty()) {
+            clearMusic(i);
+            continue;
+        }
+        i++;
+    }
 }

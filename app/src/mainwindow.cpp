@@ -339,6 +339,10 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
     emit m_tableModel->sort(0, Qt::AscendingOrder);
 
     m_player->setPlaylist(m_library->dataPlaylist());
+//    cout << "===================Setting==================" << endl;
+//    for (int i = 0; i < m_library->dataPlaylist().size(); ++i )
+//        cout << m_library->dataPlaylist()[i].m_path.toStdString() << endl;
+//    cout << "============================================" << endl;
 }
 
 void MainWindow::loadCoverImage(const QModelIndex &index) {
