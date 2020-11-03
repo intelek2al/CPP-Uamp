@@ -28,6 +28,4 @@ private:
      QVector<Music> m_media_list;
 };
 
-char *toChar(QString str);
-
 #endif //UAMP_MEDIALIBRARY_H

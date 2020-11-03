@@ -3,12 +3,6 @@
 #include "tag_functions.h"
 #include <QDir>
 
-char *toChar(QString str)
-{
-    char *test = str.toUtf8().data();
-    return test;
-}
-
 MediaLibrary::MediaLibrary() {
     // load from base
     if (!load_media_base()) {
@@ -63,13 +57,15 @@ void MediaLibrary::add_file(const QString &file_name) {
     QFileInfo fileInfo(file_name);
     if (!fileInfo.isReadable()) {
         qWarning(logWarning()) << fileInfo.fileName() << " not readable";
+        return;
     }
+
     Music tmp;
     try
     {
 //            Sound_tags current;
-        tmp = TagFunctions::read_tags(toChar(QString(fileInfo.fileName())),
-                                      toChar(QString(fileInfo.filePath())));
+        tmp = TagFunctions::read_tags(TagFunctions::toChar(QString(fileInfo.fileName())),
+                                      TagFunctions::toChar(QString(fileInfo.filePath())));
     }
     catch (std::exception &e)
     {

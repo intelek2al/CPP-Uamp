@@ -13,7 +13,6 @@ public:
    ~SqlBase();
 
    bool AddtoLibrary(const QString& media_path);
-   Music LoadSongTags(const QString &file_name);
 
 private:
     bool createConnection();

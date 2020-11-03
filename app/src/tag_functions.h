@@ -80,6 +80,9 @@ namespace TagFunctions {
     void modify_tag_track(const Music &changes);
 
     bool modify_tags(const Music &changes);
+
+    Music LoadSongTags(const QString &file_name);
+
 }
 
 

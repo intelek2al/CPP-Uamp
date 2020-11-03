@@ -6,8 +6,8 @@
 #include "loggingcategories.h"
 #include "music.h"
 
-//#define default_cover "./app/resources/logo1.png"
 #define default_cover ":/logo1.png"
+
 class ImageFile;
 
 /* Unsychronised lyrics/text transcription
@@ -388,4 +388,26 @@ bool TagFunctions::set_image_mpeg(char *file_path, char *image_path)
     frame->setPicture(imageData);
     mpegFile.save();
     return true;
+}
+
+
+Music TagFunctions::LoadSongTags(const QString &file_name) {
+
+    QFileInfo fileInfo(file_name);
+    if (!fileInfo.isReadable()) {
+        qWarning(logWarning()) << fileInfo.fileName() << " not readable";
+        return Music();
+    }
+    Music tmp;
+    try
+    {
+        tmp = TagFunctions::read_tags(TagFunctions::toChar(QString(fileInfo.fileName())),
+                                      TagFunctions::toChar(QString(fileInfo.filePath())));
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+    if (!tmp.empty())
+        return tmp;
 }

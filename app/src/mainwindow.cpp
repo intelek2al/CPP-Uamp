@@ -15,14 +15,6 @@
 #include <QSqlQueryModel>
 #include <QSqlRelationalTableModel>
 
-
-char *toChar2(QString str)
-{
-    char *test = str.toUtf8().data();
-    return test;
-}
-
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -44,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_SQL_model.select();
 
 //    ui->mainMusicTable->setModel(&m_SQL_model);
-
 
     m_selection_model = new QItemSelectionModel(m_tableModel);
 
