@@ -25,6 +25,13 @@ class ImageFile;
     Lyrics/text         <full text string according to encoding>
 */
 
+
+char *TagFunctions::toChar(QString str)
+{
+    char *test = str.toUtf8().data();
+    return test;
+}
+
 void TagFunctions::load_lyrics(char *file_name) {
     TagLib::MPEG::File f1(file_name);
 

@@ -12,6 +12,8 @@
 #include <QFileDialog>
 #include <algorithm>
 #include <QtWidgets>
+#include <QSqlQueryModel>
+#include <QSqlRelationalTableModel>
 
 
 char *toChar2(QString str)
@@ -32,17 +34,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     m_base = new SqlBase();
 
+//    QSqlRelationalTableModel
+
     m_tableModel = new MusicTableModel(*m_library,  ui->mainMusicTable);
+
+    QSqlTableModel m_SQL_model;
+
+    m_SQL_model.setTable("SONGS");
+    m_SQL_model.select();
+
+//    ui->mainMusicTable->setModel(&m_SQL_model);
+
 
     m_selection_model = new QItemSelectionModel(m_tableModel);
 
     m_star_delegate = new StarDelegate(ui->mainMusicTable);
 
+
     ui->mainMusicTable->setModel(m_tableModel);
 
     ui->mainMusicTable->setItemDelegateForColumn(3, m_star_delegate);
-
-//    ui->mainMusicTable->setItemDelegateForColumn(3, new StarDelegate(ui->mainMusicTable));
 
     ui->mainMusicTable->setEditTriggers(
 //            QAbstractItemView::DoubleClicked |
@@ -333,6 +344,8 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 {
     QString f_name = QFileDialog::getExistingDirectory(this, "Add media", "");
     m_library->add_media(f_name);
+
+    m_base->AddtoLibrary(f_name);
 
     qDebug(logDebug()) << "m_library size=" << m_library->data().size();
     emit m_tableModel->layoutChanged();

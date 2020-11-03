@@ -45,6 +45,8 @@ using std::endl;
 
 namespace TagFunctions {
 
+    char *toChar(QString str);
+
     Music read_tags(char *file_name, char *file_path);
 
     void load_lyrics(char *file_name);
