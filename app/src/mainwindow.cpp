@@ -14,6 +14,7 @@
 #include <QtWidgets>
 #include <QSqlQueryModel>
 #include <QSqlRelationalTableModel>
+#include <QSqlRecord>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -36,11 +37,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->mainMusicTable->setModel(m_SQL_model);
 
-
     ui->mainMusicTable->hideColumn(0);
 
-
-    m_selection_model = new QItemSelectionModel(m_tableModel);
+//    m_selection_model = new QItemSelectionModel(m_tableModel);
 
     m_star_delegate = new StarDelegate(ui->mainMusicTable);
 
@@ -55,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->mainMusicTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    ui->mainMusicTable->setSelectionModel(m_selection_model);
+//    ui->mainMusicTable->setSelectionModel(m_selection_model);
 
     connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
 
@@ -83,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->mainMusicTable, SIGNAL(customContextMenuRequested(const QPoint &)), this,
             SLOT(onMusicTableContextMenu(const QPoint &)));
 
+    connect(ui->mainMusicTable, &QAbstractItemView::clicked, this, &MainWindow::currentIndex);
 }
 
 void MainWindow::onMusicTableContextMenu(const QPoint &point) {
@@ -173,10 +173,10 @@ MainWindow::~MainWindow()
     system("leaks -q uamp");
 }
 
-void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
-{
-    m_table_index = index;
-}
+//void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
+//{
+//    m_table_index = index;
+//}
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
@@ -289,13 +289,21 @@ void MainWindow::on_actionInfo_triggered()
 {
   qInfo(logInfo()) << "on_actionInfo_triggered";
 //      Music current = m_library->data()[m_table_index.row()];
-    auto index = m_selection_model->selection().indexes();
+//    auto index = m_selection_model->selection().indexes();
 
-    if (!index.front().isValid() && (!(m_library->data().empty()))) {
+//    if (!index.front().isValid() && (!(m_library->data().empty()))) {
+    if (!m_table_index.isValid()) {
         qDebug(logDebug()) << "on_actionInfo_triggered return";
         return;
     }
-    Music current = m_library->data()[index.front().row()];
+
+    if (auto row = m_SQL_model->record(m_table_index.row()); row.isEmpty()) {
+        qDebug(logDebug()) << " record from m_tableIndex empty";
+        return;
+    }
+    Music current = getMusicfromTable();
+
+//            m_library->data()[index.front().row()];
 
     DialogInfo songInfo = DialogInfo(current, 0);
 //  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
@@ -310,8 +318,9 @@ void MainWindow::on_actionInfo_triggered()
           if (!(TagFunctions::modify_tags(new_song_info))) {
               qInfo(logInfo()) << new_song_info.m_path << " is not writable";
           } else {
-              emit editTagsCompleted(index.front(), new_song_info);
-                m_library->setData(index.front().row(), new_song_info);
+              emit editTagsCompleted(m_table_index, new_song_info);
+//                m_library->setData(m_table_index.row(), new_song_info);
+//                m_SQL_model->setRecord();
               qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
           }
       }
@@ -320,20 +329,39 @@ void MainWindow::on_actionInfo_triggered()
     qInfo(logInfo()) << "cancel DialogInfo";
 }
 
+Music MainWindow::getMusicfromTable() {
+    //    {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
+    Music current_song;
+    current_song.m_title = m_SQL_model->record(m_table_index.row()).value("Title").toString();
+    current_song.m_time = m_SQL_model->record(m_table_index.row()).value("Time").toString();
+    current_song.m_artist = m_SQL_model->record(m_table_index.row()).value("Artist").toString();
+    current_song.m_rate = m_SQL_model->record(m_table_index.row()).value("Rating").toString();
+    current_song.m_genre = m_SQL_model->record(m_table_index.row()).value("Genre").toString();
+    current_song.m_album = m_SQL_model->record(m_table_index.row()).value("Album").toString();
+    current_song.m_year = m_SQL_model->record(m_table_index.row()).value("Year").toString();
+    current_song.m_track = m_SQL_model->record(m_table_index.row()).value("Track").toString();
+    current_song.m_comment = m_SQL_model->record(m_table_index.row()).value("Comment").toString();
+    current_song.m_name = m_SQL_model->record(m_table_index.row()).value("Name").toString();
+    current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
+
+    return current_song;
+}
+
 
 void MainWindow::on_actionDelete_from_Library_triggered()
 {
-    auto index = m_selection_model->selection().indexes();
+//    auto index = m_selection_model->selection().indexes();
+
     qInfo(logInfo()) << " on_actionDelete_from_Library_triggered";
 //    qInfo(logInfo()) << " song =" << m_library->data()[index.front().row()][0];
 
-    if (!index.front().isValid()) {
+    if (!m_table_index.isValid()) {
         qDebug(logDebug()) << "on_actionDelete_from_Library_triggered return";
         return;
     }
 //    m_tableModel->removeRows(index.front().row(), 1, index.front());
 //    m_SQL_model->select()
-    m_SQL_model->removeRows(index.front().row(), 1, index.front());
+    m_SQL_model->removeRows(m_table_index.row(), 1, m_table_index);
 }
 
 
@@ -349,7 +377,11 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
     emit m_tableModel->layoutChanged();
     emit m_tableModel->sort(0, Qt::AscendingOrder);
 
+//    m_SQL_model->select()
+
+
     m_player->setPlaylist(m_library->dataPlaylist());
+
 //    cout << "===================Setting==================" << endl;
 //    for (int i = 0; i < m_library->dataPlaylist().size(); ++i )
 //        cout << m_library->dataPlaylist()[i].m_path.toStdString() << endl;
@@ -373,6 +405,11 @@ void MainWindow::loadCoverImage(const QModelIndex &index) {
     }
     QPixmap pix(QPixmap::fromImage(coverQImg));
     ui->cover_label->setPixmap(pix);
+}
+
+void MainWindow::currentIndex(const QModelIndex &index) {
+    m_table_index = index;
+
 }
 
 

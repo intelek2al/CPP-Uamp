@@ -46,7 +46,9 @@ public:
     ~MainWindow() override;
 
 private slots:
-    void on_mainMusicTable_clicked(const QModelIndex &index);
+//    void on_mainMusicTable_clicked(const QModelIndex &index);
+
+    void currentIndex(const QModelIndex &index);
 
     void on_mainMusicTable_doubleClicked(const QModelIndex &index);  // player
 
@@ -87,6 +89,8 @@ private:
     void readSettings();
     void writeSettings();
     void loadCoverImage(const QModelIndex &index);
+
+    Music getMusicfromTable();
 
     Ui::MainWindow *ui;
 
