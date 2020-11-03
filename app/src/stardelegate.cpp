@@ -9,24 +9,24 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
 {
   qDebug(logDebug()) << "StarDelegate::paint";
-  qDebug(logDebug()) << "index collumn = " << index.column();
-  qDebug(logDebug()) << "index row = " << index.row();
-  qDebug(logDebug()) << "index data = " << index.data();
+//  qDebug(logDebug()) << "index collumn = " << index.column();
+//  qDebug(logDebug()) << "index row = " << index.row();
+//  qDebug(logDebug()) << "index data = " << index.data();
 
 //  if (index.data().canConvert<StarRating>()) {
-    qDebug(logDebug()) << "StarDelegate::paint 2";
+//    qDebug(logDebug()) << "StarDelegate::paint 2";
 
       StarRating starRating(index.data().toInt());
 
 //    StarRating starRating = starRating1;
 //    StarRating starRating = qvariant_cast<StarRating>(index.data());
 
-    qDebug(logDebug()) <<  "star count =" << starRating.starCount();
+//    qDebug(logDebug()) <<  "star count =" << starRating.starCount();
 
-    qDebug(logDebug()) << "StarDelegate::paint 3";
+//    qDebug(logDebug()) << "StarDelegate::paint 3";
 
     if (option.state & QStyle::State_Selected) {
-        qDebug(logDebug()) << "StarDelegate::paint 4";
+//        qDebug(logDebug()) << "StarDelegate::paint 4";
         painter->fillRect(option.rect, option.palette.highlight());
     }
     starRating.paint(painter, option.rect, option.palette,
@@ -72,7 +72,7 @@ void StarDelegate::setEditorData(QWidget *editor,
     qDebug(logDebug()) << "StarDelegate::setEditorData if true";
 
     QVariant tmp =  index.data();
-    qDebug(logDebug()) << " index.data() =" << index.data();
+//    qDebug(logDebug()) << " index.data() =" << index.data();
 
     StarRating starRating = qvariant_cast<StarRating>(index.data());
     StarEditor *starEditor = qobject_cast<StarEditor *>(editor);

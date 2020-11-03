@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QSqlDatabase>
+#include "music.h"
 
 class SqlBase {
 
@@ -11,12 +12,13 @@ public:
 
    ~SqlBase();
 
-private:
+   bool AddtoLibrary(const QString& media_path);
 
+private:
     bool createConnection();
     bool createNewBase();
+    bool loadData();
 
-//    QString m_library_name;
     QSqlDatabase m_media_base;
 
 };

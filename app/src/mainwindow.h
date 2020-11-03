@@ -113,6 +113,5 @@ private:
 //    void outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index);
 };
 
-char *toChar2(QString str);
 
 #endif // MAINWINDOW_H

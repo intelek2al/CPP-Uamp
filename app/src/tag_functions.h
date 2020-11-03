@@ -45,6 +45,8 @@ using std::endl;
 
 namespace TagFunctions {
 
+    char *toChar(QString str);
+
     Music read_tags(char *file_name, char *file_path);
 
     void load_lyrics(char *file_name);
@@ -78,6 +80,9 @@ namespace TagFunctions {
     void modify_tag_track(const Music &changes);
 
     bool modify_tags(const Music &changes);
+
+    Music LoadSongTags(const QString &file_name);
+
 }
 
 
