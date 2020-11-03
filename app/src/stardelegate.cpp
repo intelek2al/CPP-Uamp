@@ -8,7 +8,7 @@
 void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
 {
-  qDebug(logDebug()) << "StarDelegate::paint";
+//  qDebug(logDebug()) << "StarDelegate::paint";
 //  qDebug(logDebug()) << "index collumn = " << index.column();
 //  qDebug(logDebug()) << "index row = " << index.row();
 //  qDebug(logDebug()) << "index data = " << index.data();

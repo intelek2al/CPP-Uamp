@@ -10,7 +10,7 @@ StarRating::StarRating(int starCount, int maxStarCount)
     : myStarCount(starCount),
       myMaxStarCount(maxStarCount)
 {
-    qDebug(logDebug()) << "StarRating::StarRating";
+//    qDebug(logDebug()) << "StarRating::StarRating";
 
   starPolygon << QPointF(1.0, 0.5);
   for (int i = 1; i < 5; ++i)
@@ -25,7 +25,7 @@ StarRating::StarRating(int starCount, int maxStarCount)
 void StarRating::paint(QPainter *painter, const QRect &rect,
                        const QPalette &palette, EditMode mode) const
 {
-    qDebug(logDebug()) << "StarRating::paint";
+//    qDebug(logDebug()) << "StarRating::paint";
   painter->save();
 
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -51,7 +51,7 @@ void StarRating::paint(QPainter *painter, const QRect &rect,
 
 QSize StarRating::sizeHint() const
 {
-    qDebug(logDebug()) << "StarRating::sizeHint";
+//    qDebug(logDebug()) << "StarRating::sizeHint";
 
   return PaintingScaleFactor * QSize(myMaxStarCount, 1);
 }

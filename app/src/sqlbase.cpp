@@ -23,7 +23,8 @@ bool SqlBase::createConnection() {
 
     qDebug(logDebug()) << "SqlBase::createConnection";
     m_media_base = QSqlDatabase:: addDatabase ("QSQLITE");
-    m_media_base.setDatabaseName("/Users/snikolayen/media_db.sqlite");
+//    m_media_base.setDatabaseName("/Users/snikolayen/media_db.sqlite");
+    m_media_base.setDatabaseName("/Users/Shared/media_db.sqlite");
     m_media_base.setUserName ("admin");
     m_media_base.setHostName("localhost");
     m_media_base. setPassword ("password");

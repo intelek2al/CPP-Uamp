@@ -31,10 +31,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_SQL_model = new QSqlTableModel;
 
     m_SQL_model->setTable("SONGS");
-    m_SQL_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    m_SQL_model->setEditStrategy(QSqlTableModel::OnFieldChange);
     m_SQL_model->select();
 
     ui->mainMusicTable->setModel(m_SQL_model);
+
+
+    ui->mainMusicTable->hideColumn(0);
+
 
     m_selection_model = new QItemSelectionModel(m_tableModel);
 
@@ -323,11 +327,13 @@ void MainWindow::on_actionDelete_from_Library_triggered()
     qInfo(logInfo()) << " on_actionDelete_from_Library_triggered";
 //    qInfo(logInfo()) << " song =" << m_library->data()[index.front().row()][0];
 
-    if (!index.front().isValid() && (!(m_library->data().empty()))) {
+    if (!index.front().isValid()) {
         qDebug(logDebug()) << "on_actionDelete_from_Library_triggered return";
         return;
     }
-    m_tableModel->removeRows(index.front().row(), 1, index.front());
+//    m_tableModel->removeRows(index.front().row(), 1, index.front());
+//    m_SQL_model->select()
+    m_SQL_model->removeRows(index.front().row(), 1, index.front());
 }
 
 
