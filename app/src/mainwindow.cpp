@@ -30,7 +30,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_tableModel = new MusicTableModel(*m_library,  ui->mainMusicTable);
 
     m_SQL_model = new QSqlTableModel;
+
     m_PlayList_model = new QSqlTableModel;
+
     m_PlayList_model->setTable("LIST_PLAYLISTS");
     m_SQL_model->setTable("SONGS");
     m_SQL_model->setEditStrategy(QSqlTableModel::OnFieldChange);
@@ -409,7 +411,17 @@ void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
 
 void MainWindow::currentPlayListIndex(const QModelIndex &index) {
     m_playList_index = index;
+
+    qDebug(logDebug()) << "click on playlists";
+
+    QSqlRelationalTableModel *r_model = new QSqlRelationalTableModel;
+
+    r_model->setTable("PLAYLIST");
+    r_model->setRelation(1, QSqlRelation("PLAYLIST_ID", "2", "Name"));
+    ui->mainMusicTable->setModel(r_model);
+
     // show in table list of songs current playList
+
 }
 
 void MainWindow::on_actionNewPlaylist_triggered()
@@ -539,3 +551,8 @@ if (t) {
     }
     */
 
+void MainWindow::on_songs_clicked()
+{
+    ui->mainMusicTable->setModel(m_SQL_model);
+    m_SQL_model->select();
+}

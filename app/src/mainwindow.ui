@@ -443,7 +443,7 @@ color: rgb(132, 130, 133);</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_5">
+            <widget class="QPushButton" name="songs">
              <property name="text">
               <string>Songs</string>
              </property>

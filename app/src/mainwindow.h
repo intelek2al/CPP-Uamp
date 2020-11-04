@@ -94,6 +94,8 @@ private slots:
 
     void on_search_line_editingFinished();
 
+    void on_songs_clicked();
+
 
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);
