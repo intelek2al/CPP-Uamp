@@ -21,6 +21,7 @@ public:
     void setSound(int index);
 
 public slots:
+    void playNext(const Music &song);
     void setPlay();
     void setPause();
     void setStop();
@@ -30,6 +31,9 @@ public slots:
     void stateCheck(QMediaPlayer::State state);
     void setPlaylist(const Playlist &playlist);
     void setPlaylist(QSqlTableModel *model);
+    void fastForward();
+    void rewind();
+    void metaData(bool check);
     static QMediaPlaylist *playlist();
 //    static QMediaPlaylist *getInstance();
     void next();

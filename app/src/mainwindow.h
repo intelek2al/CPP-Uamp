@@ -82,6 +82,12 @@ private slots:
 
     void on_actionDelete_from_Library_triggered();  // delete song from library
 
+    void playNext();
+
+    void on_actionFast_forward_triggered();
+
+    void on_actionRewind_triggered();
+
 
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);

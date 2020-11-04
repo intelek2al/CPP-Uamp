@@ -1,8 +1,11 @@
 #include "playerplaylist.h"
 #include "soundPlayer.h"
 
+using namespace std;
+
 PlayerPlaylist::PlayerPlaylist() {
     m_playlist = SoundPlayer::playlist();
+    m_current_play = Auto;
 }
 
 PlayerPlaylist::PlayerPlaylist(const Playlist &playlist) {
@@ -11,8 +14,14 @@ PlayerPlaylist::PlayerPlaylist(const Playlist &playlist) {
 }
 
 void PlayerPlaylist::addUserNext(const Music &song) {
-    m_user.addMusic(song);
-    refresh();
+//    if(m_user.empty()) {
+//        m_user.addMusic(Music());
+        m_user.addFrontMusic(song);
+//    }
+//    else {
+//        m_user.addFrontMusic(song);
+//    }
+//    refresh();
 }
 
 void PlayerPlaylist::clearCustomUser() {
@@ -32,7 +41,6 @@ void PlayerPlaylist::setPlaylist(const Playlist &playlist) {
 }
 
 #include <iostream>
-
 void PlayerPlaylist::refresh() {
     m_playlist->clear();
     m_user.addToMediaPlaylist();
@@ -48,20 +56,24 @@ void PlayerPlaylist::refresh() {
 //    }
 }
 #include <iostream>
+
 void PlayerPlaylist::next() {
-    if (!m_user.empty()) {
+    if (m_current_play == Auto) {
+        Music _tmp = m_auto[0];
+        m_history.addFrontMusic(_tmp, Own::Auto);
+        m_auto.clearMusic(0);
+        m_auto.addMusic(_tmp);
+    } else {
         m_history.addFrontMusic(m_user[0], Own::User);
-        if (m_mode != QMediaPlaylist::CurrentItemInLoop)
+        if (m_mode != QMediaPlaylist::CurrentItemInLoop && m_current_play == User) {
             m_user.clearMusic(0);
-        refresh();
-        return;
+        }
     }
-    Music _tmp = m_auto[0];
-    m_history.addFrontMusic(_tmp, Own::Auto);
-//    std::cout << "======== Debug ========\n" << m_auto[0].getStr().toStdString() << std::endl;
-    m_auto.clearMusic(0);
-//    std::cout << "======== Debug ========\n" << m_auto[0].getStr().toStdString() << std::endl;
-    m_auto.addMusic(_tmp);
+    if (!m_user.empty())
+        m_current_play = User;
+    else
+        m_current_play = Auto;
+
     refresh();
 }
 
@@ -108,9 +120,6 @@ void PlayerPlaylist::setStartSong(const QUrl &song) {
 Playlist &PlayerPlaylist::currentPlaylist() {
     return m_list;
 }
-
-#include <iostream>
-using namespace std;
 
 void PlayerPlaylist::setStartSong(int pos) {
     if (!m_auto.empty())
@@ -173,4 +182,10 @@ void PlayerPlaylist::previous() {
 
 Playlist PlayerPlaylist::history() {
     return m_history.history;
+}
+
+Music PlayerPlaylist::currentMusic() const {
+    if (m_current_play == User)
+        return m_user[0];
+    return m_auto[0];
 }

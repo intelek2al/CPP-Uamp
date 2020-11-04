@@ -70,7 +70,7 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="playerLayout" stretch="0,2,2,0,0,5,0,0,0">
+     <layout class="QHBoxLayout" name="playerLayout" stretch="0,0,2,0,0,5,0,0,0">
       <property name="spacing">
        <number>20</number>
       </property>
@@ -616,6 +616,9 @@ color: rgb(132, 130, 133);</string>
     <addaction name="actionDecrease_Volume"/>
     <addaction name="actionShuffle"/>
     <addaction name="actionRepeat"/>
+    <addaction name="separator"/>
+    <addaction name="actionFast_forward"/>
+    <addaction name="actionRewind"/>
    </widget>
    <widget class="QMenu" name="menuAccount">
     <property name="title">
@@ -887,6 +890,22 @@ color: rgb(132, 130, 133);</string>
   <action name="actionUamp_Help">
    <property name="text">
     <string>Uamp Help</string>
+   </property>
+  </action>
+  <action name="actionFast_forward">
+   <property name="text">
+    <string>Fast forward</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Right</string>
+   </property>
+  </action>
+  <action name="actionRewind">
+   <property name="text">
+    <string>Rewind</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Left</string>
    </property>
   </action>
  </widget>
