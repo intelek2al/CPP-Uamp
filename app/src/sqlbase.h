@@ -14,6 +14,8 @@ public:
 
    bool AddtoLibrary(const QString& media_path);
    bool AddNewPlaylist(const QString& name);
+   bool DeletePlaylist(const QString& name);
+   bool AddtoPlaylist(const QString& path, const QString& cur_playlist);
 
 private:
     bool createConnection();

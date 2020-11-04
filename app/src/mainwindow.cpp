@@ -56,12 +56,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 //    m_selection_model = new QItemSelectionModel(m_tableModel);
 
     m_star_delegate = new StarDelegate(ui->mainMusicTable);
-
-
 //    ui->mainMusicTable->setModel(m_tableModel);
 
     ui->mainMusicTable->setItemDelegateForColumn(4, m_star_delegate);
-
     ui->mainMusicTable->setEditTriggers(
 //            QAbstractItemView::DoubleClicked |
                                   QAbstractItemView::SelectedClicked);
@@ -69,15 +66,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->mainMusicTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
 //    ui->mainMusicTable->setSelectionModel(m_selection_model);
-
     connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
-
 
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
 
-    
     // default cover in player
     QImage def_cover(":/def_cover_color.png");
     QPixmap pix(QPixmap::fromImage(def_cover));
@@ -108,7 +102,7 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
 //    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
 
     QAction action_add_to_playlist("Add to Playlist", this);
-//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    connect(&action_add_to_playlist, &QAction::triggered, this, &MainWindow::on_actionAddtoPlaylist_triggered);
     contextMenu.addAction(&action_add_to_playlist);
 
     QAction* actionA_Setup = contextMenu.addAction( "Setup" );
@@ -156,39 +150,18 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
     contextMenu.addAction(&action_new);
 
     QAction action_delete("Delete Playlist", this);
-    connect(&action_delete, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
+    connect(&action_delete, &QAction::triggered, this, &MainWindow::on_actionDeletePlaylist_triggered);
     contextMenu.addAction(&action_delete);
-
 
 //    QAction action_rename("Rename ", this);
 //    connect(&action_rename, &QAction::triggered, this, [=] () { on_action_context_file_rename(fullFileName); });
 //    contextMenu.addAction(&action_rename);
-//    QAction action_delete("Delete ", this);
-//    connect(&action_delete, &QAction::triggered, this, [=] { on_action_context_file_delete(fullFileName) ;});
-//    contextMenu.addAction(&action_delete);
 
     contextMenu.exec(mapToGlobal(point));
 }
 
 
-void MainWindow::on_actionNewPlaylist_triggered()
-{
-    bool ok;
-    QString new_playlist_name = QInputDialog::getText(this,"New PlayList",
-                                                    tr("Enter the name for new PlayList"),
-                                                    QLineEdit::Normal,
-                                                    "",
-                                                    &ok);
-    if (ok) {
-            qInfo(logInfo()) << "new playlist " << new_playlist_name;
-            m_base->AddNewPlaylist(new_playlist_name);
-            m_PlayList_model->select();
-        } else {
-//            QMessageBox::warning(0, "Warning ", "You cannot delete the folder");  // show warning
-        qInfo(logInfo()) << "Warning You cannot delete the folder " << new_playlist_name;
-    }
 
-}
 
 
 MainWindow::~MainWindow()
@@ -212,7 +185,7 @@ void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // p
 //    setMusicPlay(current.m_path);
     setMusicPlay(index.row());
 
-//    loadCoverImage(index);
+    loadCoverImage(index);
 }
 
 void MainWindow::setMusicPlay(QString soundPath)
@@ -252,18 +225,7 @@ void MainWindow::on_statusVolume_valueChanged(int value)
     m_player->setVolume(value);
 }
 
-//void MainWindow::on_search_line_editingFinished()
-//{
-////    readDir(ui->fileBrowser->currentIndex());
-//    auto tmp = m_searcher->search();
-//    m_music_list = tmp;
-//    if (!m_tableModel)
-//        delete m_tableModel;
-//    m_tableModel = new MusicTableModel(ui->mainMusicTable);
-//    m_tableModel->music_list_add(m_music_list);
-//    ui->mainMusicTable->setModel(m_tableModel);
-//    ui->mainMusicTable->viewport()->update();
-//}
+
 
 void MainWindow::readSettings() {
     QSettings *settings = App::get_app()->app_settings();
@@ -402,9 +364,8 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 //    m_library->add_media(f_name);
 
     m_base->AddtoLibrary(f_name);
-//    m_SQL_model->select();
+    m_SQL_model->select();
 
-//    qDebug(logDebug()) << "m_library size=" << m_library->data().size();
     emit m_tableModel->layoutChanged();
     emit m_tableModel->sort(0, Qt::AscendingOrder);
 
@@ -420,18 +381,18 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 }
 
 void MainWindow::loadCoverImage(const QModelIndex &index) {
-
-    std::string fileName = m_library->data()[index.row()].m_name.toStdString().data();
-    std::string fileType = fileName.substr(fileName.size() - 3);
+    QString filePath = m_SQL_model->record(index.row()).value("Path").toString();
+    QString fileName = m_SQL_model->record(index.row()).value("Name").toString();
+    QString fileType = QFileInfo(filePath).completeSuffix();
 
     QImage coverQImg(":/def_cover_color.png");
 
     if (fileType == "mp3") {
-        coverQImg = TagFunctions::load_cover_image_mpeg(m_library->data()[index.row()].m_path.toStdString().data());
+        coverQImg = TagFunctions::load_cover_image_mpeg(filePath.toStdString().data());
         ui->statusbar->showMessage(tr( " loaded"), 200);
     }
     if (fileType == "m4a") {
-        coverQImg = TagFunctions::load_cover_image_m4a(m_library->data()[index.row()].m_path.toStdString().data());
+        coverQImg = TagFunctions::load_cover_image_m4a(filePath.toStdString().data());
         ui->statusbar->showMessage(tr( " loaded"), 200);
     }
     QPixmap pix(QPixmap::fromImage(coverQImg));
@@ -445,15 +406,62 @@ void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
 
 void MainWindow::currentPlayListIndex(const QModelIndex &index) {
     m_playList_index = index;
+    // show in table list of songs current playList
+}
+
+void MainWindow::on_actionNewPlaylist_triggered()
+{
+    bool ok;
+    QString new_playlist_name = QInputDialog::getText(this,"New PlayList",
+                                                      tr("Enter the name for new PlayList"),
+                                                      QLineEdit::Normal,
+                                                      "",
+                                                      &ok);
+    if (ok) {
+        qInfo(logInfo()) << "new playlist " << new_playlist_name;
+        m_base->AddNewPlaylist(new_playlist_name);
+        m_PlayList_model->select();
+    } else {
+//            QMessageBox::warning(0, "Warning ", "You cannot delete the folder");  // show warning
+        qInfo(logInfo()) << "Warning You cannot delete the folder " << new_playlist_name;
+    }
+
 }
 
 void MainWindow::on_actionDeletePlaylist_triggered() {
 
+    qInfo(logInfo()) << "Delete playlist " << m_playList_index.data().toString();
+
+//    current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
+//
+    QString name = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
+    qDebug(logDebug()) << "delete playlist name =" << name;
+    m_base->DeletePlaylist(name);
+    m_PlayList_model->select();
+//  m_playList_index = nullptr;
+}
+
+void MainWindow::on_actionAddtoPlaylist_triggered() {
+
+    auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
+    auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
+    m_base->AddtoPlaylist(current_song_path, cur_playlist);
 }
 
 
 
-
+//void MainWindow::on_search_line_editingFinished()
+//{
+////    readDir(ui->fileBrowser->currentIndex());
+//    auto tmp = m_searcher->search();
+//    m_music_list = tmp;
+//    if (!m_tableModel)
+//        delete m_tableModel;
+//    m_tableModel = new MusicTableModel(ui->mainMusicTable);
+//    m_tableModel->music_list_add(m_music_list);
+//    ui->mainMusicTable->setModel(m_tableModel);
+//    ui->mainMusicTable->viewport()->update();
+//}
 
 
 

@@ -194,7 +194,7 @@ bool SqlBase::AddNewPlaylist(const QString &name) {
     }
 
     QSqlQuery query;
-    query.prepare("INSERT INTO LIST_PLAYLISTS (Name ) "
+    query.prepare("INSERT INTO LIST_PLAYLISTS (Name) "
                   "VALUES (:Name)");
     query.bindValue(":Name", name);
 
@@ -205,3 +205,59 @@ bool SqlBase::AddNewPlaylist(const QString &name) {
     return true;
 }
 
+bool SqlBase::DeletePlaylist(const QString& name) {
+    qDebug(logDebug()) << "Delete Playlist from LIST_PLAYLISTS";
+
+    QSqlQuery query;
+    query.prepare("DELETE FROM LIST_PLAYLISTS WHERE Name = ?");
+    query.addBindValue(name);
+    if (!query.exec()) {
+        qDebug(logDebug()) << "error "  << query.lastError();
+        return false;
+    }
+    return true;
+}
+
+bool SqlBase::AddtoPlaylist(const QString &path, const QString &cur_playlist) {
+    qDebug(logDebug()) << "SqlBase::AddtoPlaylist";
+
+    if (path.isEmpty() || cur_playlist.isEmpty()) {
+        return false;
+    }
+
+    qDebug(logDebug()) << "path = " << path;
+    qDebug(logDebug()) << "cur_playlist = " << cur_playlist;
+
+    QSqlQuery query;
+    query.prepare("SELECT FROM LIST_PLAYLISTS WHERE Name = ?");
+    query.addBindValue(cur_playlist);
+
+    /*
+    query.prepare("INSERT INTO PLAYLIST (PLAYLIST, SONG_ID) "
+                  "VALUES (:PLAYLIST, :SONG_ID)");
+    query.bindValue(":PLAYLIST", "SELECT FROM LIST_PLAYLISTS WHERE Name = ?");
+    query.addBindValue(cur_playlist);
+    query.bindValue(":SONG_ID", "SELECT FROM SONGS WHERE Path = ?");
+    query.addBindValue(path);
+    */
+
+    if (!query.exec()) {
+        qDebug(logDebug()) << "AddtoPlaylist failed, error = " << query.lastError();
+        return false;
+    }
+    int play_list_id =query.value(0).toInt();
+//    int SONG_id =
+    qDebug(logDebug()) << " song id = " << play_list_id;
+
+    return true;
+}
+
+
+//QString str = "CREATE TABLE IF NOT EXISTS PLAYLIST ("  \
+//      "ID             INTEGER  PRIMARY KEY  AUTOINCREMENT," \
+//      "PLAYLIST_ID    INTEGER  NOT NULL," \
+//      "SONG_ID        INTEGER  NOT NULL," \
+//      "FOREIGN KEY (PLAYLIST_ID) REFERENCES LIST_PLAYLISTS (PLAY_LISTS_ID)" \
+//      "FOREIGN KEY (SONG_ID) REFERENCES SONGS (SONG_ID)" \
+//      ");";
+//
