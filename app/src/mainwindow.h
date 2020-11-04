@@ -72,7 +72,9 @@ private slots:
 
     void onMusicTableContextMenu(const QPoint &point);
 
-    void on_actionPlaylist_triggered();
+    void on_actionNewPlaylist_triggered();
+
+    void on_actionDeletePlaylist_triggered();
 
     void on_actionPreferences_triggered();
 

@@ -151,8 +151,13 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
 //    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
 
     QAction action_new("New Playlist", this);
-    connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
     contextMenu.addAction(&action_new);
+
+    QAction action_delete("Delete Playlist", this);
+    connect(&action_delete, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
+    contextMenu.addAction(&action_delete);
+
 
 //    QAction action_rename("Rename ", this);
 //    connect(&action_rename, &QAction::triggered, this, [=] () { on_action_context_file_rename(fullFileName); });
@@ -165,7 +170,7 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
 }
 
 
-void MainWindow::on_actionPlaylist_triggered()
+void MainWindow::on_actionNewPlaylist_triggered()
 {
     bool ok;
     QString new_playlist_name = QInputDialog::getText(this,"New PlayList",
@@ -206,7 +211,7 @@ void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // p
 //    setMusicPlay(current.m_path);
     setMusicPlay(index.row());
 
-    loadCoverImage(index);
+//    loadCoverImage(index);
 }
 
 void MainWindow::setMusicPlay(QString soundPath)
@@ -439,6 +444,10 @@ void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
 
 void MainWindow::currentPlayListIndex(const QModelIndex &index) {
     m_playList_index = index;
+}
+
+void MainWindow::on_actionDeletePlaylist_triggered() {
+
 }
 
 
