@@ -431,16 +431,9 @@ void MainWindow::on_actionNewPlaylist_triggered()
 }
 
 void MainWindow::on_actionDeletePlaylist_triggered() {
-
-    qInfo(logInfo()) << "Delete playlist " << m_playList_index.data().toString();
-
-//    current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
-//
     QString name = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
-    qDebug(logDebug()) << "delete playlist name =" << name;
     m_base->DeletePlaylist(name);
     m_PlayList_model->select();
-//  m_playList_index = nullptr;
 }
 void MainWindow::playNext() {
 //    Music song = getMusicfromTable();
