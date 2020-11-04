@@ -86,6 +86,12 @@ private slots:
 
     void on_actionAddtoPlaylist_triggered();
 
+    void playNext();
+
+    void on_actionFast_forward_triggered();
+
+    void on_actionRewind_triggered();
+
 
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);

@@ -22,14 +22,14 @@ public:
     QString playlistName() const;
     void shuffle();
     void unshuffle();
-    Music getMusic(int pos);
+    Music getMusic(int pos) const;
     bool empty() const;
     void addToMediaPlaylist();
     void clearMusic(int pos);
     void clearMusic(const Music& music);
     void clear();
     size_t size() const;
-    Music operator[](int index);
+    Music operator[](int index) const;
     int indexMusic(const Music &music) const;
 
 private:

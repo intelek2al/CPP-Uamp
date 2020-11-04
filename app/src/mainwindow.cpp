@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->listPlaylist->setModel(m_PlayList_model);
     ui->listPlaylist->setModelColumn(1);
 
+
     ui->listPlaylist->setEditTriggers(
 //            QAbstractItemView::DoubleClicked |
             QAbstractItemView::SelectedClicked);
@@ -69,8 +70,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
 
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-    ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+    ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
+//    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
 
     // default cover in player
     QImage def_cover(":/def_cover_color.png");
@@ -108,7 +110,7 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
     QAction* actionA_Setup = contextMenu.addAction( "Setup" );
 
     QAction action_play_next("Play Next", this);
-//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    connect(&action_play_next, &QAction::triggered, this, &MainWindow::playNext);
     contextMenu.addAction(&action_play_next);
 
 //    QAction action_play_later("Play Later", this);
@@ -440,6 +442,21 @@ void MainWindow::on_actionDeletePlaylist_triggered() {
     m_PlayList_model->select();
 //  m_playList_index = nullptr;
 }
+void MainWindow::playNext() {
+//    Music song = getMusicfromTable();
+    m_player->playNext(getMusicfromTable());
+}
+
+void MainWindow::on_actionFast_forward_triggered()
+{
+    m_player->fastForward();
+}
+
+void MainWindow::on_actionRewind_triggered()
+{
+    m_player->rewind();
+}
+
 
 void MainWindow::on_actionAddtoPlaylist_triggered() {
 

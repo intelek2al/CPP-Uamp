@@ -47,7 +47,7 @@ QString Playlist::playlistName() const {
     return m_playlistName;
 }
 
-Music Playlist::getMusic(int pos) {
+Music Playlist::getMusic(int pos) const {
     if(pos >= 0 && pos < m_musicPlaylist.size())
         return m_musicPlaylist[pos];
     return Music();
@@ -102,7 +102,7 @@ bool Playlist::empty() const {
     return m_musicPlaylist.empty();
 }
 
-Music Playlist::operator[](int index) {
+Music Playlist::operator[](int index) const {
     if (index >= 0 && index < m_musicPlaylist.size())
         return m_musicPlaylist[index];
     return Music();

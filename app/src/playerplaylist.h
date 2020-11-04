@@ -20,8 +20,9 @@ public:
     void setMode(QMediaPlaylist::PlaybackMode mode);
     Playlist &currentPlaylist();
     Playlist upNext();
-    Playlist history();
+    Music currentMusic() const;
 
+    Playlist history();
 public slots:
     void next();
     void previous();
@@ -66,6 +67,7 @@ private:
     };
     void refresh();
 private:
+    Own m_current_play;
     QMediaPlaylist::PlaybackMode m_mode;
     History m_history;
     Playlist m_user;

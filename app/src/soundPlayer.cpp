@@ -10,6 +10,8 @@ SoundPlayer::SoundPlayer(Ui::MainWindow *child)
     ui = child;
     connect(m_player, &QMediaPlayer::positionChanged, this, &SoundPlayer::setPosition);
     connect(m_player, &QMediaPlayer::stateChanged, this, &SoundPlayer::stateCheck);
+//    connect(m_player, QOverload<bool>::of(&QMediaObject::availabilityChanged) &SoundPlayer::metaData);
+    connect(m_player, &QMediaPlayer::metaDataAvailableChanged, this, &SoundPlayer::metaData);
     ui->labelSong->setText("");
     ui->labelArtist->setText("");
 }
@@ -45,8 +47,6 @@ void SoundPlayer::setSound(int index) {
 
     m_list.setStartSong(index);
 //    QStringList list = m_player->availableMetaData();
-
-    this->setPlay();
     ui->playButton->click();
 }
 
@@ -75,15 +75,15 @@ void SoundPlayer::stateCheck(QMediaPlayer::State state) {
 #include <iostream>
 void SoundPlayer::setPlay()
 {
-    if (m_player->isMetaDataAvailable()) {
-        ui->labelSong->setText(m_player->metaData(QStringLiteral("Title")).toString());
-        ui->labelArtist->setText(m_player->metaData(QStringLiteral("ContributingArtist")).toString());
+    metaData(m_player->isMetaDataAvailable());
+
+    if (m_player->state() == QMediaPlayer::State::PausedState || m_player->state() == QMediaPlayer::State::StoppedState) {
+        m_player->play();
     }
-//    if (m_player->error() == QMediaPlayer::NoError)
-//    m_list.currentPlaylist()-
-        std::cout << "Player errors : " << m_player->errorString().toStdString() << std::endl;
+    else if(m_player->state() == QMediaPlayer::State::PlayingState) {
+        m_player->pause();
+    }
     ui->statusPlay->setEnabled(true);
-    m_player->play();
 }
 
 void SoundPlayer::setPause()
@@ -107,13 +107,25 @@ void SoundPlayer::setPosition(int position)
        ui->statusPlay->setMaximum(static_cast<int>(m_player->duration()));
     ui->statusPlay->setValue(position);
 
-    int sececonds = (position / 1000) % 60;
+    int seconds = (position / 1000) % 60;
     int minute = (position / 60000) % 60;
     int hours = (position / 3600000) % 24;
-    QTime time{hours, minute, sececonds};
+    QTime time{hours, minute, seconds};
     ui->labelTime->setText(time.toString());
 }
 
+void SoundPlayer::fastForward() {
+    int pos = m_player->position();
+    pos += 10 * 1000;
+    m_player->setPosition(pos);
+}
+
+void SoundPlayer::rewind()
+{
+    int pos = m_player->position();
+    pos += -10 * 1000;
+    m_player->setPosition(pos);
+}
 void SoundPlayer::setMovedPosition(int position)
 {
     m_player->setPosition(position);
@@ -200,3 +212,21 @@ void SoundPlayer::savePlaylist(Playlist playlist, QString path) {
     ui->statusbar->showMessage("not saved: " + _pl.errorString(), 12000);
 }
 
+void SoundPlayer::playNext(const Music &song) {
+    m_list.addUserNext(song);
+}
+
+void SoundPlayer::metaData(bool check) {
+    std::cout << "Avalible: " << check << std::endl;
+    if (check) {
+        auto title = m_player->metaData(QStringLiteral("Title")).toString();
+        ui->labelSong->setText(title.isEmpty() ? "Untitled" : title);
+        ui->labelArtist->setText(m_player->metaData(QStringLiteral("ContributingArtist")).toString());
+    }
+    else {
+        auto title = m_list.currentMusic().m_title;
+        auto artist = m_list.currentMusic().m_artist;
+        ui->labelSong->setText(title);
+        ui->labelArtist->setText(artist);
+    }
+}
