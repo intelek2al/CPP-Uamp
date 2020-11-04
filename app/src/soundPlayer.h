@@ -31,6 +31,7 @@ public slots:
 //    static QMediaPlaylist *getInstance();
     void next();
     void previous();
+    void savePlaylist(Playlist playlist, QString path = "/Users/msavytskyi/Desktop/");
 
 private slots:
 

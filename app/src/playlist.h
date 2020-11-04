@@ -30,6 +30,7 @@ public:
     void clear();
     size_t size() const;
     Music operator[](int index);
+    int indexMusic(const Music &music) const;
 
 private:
     QString m_playlistName;

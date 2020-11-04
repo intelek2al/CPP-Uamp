@@ -42,6 +42,8 @@ private:
 
         void clearMusic(int pos) {
             history.clearMusic(0);
+            if (history.empty())
+                return;
             if (pos == 0) {
                 historyOwners.pop_front();
                 return;

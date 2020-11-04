@@ -165,3 +165,15 @@ void SoundPlayer::previous() {
         std::cout << test_up[i].getStr().toStdString() << std::endl;
     }
 }
+
+void SoundPlayer::savePlaylist(Playlist playlist, QString path) {
+    QMediaPlaylist _pl;
+    for (size_t i = 0; i < playlist.size(); ++i) {
+        _pl.addMedia(playlist[i].m_url);
+    }
+    path += "test.m3u";
+    if (_pl.save(QUrl::fromLocalFile(path)))
+        ui->statusbar->showMessage("saved", 1200);
+    else
+    ui->statusbar->showMessage("not saved: " + _pl.errorString(), 12000);
+}

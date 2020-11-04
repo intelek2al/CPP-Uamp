@@ -60,6 +60,8 @@ void Playlist::addToMediaPlaylist() {
 }
 
 void Playlist::clearMusic(int pos) {
+    if (m_musicPlaylist.empty())
+        return;
     if (pos == 0) {
         m_musicPlaylist.pop_front();
         return;
@@ -138,4 +140,13 @@ void Playlist::clearEmpty() {
         }
         i++;
     }
+}
+
+int Playlist::indexMusic(const Music &music) const {
+    size_t idx = 0;
+    for (; idx < m_musicPlaylist.size(); ++idx) {
+        if (music == m_musicPlaylist[idx])
+            return idx;
+    }
+    return -1;
 }

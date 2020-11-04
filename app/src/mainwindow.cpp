@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_SQL_model->setEditStrategy(QSqlTableModel::OnFieldChange);
     m_SQL_model->select();
 
-    ui->mainMusicTable->setModel(m_SQL_model);
+//    ui->mainMusicTable->setModel(m_SQL_model);
 
 
     ui->mainMusicTable->hideColumn(0);
@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_star_delegate = new StarDelegate(ui->mainMusicTable);
 
 
-//    ui->mainMusicTable->setModel(m_tableModel);
+    ui->mainMusicTable->setModel(m_tableModel);
 
     ui->mainMusicTable->setItemDelegateForColumn(3, m_star_delegate);
 
@@ -343,13 +343,14 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
     QString f_name = QFileDialog::getExistingDirectory(this, "Add media", "");
     m_library->add_media(f_name);
 
-    m_base->AddtoLibrary(f_name);
+//    m_base->AddtoLibrary(f_name);
 
     qDebug(logDebug()) << "m_library size=" << m_library->data().size();
     emit m_tableModel->layoutChanged();
     emit m_tableModel->sort(0, Qt::AscendingOrder);
 
     m_player->setPlaylist(m_library->dataPlaylist());
+    m_player->savePlaylist(m_library->dataPlaylist());
 //    cout << "===================Setting==================" << endl;
 //    for (int i = 0; i < m_library->dataPlaylist().size(); ++i )
 //        cout << m_library->dataPlaylist()[i].m_path.toStdString() << endl;
@@ -374,12 +375,6 @@ void MainWindow::loadCoverImage(const QModelIndex &index) {
     QPixmap pix(QPixmap::fromImage(coverQImg));
     ui->cover_label->setPixmap(pix);
 }
-
-
-
-
-
-
 
 //void MainWindow::outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index)
 //{

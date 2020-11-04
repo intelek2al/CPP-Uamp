@@ -61,7 +61,7 @@ void PlayerPlaylist::next() {
 //    std::cout << "======== Debug ========\n" << m_auto[0].getStr().toStdString() << std::endl;
     m_auto.clearMusic(0);
 //    std::cout << "======== Debug ========\n" << m_auto[0].getStr().toStdString() << std::endl;
-//    m_auto.addFrontMusic(_tmp);
+    m_auto.addMusic(_tmp);
     refresh();
 }
 
@@ -149,12 +149,24 @@ Playlist PlayerPlaylist::upNext() {
 }
 
 void PlayerPlaylist::previous() {
-    Music _tmp = m_history.history[0];
-    Own owner = m_history.historyOwners[0];
-//    if (owner == Own::Auto)
-//        m_auto.addFrontMusic(_tmp);
-//    else if (owner == Own::User)
-    m_user.addFrontMusic(_tmp);
+    Music _tmp;
+    Own owner;
+    if (m_history.history.empty()) {
+        auto current = m_user.empty() ? m_auto : m_user;
+        auto index = m_list.indexMusic(current[0]);
+        index = index == 0 ? m_list.size() - 1 : index - 1;
+        _tmp = m_list[index];
+        owner = User;
+    }
+    else {
+        _tmp = m_history.history[0];
+        owner = m_history.historyOwners[0];
+    }
+    if (owner == Own::Auto)
+        m_auto.addFrontMusic(_tmp);
+    else if (owner == Own::User) {
+        m_user.addFrontMusic(_tmp);
+    }
     m_history.clearMusic(0);
     refresh();
 }
