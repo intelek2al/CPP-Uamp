@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_player->setPlaylist(m_library->dataPlaylist());
 
     ui->mainMusicTable->setModel(m_SQL_model);
+    m_player->setPlaylist(m_SQL_model);
 
     ui->mainMusicTable->hideColumn(0);
 
@@ -206,7 +207,7 @@ void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // p
 //    setMusicPlay(current.m_path);
     setMusicPlay(index.row());
 
-    loadCoverImage(index);
+//    loadCoverImage(index);
 }
 
 void MainWindow::setMusicPlay(QString soundPath)
