@@ -89,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->mainMusicTable->setContextMenuPolicy(Qt::CustomContextMenu);
 //    connect(ui->filterBox, SIGNAL(activated(int)), this, SLOT(on_search_line_editingFinished()));
     // context menu for music table
+    m_searcher = new Searcher(ui->search_line, ui->filterBox, m_SQL_model);
     connect(ui->mainMusicTable, SIGNAL(customContextMenuRequested(const QPoint &)), this,
             SLOT(onMusicTableContextMenu(const QPoint &)));
 
@@ -168,7 +169,7 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
 
 MainWindow::~MainWindow()
 {
-//    delete m_searcher;
+    delete m_searcher;
     delete  m_library;
     delete ui;
     system("leaks -q uamp");
@@ -467,18 +468,18 @@ void MainWindow::on_actionAddtoPlaylist_triggered() {
 
 
 
-//void MainWindow::on_search_line_editingFinished()
-//{
-////    readDir(ui->fileBrowser->currentIndex());
-//    auto tmp = m_searcher->search();
-//    m_music_list = tmp;
+void MainWindow::on_search_line_editingFinished()
+{
+    cout << "ASDASDASDASDASDASDASDASDASDASDASDASD" << endl;
+//    readDir(ui->fileBrowser->currentIndex());
+    m_searcher->search();
 //    if (!m_tableModel)
 //        delete m_tableModel;
 //    m_tableModel = new MusicTableModel(ui->mainMusicTable);
 //    m_tableModel->music_list_add(m_music_list);
 //    ui->mainMusicTable->setModel(m_tableModel);
 //    ui->mainMusicTable->viewport()->update();
-//}
+}
 
 
 

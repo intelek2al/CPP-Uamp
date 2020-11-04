@@ -92,6 +92,8 @@ private slots:
 
     void on_actionRewind_triggered();
 
+    void on_search_line_editingFinished();
+
 
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);

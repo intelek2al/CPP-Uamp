@@ -1,5 +1,6 @@
 #include "soundPlayer.h"
 #include "ui_mainwindow.h"
+#include <QWidget>
 
 SoundPlayer::SoundPlayer(Ui::MainWindow *child)
 {
@@ -75,13 +76,16 @@ void SoundPlayer::stateCheck(QMediaPlayer::State state) {
 #include <iostream>
 void SoundPlayer::setPlay()
 {
-    metaData(m_player->isMetaDataAvailable());
+    QWidget tmp;
 
+    metaData(m_player->isMetaDataAvailable());
     if (m_player->state() == QMediaPlayer::State::PausedState || m_player->state() == QMediaPlayer::State::StoppedState) {
         m_player->play();
+        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPause));
     }
     else if(m_player->state() == QMediaPlayer::State::PlayingState) {
         m_player->pause();
+        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPlay));
     }
     ui->statusPlay->setEnabled(true);
 }
