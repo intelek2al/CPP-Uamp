@@ -41,7 +41,7 @@ public slots:
     void savePlaylist(Playlist playlist, QString path = "/Users/msavytskyi/Desktop/");
 
 private slots:
-
+    void modelChanged();
     void on_statusPlay_valueChanged(int value);
     void on_mainMusicTable_pressed(const QModelIndex &index);
 

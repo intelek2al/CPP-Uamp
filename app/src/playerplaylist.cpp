@@ -189,3 +189,15 @@ Music PlayerPlaylist::currentMusic() const {
         return m_user[0];
     return m_auto[0];
 }
+
+void PlayerPlaylist::setChangedPlaylist(const Playlist &playlist) {
+    m_list = playlist;
+    auto current = currentMusic();
+    m_auto = m_list;
+    if (m_mode == QMediaPlaylist::PlaybackMode::Random)
+        m_auto.shuffle();
+    if (m_current_play == Auto) {
+        m_auto[0] = current;
+    }
+
+}
