@@ -18,8 +18,14 @@ SqlBase::SqlBase() {
     }
 }
 
+bool SqlBase::createNewBase() {
+    bool result = createTableSongs();
+    createTableListPlaylists();
+    createTablePlaylist();
+    return result;
+}
+
 bool SqlBase::createConnection() {
-//    QString prefix = "~/";
 
     qDebug(logDebug()) << "SqlBase::createConnection";
     m_media_base = QSqlDatabase:: addDatabase ("QSQLITE");
@@ -35,11 +41,12 @@ bool SqlBase::createConnection() {
     return true;
 }
 
-bool SqlBase::createNewBase() {
+
+bool SqlBase::createTableSongs() {
   qDebug(logDebug()) << "Create table SONGS";
   QSqlQuery query;
   QString str = "CREATE TABLE IF NOT EXISTS SONGS ("  \
-      "ID INTEGER PRIMARY KEY   NOT NULL ," \
+      "SONG_ID             INTEGER PRIMARY KEY  AUTOINCREMENT," \
       "Title          TEXT    ," \
       "Time           TEXT    ," \
       "Artist         TEXT    ," \
@@ -50,17 +57,57 @@ bool SqlBase::createNewBase() {
       "Track          TEXT    ," \
       "Comment        TEXT    ," \
       "Name           TEXT    NOT NULL," \
-      "Path     TEXT  UNIQUE  NOT NULL"  \
-              ");";
+      "Path           TEXT    UNIQUE  NOT NULL"  \
+      ");";
 
   if (!query.exec(str)) {
-    qDebug(logDebug()) << "Unable to create table" << query.lastError();
+    qDebug(logDebug()) << "Unable to create table SONGS" << query.lastError();
   }
   else {
-    qDebug(logDebug()) << "Table created successfully\n";
+    qDebug(logDebug()) << "Table SONGS created successfully\n";
   }
     return false;
 }
+
+bool SqlBase::createTableListPlaylists() {
+    qDebug(logDebug()) << "Create table LIST_PLAYLISTS";
+
+    QSqlQuery query;
+    QString str = "CREATE TABLE IF NOT EXISTS LIST_PLAYLISTS ("  \
+      "PLAY_LISTS_ID   INTEGER PRIMARY KEY  AUTOINCREMENT," \
+      "Name            TEXT    UNIQUE NOT NULL " \
+      ");";
+
+    if (!query.exec(str)) {
+        qDebug(logDebug()) << "Unable to create table LIST_PLAYLISTS" << query.lastError();
+    }
+    else {
+        qDebug(logDebug()) << "Table LIST_PLAYLISTS created successfully\n";
+    }
+    return false;
+}
+
+bool SqlBase::createTablePlaylist() {
+    qDebug(logDebug()) << "Create table PLAYLIST";
+
+    QSqlQuery query;
+    QString str = "CREATE TABLE IF NOT EXISTS PLAYLIST ("  \
+      "ID             INTEGER  PRIMARY KEY  AUTOINCREMENT," \
+      "PLAYLIST_ID    INTEGER  NOT NULL," \
+      "SONG_ID        INTEGER  NOT NULL," \
+      "FOREIGN KEY (PLAYLIST_ID) REFERENCES LIST_PLAYLISTS (PLAY_LISTS_ID)" \
+      "FOREIGN KEY (SONG_ID) REFERENCES SONGS (SONG_ID)" \
+      ");";
+
+    if (!query.exec(str)) {
+        qDebug(logDebug()) << "Unable to create table PLAYLIST" << query.lastError();
+    } else {
+        qDebug(logDebug()) << "Table PLAYLIST created successfully\n";
+    }
+    return false;
+}
+
+
 
 bool SqlBase::loadData() {
     qDebug(logDebug()) <<  "SqlBase::loadData()";
@@ -138,3 +185,23 @@ SqlBase::~SqlBase() {
     m_media_base.close();
     m_media_base.removeDatabase(m_media_base.connectionName());
 }
+
+bool SqlBase::AddNewPlaylist(const QString &name) {
+    qDebug(logDebug()) << "Create newPlaylist in LIST_PLAYLISTS";
+
+    if (name.isEmpty()) {
+        return false;
+    }
+
+    QSqlQuery query;
+    query.prepare("INSERT INTO LIST_PLAYLISTS (Name ) "
+                  "VALUES (:Name)");
+    query.bindValue(":Name", name);
+
+    if (!query.exec()) {
+        qDebug(logDebug()) << "Create newPlaylist in LIST_PLAYLISTS failed, error = " << query.lastError();
+        return false;
+    }
+    return true;
+}
+

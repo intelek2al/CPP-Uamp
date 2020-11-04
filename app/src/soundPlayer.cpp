@@ -128,8 +128,11 @@ QMediaPlaylist *SoundPlayer::playlist() {
 }
 
 void SoundPlayer::setPlaylist(const Playlist &playlist) {
-    m_list.setPlaylist(playlist);
-    isPlaylistExist = true;
+
+
+//    m_list.setPlaylist(playlist);
+//    isPlaylistExist = true;
+//
 }
 
 void SoundPlayer::next() {

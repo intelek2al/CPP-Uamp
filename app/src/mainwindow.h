@@ -48,7 +48,9 @@ public:
 private slots:
 //    void on_mainMusicTable_clicked(const QModelIndex &index);
 
-    void currentIndex(const QModelIndex &index);
+    void currentMusicTableIndex(const QModelIndex &index);  // index of current sohg
+
+    void currentPlayListIndex(const QModelIndex &index);   // index of current playList
 
     void on_mainMusicTable_doubleClicked(const QModelIndex &index);  // player
 
@@ -106,11 +108,14 @@ private:
     Settings *m_settings;
 
     QModelIndex m_table_index {};
+    QModelIndex m_playList_index {};
+
     Music new_song_info;
 
     SqlBase *m_base;
 
     QSqlTableModel *m_SQL_model;
+    QSqlTableModel *m_PlayList_model;
 
     StarDelegate *m_star_delegate;
 
