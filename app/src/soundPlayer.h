@@ -4,6 +4,8 @@
 #include <QMediaPlayer>
 #include <QTime>
 #include <QMediaPlaylist>
+#include <QSqlTableModel>
+#include <QSqlRecord>
 #include "playerplaylist.h"
 
 namespace Ui {
@@ -27,6 +29,7 @@ public slots:
     void setMovedPosition(int position);
     void stateCheck(QMediaPlayer::State state);
     void setPlaylist(const Playlist &playlist);
+    void setPlaylist(QSqlTableModel *model);
     static QMediaPlaylist *playlist();
 //    static QMediaPlaylist *getInstance();
     void next();

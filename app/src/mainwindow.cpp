@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_player->setPlaylist(m_library->dataPlaylist());
 
     ui->mainMusicTable->setModel(m_SQL_model);
+    m_player->setPlaylist(m_SQL_model);
 
     ui->mainMusicTable->hideColumn(0);
 
