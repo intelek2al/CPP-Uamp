@@ -149,24 +149,8 @@ void SoundPlayer::setPlaylist(const Playlist &playlist) {
 }
 
 void SoundPlayer::setPlaylist(QSqlTableModel *model) {
-    Playlist playlist;
-    std::cout << "= = = = = = = Loading = = = = = = = " << std::endl;
-    for (int i = 0; i < model->rowCount(); ++i) {
-        Music current_song;
-        current_song.m_title = model->record(i).value("Title").toString();
-        current_song.m_time = model->record(i).value("Time").toString();
-        current_song.m_artist = model->record(i).value("Artist").toString();
-        current_song.m_rate = model->record(i).value("Rating").toString();
-        current_song.m_genre = model->record(i).value("Genre").toString();
-        current_song.m_album = model->record(i).value("Album").toString();
-        current_song.m_year = model->record(i).value("Year").toString();
-        current_song.m_track = model->record(i).value("Track").toString();
-        current_song.m_comment = model->record(i).value("Comment").toString();
-        current_song.m_name = model->record(i).value("Name").toString();
-        current_song.m_path = model->record(i).value("Path").toString();
-        std::cout << "  Song : " << current_song.m_title.toStdString() << std::endl;
-        playlist.addMusic(current_song);
-    }
+    m_model = model;
+    Playlist playlist = handlerPlaylist(m_model);
     setPlaylist(playlist);
 }
 
@@ -233,4 +217,32 @@ void SoundPlayer::metaData(bool check) {
         ui->labelSong->setText(title);
         ui->labelArtist->setText(artist);
     }
+}
+
+void SoundPlayer::modelChanged() {
+    std::cout << "= = = = = = = Reloading = = = = = = = " << std::endl;
+    Playlist playlist = handlerPlaylist(m_model);
+    m_list.setChangedPlaylist(playlist);
+}
+
+Playlist SoundPlayer::handlerPlaylist(QSqlTableModel *model) {
+    Playlist playlist;
+    std::cout << "= = = = = = = Loading = = = = = = = " << std::endl;
+    for (int i = 0; i < model->rowCount(); ++i) {
+        Music current_song;
+        current_song.m_title = model->record(i).value("Title").toString();
+        current_song.m_time = model->record(i).value("Time").toString();
+        current_song.m_artist = model->record(i).value("Artist").toString();
+        current_song.m_rate = model->record(i).value("Rating").toString();
+        current_song.m_genre = model->record(i).value("Genre").toString();
+        current_song.m_album = model->record(i).value("Album").toString();
+        current_song.m_year = model->record(i).value("Year").toString();
+        current_song.m_track = model->record(i).value("Track").toString();
+        current_song.m_comment = model->record(i).value("Comment").toString();
+        current_song.m_name = model->record(i).value("Name").toString();
+        current_song.m_path = model->record(i).value("Path").toString();
+        std::cout << "  Song : " << current_song.m_title.toStdString() << std::endl;
+        playlist.addMusic(current_song);
+    }
+    return playlist;
 }
