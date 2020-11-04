@@ -57,7 +57,7 @@ bool SqlBase::createNewBase() {
     qDebug(logDebug()) << "Unable to create table" << query.lastError();
   }
   else {
-    qDebug(logDebug()) <<  "Table created successfully\n";
+    qDebug(logDebug()) << "Table created successfully\n";
   }
     return false;
 }
