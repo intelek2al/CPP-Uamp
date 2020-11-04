@@ -197,6 +197,7 @@ void PlayerPlaylist::setChangedPlaylist(const Playlist &playlist) {
     if (m_mode == QMediaPlaylist::PlaybackMode::Random)
         m_auto.shuffle();
     if (m_current_play == Auto) {
+//        int i =
         m_auto[0] = current;
     }
 

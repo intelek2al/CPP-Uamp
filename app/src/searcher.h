@@ -8,6 +8,7 @@
 #include <QString>
 #include <QMap>
 #include <QSqlTableModel>
+
 class Searcher : public QObject
 {
     Q_OBJECT

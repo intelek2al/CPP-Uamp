@@ -38,10 +38,12 @@ public slots:
 //    static QMediaPlaylist *getInstance();
     void next();
     void previous();
+    void modelChanged();
     void savePlaylist(Playlist playlist, QString path = "/Users/msavytskyi/Desktop/");
 
+    static Playlist handlerPlaylist(QSqlTableModel *model);
+
 private slots:
-    void modelChanged();
     void on_statusPlay_valueChanged(int value);
     void on_mainMusicTable_pressed(const QModelIndex &index);
 
@@ -52,6 +54,7 @@ private:
     static QMediaPlaylist *m_playlist;
     Ui::MainWindow *ui;
     bool isPlaylistExist = false;
+    QSqlTableModel *m_model;
 };
 
 

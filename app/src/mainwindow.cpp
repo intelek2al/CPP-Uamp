@@ -95,6 +95,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(ui->mainMusicTable, &QAbstractItemView::clicked, this, &MainWindow::currentMusicTableIndex);
     connect(ui->listPlaylist, &QAbstractItemView::clicked, this, &MainWindow::currentPlayListIndex);
+    connect(m_SQL_model, &QSqlTableModel::dataChanged, m_player, &SoundPlayer::modelChanged);
+    connect(m_SQL_model, &QSqlTableModel::rowsMoved, m_player, &SoundPlayer::modelChanged);
+    connect(m_SQL_model, &QSqlTableModel::layoutChanged, m_player, &SoundPlayer::modelChanged);
 }
 
 void MainWindow::onMusicTableContextMenu(const QPoint &point) {
