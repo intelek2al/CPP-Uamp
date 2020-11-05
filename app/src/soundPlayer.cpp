@@ -216,7 +216,7 @@ Playlist SoundPlayer::importPlaylist(const QString &path) {
         auto media = _pl.media(i).canonicalUrl();
         playlist.addMusic(Music(media));
     }
-    emit playlistImported(playlist);
+//    emit playlistImported(playlist);
 
     return playlist;
 //    std::cout << " = = = = = = = = = = Loaded = = = = = = = = = = = " << std::endl;

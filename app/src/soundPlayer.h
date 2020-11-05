@@ -21,7 +21,7 @@ public:
     void setSound(int index);
 
 signals:
-    void playlistImported(Playlist);
+//    void playlistImported(Playlist);
 
 public slots:
     void playNext(const Music &song);

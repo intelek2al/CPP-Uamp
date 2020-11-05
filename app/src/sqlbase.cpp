@@ -37,6 +37,9 @@ bool SqlBase::createConnection() {
     if (!m_media_base.open()) {
         qDebug(logDebug()) << "Cannot open database:" << m_media_base.lastError();
         return false;
+    } else {
+      QSqlQuery query;
+      query.exec("PRAGMA foreign_keys = ON;");
     }
     return true;
 }
@@ -91,12 +94,15 @@ bool SqlBase::createTablePlaylist() {
     qDebug(logDebug()) << "Create table PLAYLIST";
 
     QSqlQuery query;
+
+    query.exec("PRAGMA foreign_keys = ON;");
+
     QString str = "CREATE TABLE IF NOT EXISTS PLAYLIST ("  \
       "ID             INTEGER  PRIMARY KEY  AUTOINCREMENT," \
-      "PLAYLIST_ID    INTEGER  NOT NULL," \
-      "SONG_ID        INTEGER  NOT NULL," \
-      "FOREIGN KEY (PLAYLIST_ID) REFERENCES LIST_PLAYLISTS (PLAY_LISTS_ID)" \
-      "FOREIGN KEY (SONG_ID) REFERENCES SONGS (SONG_ID)" \
+      "PLAYLIST_R    INTEGER  NOT NULL," \
+      "SONG_R        INTEGER  NOT NULL," \
+      "FOREIGN KEY (PLAYLIST_R) REFERENCES LIST_PLAYLISTS (PLAY_LISTS_ID)" \
+      "FOREIGN KEY (SONG_R) REFERENCES SONGS (SONG_ID) ON DELETE CASCADE" \
       ");";
 
     if (!query.exec(str)) {
@@ -202,8 +208,9 @@ bool SqlBase::AddNewPlaylist(const QString &name) {
 
 bool SqlBase::DeletePlaylist(const QString& name) {
     qDebug(logDebug()) << "Delete Playlist from LIST_PLAYLISTS";
-    int PLAY_LISTS_ID;
+    int PLAY_LISTS_R;
     QSqlQuery query;
+    query.exec("PRAGMA foreign_keys = ON");
 
     query.prepare("SELECT PLAY_LISTS_ID FROM LIST_PLAYLISTS WHERE Name = ?");
     query.addBindValue(name);
@@ -212,17 +219,17 @@ bool SqlBase::DeletePlaylist(const QString& name) {
         return false;
     }
     query.next();
-    PLAY_LISTS_ID = query.value(0).toInt();
+    PLAY_LISTS_R = query.value(0).toInt();
 
     query.prepare("DELETE FROM LIST_PLAYLISTS WHERE PLAY_LISTS_ID = ?");
-    query.addBindValue(PLAY_LISTS_ID);
+    query.addBindValue(PLAY_LISTS_R);
     if (!query.exec()) {
         qDebug(logDebug()) << "error "  << query.lastError();
         return false;
     }
 
-    query.prepare("DELETE FROM PLAYLIST WHERE PLAYLIST_ID = ?");
-    query.addBindValue(PLAY_LISTS_ID);
+    query.prepare("DELETE FROM PLAYLIST WHERE PLAYLIST_R = ?");
+    query.addBindValue(PLAY_LISTS_R);
     if (!query.exec()) {
         qDebug(logDebug()) << "error "  << query.lastError();
         return false;
@@ -233,7 +240,7 @@ bool SqlBase::DeletePlaylist(const QString& name) {
 bool SqlBase::AddtoPlaylist(const QString &path, const QString &cur_playlist) {
     qDebug(logDebug()) << "SqlBase::AddtoPlaylist";
 
-    int PLAY_LISTS_ID;
+    int PLAY_LISTS_R;
     int SONG_ID;
 
     if (path.isEmpty() || cur_playlist.isEmpty())
@@ -248,7 +255,7 @@ bool SqlBase::AddtoPlaylist(const QString &path, const QString &cur_playlist) {
         return false;
     }
     query.next();
-    PLAY_LISTS_ID = query.value(0).toInt();
+    PLAY_LISTS_R = query.value(0).toInt();
 
     query.prepare("SELECT SONG_ID FROM SONGS WHERE Path = ?");
     query.addBindValue(path);
@@ -259,10 +266,10 @@ bool SqlBase::AddtoPlaylist(const QString &path, const QString &cur_playlist) {
     query.next();
     SONG_ID = query.value(0).toInt();
 
-    query.prepare("INSERT INTO PLAYLIST (PLAYLIST_ID, SONG_ID) "
-                  "VALUES (:PLAYLIST_ID, :SONG_ID)");
-    query.bindValue(":PLAYLIST_ID", PLAY_LISTS_ID);
-    query.bindValue(":SONG_ID", SONG_ID);
+    query.prepare("INSERT INTO PLAYLIST (PLAYLIST_R, SONG_R) "
+                  "VALUES (:PLAYLIST_R, :SONG_R)");
+    query.bindValue(":PLAYLIST_R", PLAY_LISTS_R);
+    query.bindValue(":SONG_R", SONG_ID);
     if (!query.exec()) {
         qDebug(logDebug()) << "AddtoPlaylist failed, error = " << query.lastError();
         return false;

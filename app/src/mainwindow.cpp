@@ -15,6 +15,7 @@
 #include <QSqlQueryModel>
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
+#include <QSqlQuery>
 //#include "bass.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -420,14 +421,38 @@ void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
 void MainWindow::currentPlayListIndex(const QModelIndex &index) {
     m_playList_index = index;
 
+//  auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
+  auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
+
     qDebug(logDebug()) << "click on playlists";
+    qDebug(logDebug()) << "cur_playlist =" << cur_playlist;
 
-    QSqlRelationalTableModel *r_model = new QSqlRelationalTableModel;
+  QSqlQueryModel *model = new QSqlQueryModel;
+  int PLAY_LISTS_R;
 
-    r_model->setTable("SONGS");
-    r_model->setRelation(0, QSqlRelation("PLAYLIST_ID", "SONG_ID", "SONG_ID"));
-    ui->mainMusicTable->setModel(r_model);
+  QSqlQuery query;
+  query.prepare("SELECT PLAY_LISTS_ID FROM LIST_PLAYLISTS WHERE Name = ?");
+  query.addBindValue(cur_playlist);
+  query.exec();
+  query.next();
+  PLAY_LISTS_R =  query.value(0).toInt();
+  qDebug(logDebug()) << "PLAY_LISTS_R = " << PLAY_LISTS_R;
 
+  query.prepare("SELECT * FROM PLAYLIST WHERE PLAYLIST_R = ?");
+  query.addBindValue(PLAY_LISTS_R);
+  query.exec();
+  model->setQuery(query);
+
+//  model->setQuery("SELECT name, salary FROM employee");
+//  model->setHeaderData(0, Qt::Horizontal, tr("Name"));
+//  model->setHeaderData(1, Qt::Horizontal, tr("Salary"));
+  ui->mainMusicTable->setModel(model);
+
+
+//    QSqlRelationalTableModel *r_model = new QSqlRelationalTableModel;
+//    r_model->setTable("SONGS");
+//    r_model->setRelation(0, QSqlRelation("PLAYLIST_ID", "SONG_ID", "SONG_ID"));
+//    ui->mainMusicTable->setModel(r_model);
     // show in table list of songs current playList
 
 }
