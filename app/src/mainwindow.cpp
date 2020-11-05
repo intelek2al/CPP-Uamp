@@ -419,8 +419,8 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
 
     QSqlRelationalTableModel *r_model = new QSqlRelationalTableModel;
 
-    r_model->setTable("PLAYLIST");
-    r_model->setRelation(1, QSqlRelation("PLAYLIST_ID", "2", "Name"));
+    r_model->setTable("SONGS");
+    r_model->setRelation(0, QSqlRelation("PLAYLIST_ID", "SONG_ID", "SONG_ID"));
     ui->mainMusicTable->setModel(r_model);
 
     // show in table list of songs current playList
