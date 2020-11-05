@@ -20,6 +20,9 @@ public:
     void setSound(QString path);
     void setSound(int index);
 
+signals:
+    void playlistImported(Playlist);
+
 public slots:
     void playNext(const Music &song);
     void setPlay();
@@ -39,13 +42,14 @@ public slots:
     void next();
     void previous();
     void modelChanged();
-    void savePlaylist(Playlist playlist, QString path = "/Users/msavytskyi/Desktop/");
+    Playlist importPlaylist(const QString &path);
+    void exportPlaylist(const Playlist &playlist = Playlist(), QString path = "/Users/msavytskyi/Desktop/");
 
     static Playlist handlerPlaylist(QSqlTableModel *model);
 
 private slots:
-    void on_statusPlay_valueChanged(int value);
-    void on_mainMusicTable_pressed(const QModelIndex &index);
+//    void on_statusPlay_valueChangedålay_valueChanged(int value);
+//    void on_mainMusicTable_pressed(const QModelIndex &index);
 
 private:
 //    QMediaPlayer::State m_state = QMediaPlayer::State::StoppedState;

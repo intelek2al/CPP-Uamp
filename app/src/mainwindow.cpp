@@ -15,6 +15,7 @@
 #include <QSqlQueryModel>
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
+//#include "bass.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -160,6 +161,10 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
     QAction action_delete("Delete Playlist", this);
     connect(&action_delete, &QAction::triggered, this, &MainWindow::on_actionDeletePlaylist_triggered);
     contextMenu.addAction(&action_delete);
+
+//    QAction action_export("Export Playlist", this);
+//    connect(&action_delete, &QAction::triggered, this, &MainWindow::on_actionDeletePlaylist_triggered);
+//    contextMenu.addAction(&action_delete);
 
 //    QAction action_rename("Rename ", this);
 //    connect(&action_rename, &QAction::triggered, this, [=] () { on_action_context_file_rename(fullFileName); });
