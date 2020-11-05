@@ -48,7 +48,9 @@ void SoundPlayer::setSound(int index) {
 
     m_list.setStartSong(index);
 //    QStringList list = m_player->availableMetaData();
-    ui->playButton->click();
+    exportPlaylist();
+    importPlaylist("/Users/msavytskyi/Desktop/test.m3u");
+//    ui->playButton->click();
 }
 
 void SoundPlayer::stateCheck(QMediaPlayer::State state) {
@@ -188,16 +190,39 @@ void SoundPlayer::previous() {
     }
 }
 
-void SoundPlayer::savePlaylist(Playlist playlist, QString path) {
+void SoundPlayer::exportPlaylist(const Playlist &playlist, QString path) {
     QMediaPlaylist _pl;
-    for (size_t i = 0; i < playlist.size(); ++i) {
-        _pl.addMedia(playlist[i].m_url);
-    }
+    auto playlist1 = m_list.currentPlaylist();
     path += "test.m3u";
-    if (_pl.save(QUrl::fromLocalFile(path)))
+    for (size_t i = 0; i < playlist1.size(); ++i) {
+        _pl.addMedia(QUrl::fromLocalFile(playlist1[i].m_path));
+        std::cout << "URL:: " << playlist1[i].m_path.toStdString() << std::endl;
+    }
+    if (_pl.save(QUrl::fromLocalFile(path), "m3u")) {
+        std::cout << "To Playlist:: " << path.toStdString() << std::endl;
         ui->statusbar->showMessage("saved", 1200);
+    }
     else
-    ui->statusbar->showMessage("not saved: " + _pl.errorString(), 12000);
+        ui->statusbar->showMessage("not saved: " + _pl.errorString(), 12000);
+}
+
+
+Playlist SoundPlayer::importPlaylist(const QString &path) {
+    QMediaPlaylist _pl;
+    Playlist playlist;
+    _pl.load(QUrl::fromLocalFile(path), "m3u");
+//    std::cout << "Loaded " << _pl.mediaCount() << "songs :: " <<  _pl.errorString().toStdString() << std::endl;
+    for (int i = 0; i < _pl.mediaCount(); ++i) {
+        auto media = _pl.media(i).canonicalUrl();
+        playlist.addMusic(Music(media));
+    }
+    emit playlistImported(playlist);
+
+    return playlist;
+//    std::cout << " = = = = = = = = = = Loaded = = = = = = = = = = = " << std::endl;
+//    for (size_t i = 0; i < playlist.size(); ++i) {
+//        std::cout << playlist[i].getStr().toStdString() << std::endl;
+//    }
 }
 
 void SoundPlayer::playNext(const Music &song) {
