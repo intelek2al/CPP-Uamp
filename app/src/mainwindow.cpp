@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_star_delegate = new StarDelegate(ui->mainMusicTable);
 //    ui->mainMusicTable->setModel(m_tableModel);
 
-//    ui->mainMusicTable->setItemDelegateForColumn(4, m_star_delegate);
+    ui->mainMusicTable->setItemDelegateForColumn(4, m_star_delegate);
     ui->mainMusicTable->setEditTriggers(
 //            QAbstractItemView::DoubleClicked |
                                   QAbstractItemView::SelectedClicked);
@@ -152,25 +152,23 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
 void MainWindow::onSideBarContextMenu(const QPoint &point)
 {
     QMenu contextMenu(tr("SideBar context menu"), this);
-
 //    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
 
     QAction action_new("New Playlist", this);
     connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
     contextMenu.addAction(&action_new);
 
+    QAction action_import_plst("Import Playlist", this);
+    connect(&action_import_plst, &QAction::triggered, this, &MainWindow::on_actionImportPlaylist_triggered);
+    contextMenu.addAction(&action_import_plst);
+
+    QAction action_export_plst("Export Playlist", this);
+    connect(&action_export_plst, &QAction::triggered, this, &MainWindow::on_actionExportPlaylist_triggered);
+    contextMenu.addAction(&action_export_plst);
+
     QAction action_delete("Delete Playlist", this);
     connect(&action_delete, &QAction::triggered, this, &MainWindow::on_actionDeletePlaylist_triggered);
     contextMenu.addAction(&action_delete);
-
-//    QAction action_export("Export Playlist", this);
-//    connect(&action_delete, &QAction::triggered, this, &MainWindow::on_actionDeletePlaylist_triggered);
-//    contextMenu.addAction(&action_delete);
-
-//    QAction action_rename("Rename ", this);
-//    connect(&action_rename, &QAction::triggered, this, [=] () { on_action_context_file_rename(fullFileName); });
-//    contextMenu.addAction(&action_rename);
-
     contextMenu.exec(mapToGlobal(point));
 }
 
@@ -443,7 +441,7 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
 //                "INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
 //                "INNER JOIN LIST_PLAYLISTS ON PLAYLIST.PLAYLIST_R = ?");
 
-    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Year, SONGS.Genre, SONGS.Time "
+    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Rating, SONGS.Year, SONGS.Genre, SONGS.Time "
                   "FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
                   "WHERE PLAYLIST.PLAYLIST_R = ?");
   query.addBindValue(PLAY_LISTS_R);
@@ -611,4 +609,14 @@ void MainWindow::on_modeButton_clicked()
         ui->modeButton->setText("L");
     }
     m_player->changeMode();
+}
+
+void MainWindow::on_actionImportPlaylist_triggered() {
+
+
+
+}
+
+void MainWindow::on_actionExportPlaylist_triggered() {
+
 }
