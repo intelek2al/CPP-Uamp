@@ -12,6 +12,8 @@ namespace Ui {
     class MainWindow;
 }
 
+
+
 class SoundPlayer : public QObject {
     Q_OBJECT
 public:
@@ -63,6 +65,7 @@ private:
     Ui::MainWindow *ui;
     bool isPlaylistExist = false;
     QSqlTableModel *m_model;
+
 };
 
 

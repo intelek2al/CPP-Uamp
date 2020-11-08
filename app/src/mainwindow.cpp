@@ -16,7 +16,7 @@
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
 #include <QSqlQuery>
-//#include "bass.h"
+#include "nextup.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -606,4 +606,12 @@ void MainWindow::on_modeButton_clicked()
         ui->modeButton->setText("L");
     }
     m_player->changeMode();
+}
+
+void MainWindow::on_upNextButton_clicked()
+{
+    nextUp = new NextUp;
+    nextUp->setGeometry(this->x() + ui->upNextButton->x() - 251 / 2, this->y() + ui->upNextButton->y() + 60, 251, 336);
+    nextUp->setWindowFlags(Qt::Popup);
+    nextUp->show();
 }
