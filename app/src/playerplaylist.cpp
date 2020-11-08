@@ -188,7 +188,7 @@ void PlayerPlaylist::previous() {
     refresh();
 }
 
-Playlist PlayerPlaylist::history() {
+Playlist PlayerPlaylist::history() const {
     return m_history.history;
 }
 
