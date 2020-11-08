@@ -136,7 +136,7 @@ private:
     QSqlTableModel *m_PlayList_model;
 
     StarDelegate *m_star_delegate;
-    NextUp *nextUp;
+    NextUp *nextUp {nullptr};
 
 //    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);

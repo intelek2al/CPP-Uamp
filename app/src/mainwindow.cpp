@@ -182,6 +182,7 @@ MainWindow::~MainWindow()
 {
     delete m_searcher;
     delete  m_library;
+    delete nextUp;
     delete ui;
     system("leaks -q uamp");
 }
@@ -615,8 +616,10 @@ void MainWindow::on_modeButton_clicked()
 
 void MainWindow::on_upNextButton_clicked()
 {
+    if (!nextUp)
+        delete nextUp;
     nextUp = new NextUp;
-    nextUp->setGeometry(this->x() + ui->upNextButton->x() - 251 / 2, this->y() + ui->upNextButton->y() + 60, 251, 336);
+    nextUp->setGeometry(this->x() + ui->upNextButton->x() - 291 / 2, this->y() + ui->upNextButton->y() + 60, 291, 441);
     nextUp->setWindowFlags(Qt::Popup);
     nextUp->show();
 }
