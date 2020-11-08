@@ -96,6 +96,7 @@ private slots:
 
     void on_songs_clicked();
 
+    void on_modeButton_clicked();
 
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);

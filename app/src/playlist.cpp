@@ -125,11 +125,15 @@ void Playlist::shuffle() {
     m_unshuff = m_musicPlaylist;
     std::random_device rd;
     std::mt19937 g(rd());
-    std::shuffle(m_musicPlaylist.begin(), m_musicPlaylist.end(), g);
+    if (size() > 1)
+        std::shuffle(m_musicPlaylist.begin() + 1, m_musicPlaylist.end(), g);
+    printPlaylist();
 }
 
 void Playlist::unshuffle() {
-    m_musicPlaylist = m_unshuff;
+    Music tmp = m_musicPlaylist[0];
+    auto it = std::remove(m_unshuff.begin(), m_unshuff.end(), tmp);
+    std::copy(m_unshuff.begin() , it, m_musicPlaylist.begin() + 1);
 }
 
 void Playlist::clearEmpty() {
@@ -149,4 +153,13 @@ int Playlist::indexMusic(const Music &music) const {
             return idx;
     }
     return -1;
+}
+
+void Playlist::printPlaylist() const {
+    std::cout << " < < < < < < < Playlist \"" << m_playlistName.toStdString() << "\" > > > > > > >\n";
+    for (size_t i = 0; i < size(); ++i) {
+        std::cout << "\t" << m_musicPlaylist[i].getStr().toStdString() << "\n";
+    }
+    std::cout << " < < < < < < < < < < ============= > > > > > > > > >" << std::endl;
+
 }

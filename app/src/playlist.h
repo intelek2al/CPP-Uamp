@@ -32,6 +32,9 @@ public:
     Music operator[](int index) const;
     int indexMusic(const Music &music) const;
 
+    void printPlaylist() const;
+
+
 private:
     QString m_playlistName;
     std::deque<Music> m_musicPlaylist;

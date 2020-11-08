@@ -6,11 +6,15 @@ using namespace std;
 PlayerPlaylist::PlayerPlaylist() {
     m_playlist = SoundPlayer::playlist();
     m_current_play = Auto;
+    m_auto.setPlaylistName("Auto");
+    m_user.setPlaylistName("User");
 }
 
 PlayerPlaylist::PlayerPlaylist(const Playlist &playlist) {
     m_playlist = SoundPlayer::playlist();
     setPlaylist(playlist);
+    m_auto.setPlaylistName("Auto");
+    m_user.setPlaylistName("User");
 }
 
 void PlayerPlaylist::addUserNext(const Music &song) {
@@ -61,8 +65,10 @@ void PlayerPlaylist::next() {
     if (m_current_play == Auto) {
         Music _tmp = m_auto[0];
         m_history.addFrontMusic(_tmp, Own::Auto);
-        m_auto.clearMusic(0);
-        m_auto.addMusic(_tmp);
+        if (m_mode != QMediaPlaylist::CurrentItemInLoop && m_current_play == Auto) {
+            m_auto.clearMusic(0);
+            m_auto.addMusic(_tmp);
+        }
     } else {
         m_history.addFrontMusic(m_user[0], Own::User);
         if (m_mode != QMediaPlaylist::CurrentItemInLoop && m_current_play == User) {
@@ -73,12 +79,8 @@ void PlayerPlaylist::next() {
         m_current_play = User;
     else
         m_current_play = Auto;
-
+    m_auto.printPlaylist();
     refresh();
-}
-
-void PlayerPlaylist::setMode(QMediaPlaylist::PlaybackMode mode) {
-    m_mode = mode;
 }
 
 void PlayerPlaylist::setStartSong(const Music &song) {
@@ -142,12 +144,18 @@ void PlayerPlaylist::setPlaybackMode(QMediaPlaylist::PlaybackMode mode) {
     switch (m_mode) {
         case QMediaPlaylist::PlaybackMode::Random: {
             m_auto.shuffle();
+            m_auto.printPlaylist();
+            break;
         }
-        default:
+        case QMediaPlaylist::PlaybackMode::CurrentItemInLoop :
             m_auto.unshuffle();
     }
-    m_user.addToMediaPlaylist();
-    m_auto.addToMediaPlaylist();
+    if (m_mode == QMediaPlaylist::PlaybackMode::CurrentItemInLoop)
+        m_playlist->setPlaybackMode(mode);
+    else
+        m_playlist->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
+//    m_user.printPlaylist();
+//    m_auto.printPlaylist();
 }
 
 Playlist PlayerPlaylist::upNext() {
@@ -197,8 +205,10 @@ void PlayerPlaylist::setChangedPlaylist(const Playlist &playlist) {
     if (m_mode == QMediaPlaylist::PlaybackMode::Random)
         m_auto.shuffle();
     if (m_current_play == Auto) {
-//        int i =
         m_auto[0] = current;
     }
+}
 
+bool PlayerPlaylist::isMediaSet() const {
+    return !m_list.empty();
 }

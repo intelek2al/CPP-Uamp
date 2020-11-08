@@ -589,3 +589,21 @@ void MainWindow::on_songs_clicked()
     ui->mainMusicTable->setModel(m_SQL_model);
     m_SQL_model->select();
 }
+
+void MainWindow::on_modeButton_clicked()
+{
+    static QString tmp = "L";
+    if (tmp == "L") {
+        tmp = "S";
+        ui->modeButton->setText("S");
+    }
+    else if (tmp == "S") {
+        tmp = "C";
+        ui->modeButton->setText("C");
+    }
+    else if (tmp == "C") {
+        tmp = "L";
+        ui->modeButton->setText("L");
+    }
+    m_player->changeMode();
+}

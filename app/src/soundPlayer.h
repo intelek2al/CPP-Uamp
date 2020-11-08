@@ -13,15 +13,18 @@ namespace Ui {
 }
 
 class SoundPlayer : public QObject {
+    Q_OBJECT
 public:
     SoundPlayer(Ui::MainWindow *child);
     ~SoundPlayer();
 
     void setSound(QString path);
     void setSound(int index);
+    void next();
+    void changeMode();
 
 signals:
-//    void playlistImported(Playlist);
+    void playlistImported(Playlist import_playlist);
 
 public slots:
     void playNext(const Music &song);
@@ -39,7 +42,7 @@ public slots:
     void metaData(bool check);
     static QMediaPlaylist *playlist();
 //    static QMediaPlaylist *getInstance();
-    void next();
+    void autoNext(QMediaPlayer::MediaStatus status);
     void previous();
     void modelChanged();
     Playlist importPlaylist(const QString &path);
@@ -53,6 +56,7 @@ private slots:
 
 private:
 //    QMediaPlayer::State m_state = QMediaPlayer::State::StoppedState;
+    QMediaPlaylist::PlaybackMode m_mode;
     QMediaPlayer *m_player;
     PlayerPlaylist m_list;
     static QMediaPlaylist *m_playlist;
