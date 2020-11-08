@@ -291,3 +291,12 @@ Playlist SoundPlayer::handlerPlaylist(QSqlTableModel *model) {
     }
     return playlist;
 }
+
+Playlist SoundPlayer::upNext() {
+    return m_list.upNext();
+}
+
+Playlist SoundPlayer::history() const {
+    return m_list.history();
+}
+

@@ -47,6 +47,8 @@ public slots:
     void autoNext(QMediaPlayer::MediaStatus status);
     void previous();
     void modelChanged();
+    Playlist upNext();
+    Playlist history() const;
     Playlist importPlaylist(const QString &path);
     void exportPlaylist(const Playlist &playlist = Playlist(), QString path = "/Users/msavytskyi/Desktop/");
 

@@ -21,7 +21,7 @@ public:
     Playlist &currentPlaylist();
     Playlist upNext();
     Music currentMusic() const;
-    Playlist history();
+    Playlist history() const;
     void setChangedPlaylist(const Playlist &playlist);
 
 public slots:

@@ -662,7 +662,7 @@ void MainWindow::on_upNextButton_clicked()
 {
     if (!nextUp)
         delete nextUp;
-    nextUp = new NextUp;
+    nextUp = new NextUp(this, m_player);
     nextUp->setGeometry(this->x() + ui->upNextButton->x() - 291 / 2, this->y() + ui->upNextButton->y() + 60, 291, 441);
     nextUp->setWindowFlags(Qt::Popup);
     nextUp->show();
