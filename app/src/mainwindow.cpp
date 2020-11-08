@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_star_delegate = new StarDelegate(ui->mainMusicTable);
 //    ui->mainMusicTable->setModel(m_tableModel);
 
-    ui->mainMusicTable->setItemDelegateForColumn(4, m_star_delegate);
+//    ui->mainMusicTable->setItemDelegateForColumn(4, m_star_delegate);
     ui->mainMusicTable->setEditTriggers(
 //            QAbstractItemView::DoubleClicked |
                                   QAbstractItemView::SelectedClicked);
@@ -427,10 +427,11 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
     qDebug(logDebug()) << "click on playlists";
     qDebug(logDebug()) << "cur_playlist =" << cur_playlist;
 
-  QSqlQueryModel *model = new QSqlQueryModel;
-  int PLAY_LISTS_R;
+    QSqlQuery query;
 
-  QSqlQuery query;
+    QSqlQueryModel *model = new QSqlQueryModel;
+    int PLAY_LISTS_R;
+
   query.prepare("SELECT PLAY_LISTS_ID FROM LIST_PLAYLISTS WHERE Name = ?");
   query.addBindValue(cur_playlist);
   query.exec();
@@ -438,7 +439,13 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
   PLAY_LISTS_R =  query.value(0).toInt();
   qDebug(logDebug()) << "PLAY_LISTS_R = " << PLAY_LISTS_R;
 
-  query.prepare("SELECT * FROM PLAYLIST WHERE PLAYLIST_R = ?");
+//  query.prepare("SELECT * FROM SONGS "
+//                "INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
+//                "INNER JOIN LIST_PLAYLISTS ON PLAYLIST.PLAYLIST_R = ?");
+
+    query.prepare("SELECT SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Year, SONGS.Genre, SONGS.Time "
+                  "FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
+                  "WHERE PLAYLIST.PLAYLIST_R = ?");
   query.addBindValue(PLAY_LISTS_R);
   query.exec();
   model->setQuery(query);
@@ -448,13 +455,11 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
 //  model->setHeaderData(1, Qt::Horizontal, tr("Salary"));
   ui->mainMusicTable->setModel(model);
 
-
 //    QSqlRelationalTableModel *r_model = new QSqlRelationalTableModel;
 //    r_model->setTable("SONGS");
 //    r_model->setRelation(0, QSqlRelation("PLAYLIST_ID", "SONG_ID", "SONG_ID"));
 //    ui->mainMusicTable->setModel(r_model);
     // show in table list of songs current playList
-
 }
 
 void MainWindow::on_actionNewPlaylist_triggered()
