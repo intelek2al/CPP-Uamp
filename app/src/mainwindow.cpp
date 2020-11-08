@@ -443,7 +443,7 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
 //                "INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
 //                "INNER JOIN LIST_PLAYLISTS ON PLAYLIST.PLAYLIST_R = ?");
 
-    query.prepare("SELECT SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Year, SONGS.Genre, SONGS.Time "
+    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Year, SONGS.Genre, SONGS.Time "
                   "FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
                   "WHERE PLAYLIST.PLAYLIST_R = ?");
   query.addBindValue(PLAY_LISTS_R);
