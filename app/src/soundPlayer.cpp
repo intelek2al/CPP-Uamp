@@ -1,5 +1,6 @@
 #include "soundPlayer.h"
 #include "ui_mainwindow.h"
+#include <QMediaMetaData>
 #include <QWidget>
 
 SoundPlayer::SoundPlayer(Ui::MainWindow *child)
@@ -13,8 +14,10 @@ SoundPlayer::SoundPlayer(Ui::MainWindow *child)
     connect(m_player, &QMediaPlayer::stateChanged, this, &SoundPlayer::stateCheck);
 //    connect(m_player, QOverload<bool>::of(&QMediaObject::availabilityChanged) &SoundPlayer::metaData);
     connect(m_player, &QMediaPlayer::metaDataAvailableChanged, this, &SoundPlayer::metaData);
+    connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &SoundPlayer::autoNext);
     ui->labelSong->setText("");
     ui->labelArtist->setText("");
+    m_mode = QMediaPlaylist::PlaybackMode::Loop;
 }
 
 SoundPlayer::~SoundPlayer()
@@ -22,7 +25,10 @@ SoundPlayer::~SoundPlayer()
     delete m_player;
 }
 
-#include <QMediaMetaData>
+void SoundPlayer::autoNext(QMediaPlayer::MediaStatus status) {
+    if (status == QMediaPlayer::MediaStatus::EndOfMedia)
+        next();
+}
 
 void SoundPlayer::setSound(QString path)
 {
@@ -48,9 +54,18 @@ void SoundPlayer::setSound(int index) {
 
     m_list.setStartSong(index);
 //    QStringList list = m_player->availableMetaData();
-    exportPlaylist();
-    importPlaylist("/Users/msavytskyi/Desktop/test.m3u");
-//    ui->playButton->click();
+    ui->playButton->click();
+}
+
+void SoundPlayer::changeMode()
+{
+    if (m_mode == QMediaPlaylist::PlaybackMode::Loop)
+        m_mode = QMediaPlaylist::PlaybackMode::Random;
+    else if (m_mode == QMediaPlaylist::PlaybackMode::Random)
+        m_mode = QMediaPlaylist::PlaybackMode::CurrentItemInLoop;
+    else if (m_mode == QMediaPlaylist::PlaybackMode::CurrentItemInLoop)
+        m_mode = QMediaPlaylist::PlaybackMode::Loop;
+    m_list.setPlaybackMode(m_mode);
 }
 
 void SoundPlayer::stateCheck(QMediaPlayer::State state) {
@@ -157,6 +172,8 @@ void SoundPlayer::setPlaylist(QSqlTableModel *model) {
 }
 
 void SoundPlayer::next() {
+    if (!m_list.isMediaSet())
+        return;
     m_list.next();
     setPlay();
     system("clear");
@@ -216,7 +233,7 @@ Playlist SoundPlayer::importPlaylist(const QString &path) {
         auto media = _pl.media(i).canonicalUrl();
         playlist.addMusic(Music(media));
     }
-//    emit playlistImported(playlist);
+    emit playlistImported(playlist);
 
     return playlist;
 //    std::cout << " = = = = = = = = = = Loaded = = = = = = = = = = = " << std::endl;

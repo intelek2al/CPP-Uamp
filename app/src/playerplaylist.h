@@ -17,7 +17,7 @@ public:
     void setStartSong(const Music &song);
     void setStartSong(const QUrl &song);
     void setStartSong(int pos);
-    void setMode(QMediaPlaylist::PlaybackMode mode);
+    bool isMediaSet() const;
     Playlist &currentPlaylist();
     Playlist upNext();
     Music currentMusic() const;
