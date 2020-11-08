@@ -36,6 +36,7 @@ namespace Ui {
 QT_END_NAMESPACE
 
 class SoundPlayer;
+class NextUp;
 
 class MainWindow : public QMainWindow
 {
@@ -102,6 +103,8 @@ private slots:
 
     void on_modeButton_clicked();
 
+    void on_upNextButton_clicked();
+
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);
     void deleteSong(const QModelIndex &);
@@ -137,6 +140,7 @@ private:
     QSqlTableModel *m_PlayList_model;
 
     StarDelegate *m_star_delegate;
+    NextUp *nextUp {nullptr};
 
 //    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);

@@ -209,18 +209,21 @@ void SoundPlayer::previous() {
 
 void SoundPlayer::exportPlaylist(const Playlist &playlist, QString path) {
     QMediaPlaylist _pl;
-    auto playlist1 = m_list.currentPlaylist();
-    path += "test.m3u";
-    for (size_t i = 0; i < playlist1.size(); ++i) {
-        _pl.addMedia(QUrl::fromLocalFile(playlist1[i].m_path));
-        std::cout << "URL:: " << playlist1[i].m_path.toStdString() << std::endl;
+
+//    auto playlist1 = m_list.currentPlaylist();
+
+    path += ".m3u";
+
+    for (size_t i = 0; i < playlist.size(); ++i) {
+        _pl.addMedia(QUrl::fromLocalFile(playlist[i].m_path));
+//        std::cout << "URL:: " << playlist1[i].m_path.toStdString() << std::endl;
     }
     if (_pl.save(QUrl::fromLocalFile(path), "m3u")) {
-        std::cout << "To Playlist:: " << path.toStdString() << std::endl;
+//        std::cout << "To Playlist:: " << path.toStdString() << std::endl;
         ui->statusbar->showMessage("saved", 1200);
     }
     else
-        ui->statusbar->showMessage("not saved: " + _pl.errorString(), 12000);
+        ui->statusbar->showMessage("not saved: " + _pl.errorString(), 1200);
 }
 
 

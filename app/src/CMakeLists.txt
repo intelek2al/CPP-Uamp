@@ -21,6 +21,8 @@ set(SOURCES mainwindow.cpp
         stardelegate.cpp
         stareditor.cpp
         sqlbase.cpp
+        nextup.cpp
+        nextupwidget.cpp
         )
 
 set(HEADERS mainwindow.h
@@ -44,9 +46,11 @@ set(HEADERS mainwindow.h
         stardelegate.h
         stareditor.h
         sqlbase.h
+        nextup.h
+        nextupwidget.h
         )
 
-set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui )
+set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui nextup.ui nextupwidget.ui)
 
 link_directories(../../build/3dparty/taglib/)
 

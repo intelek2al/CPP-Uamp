@@ -277,6 +277,43 @@ bool SqlBase::AddtoPlaylist(const QString &path, const QString &cur_playlist) {
     return true;
 }
 
+Playlist SqlBase::ExportPlaylist(const QString &name) {
+    qInfo(logInfo()) <<"SqlBase::ExportPlaylist";
+    int PLAY_LISTS_R;
+    int SONG_ID;
+
+    if (name.isEmpty())
+        return Playlist{};
+
+    QSqlQuery query;
+    query.prepare("SELECT PLAY_LISTS_ID FROM LIST_PLAYLISTS WHERE Name = ?");
+    query.addBindValue(name);
+    if (!query.exec()) {
+        qDebug(logDebug()) << "error "  << query.lastError();
+        return Playlist{};
+    }
+    query.next();
+    PLAY_LISTS_R = query.value(0).toInt();
+    qInfo(logInfo()) << "PLAY_LISTS_R =" << PLAY_LISTS_R;
+
+    query.prepare("SELECT SONGS.SONG_ID, SONGS.Path FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R WHERE PLAYLIST.PLAYLIST_R = ?");
+    query.addBindValue(PLAY_LISTS_R);
+    if (!query.exec()) {
+        qDebug(logDebug()) << "error  line 302"  << query.lastError();
+        return Playlist{};
+    }
+
+    while (query.next()) {
+        QString song_path = query.value("Path").toString();
+        qInfo(logInfo()) << "song_path = " << song_path;
+    }
+
+//    m_url = QUrl::fromLocalFile(m_path);
+
+    Playlist export_playlist{};
+    return export_playlist;
+}
+
 
 /*
 query.prepare("INSERT INTO PLAYLIST (PLAYLIST, SONG_ID) "

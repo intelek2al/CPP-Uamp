@@ -16,7 +16,7 @@
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
 #include <QSqlQuery>
-//#include "bass.h"
+#include "nextup.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -156,6 +156,7 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
 
     QAction action_new("New Playlist", this);
     connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
+//    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
     contextMenu.addAction(&action_new);
 
     QAction action_import_plst("Import Playlist", this);
@@ -180,6 +181,7 @@ MainWindow::~MainWindow()
 {
     delete m_searcher;
     delete  m_library;
+    delete nextUp;
     delete ui;
     system("leaks -q uamp");
 }
@@ -419,6 +421,8 @@ void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
 void MainWindow::currentPlayListIndex(const QModelIndex &index) {
     m_playList_index = index;
 
+
+
 //  auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
   auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
 
@@ -479,11 +483,53 @@ void MainWindow::on_actionNewPlaylist_triggered()
 
 }
 
+void MainWindow::on_actionImportPlaylist_triggered() {
+    bool ok;
+    QString import_playlist_name = QInputDialog::getText(this,"New PlayList",
+                                                      tr("Enter the name for new PlayList"),
+                                                      QLineEdit::Normal,
+                                                      "",
+                                                      &ok);
+    if (ok) {
+        qInfo(logInfo()) << "on_actionImportPlaylist_triggered " << import_playlist_name;
+
+    }
+    else {
+        qInfo(logInfo()) << "on_actionImportPlaylist_triggered  canceled";
+    }
+}
+
+void MainWindow::on_actionExportPlaylist_triggered() {
+    qInfo(logInfo()) << "on_actionExportPlaylist_triggered";
+
+    QWidget *fw = qApp->focusWidget();
+//    if (!ui->listPlaylist->hasFocus()) {
+//        qInfo(logInfo()) << "on_actionExportPlaylist_triggered  widget no focus";
+//        return;
+//    }
+
+    QFileDialog dialog(0);
+    dialog.setWindowModality(Qt::WindowModal);
+    dialog.setAcceptMode(QFileDialog::AcceptSave);
+
+    if (dialog.exec() != QDialog::Accepted)
+        return ;
+    QString playlist_name = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
+
+    qInfo(logInfo()) << "playlist_name "  << playlist_name;
+
+    Playlist current = m_base->ExportPlaylist(playlist_name);
+
+    m_player->exportPlaylist(current, dialog.selectedFiles().first());
+}
+
+
 void MainWindow::on_actionDeletePlaylist_triggered() {
     QString name = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
     m_base->DeletePlaylist(name);
     m_PlayList_model->select();
 }
+
 void MainWindow::playNext() {
 //    Music song = getMusicfromTable();
     m_player->playNext(getMusicfromTable());
@@ -611,12 +657,13 @@ void MainWindow::on_modeButton_clicked()
     m_player->changeMode();
 }
 
-void MainWindow::on_actionImportPlaylist_triggered() {
 
-
-
-}
-
-void MainWindow::on_actionExportPlaylist_triggered() {
-
+void MainWindow::on_upNextButton_clicked()
+{
+    if (!nextUp)
+        delete nextUp;
+    nextUp = new NextUp;
+    nextUp->setGeometry(this->x() + ui->upNextButton->x() - 291 / 2, this->y() + ui->upNextButton->y() + 60, 291, 441);
+    nextUp->setWindowFlags(Qt::Popup);
+    nextUp->show();
 }

@@ -4,6 +4,7 @@
 #include <QString>
 #include <QSqlDatabase>
 #include "music.h"
+#include "playlist.h"
 
 class SqlBase {
 
@@ -14,6 +15,7 @@ public:
    bool AddtoLibrary(const QString& media_path);
    bool AddNewPlaylist(const QString& name);
    bool DeletePlaylist(const QString& name);
+   Playlist ExportPlaylist(const QString& name);
    bool AddtoPlaylist(const QString& path, const QString& cur_playlist);
 
 private:
