@@ -70,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_SQL_model, &QSqlTableModel::dataChanged, m_player, &SoundPlayer::modelChanged);
     connect(m_SQL_model, &QSqlTableModel::rowsMoved, m_player, &SoundPlayer::modelChanged);
     connect(m_SQL_model, &QSqlTableModel::layoutChanged, m_player, &SoundPlayer::modelChanged);
+    connect(m_SQL_model, &QSqlTableModel::modelReset, m_player, &SoundPlayer::modelChanged);
 }
 
 
@@ -381,8 +382,8 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
     m_base->AddtoLibrary(f_name);
     m_SQL_model->select();
 
-    emit m_tableModel->layoutChanged();
-    emit m_tableModel->sort(0, Qt::AscendingOrder);
+    emit m_SQL_model->layoutChanged();
+    emit m_SQL_model->sort(0, Qt::AscendingOrder);
 
     m_SQL_model->select();
 
