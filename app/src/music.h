@@ -11,12 +11,12 @@ public:
     explicit Music(QObject *parent = nullptr);
     Music(const Music &m);
     Music(const QUrl &url);
-    explicit Music(const QVector<QString> &m);
-    explicit Music(QVector<QString> &&m);
+//    explicit Music(const QVector<QString> &m);
+//    explicit Music(QVector<QString> &&m);
     Music(Music &&m) noexcept;
     ~Music()= default;
-    Music& operator=(QVector<QString> &&m) noexcept;
-    Music& operator=(const QVector<QString> &m);
+//    Music& operator=(QVector<QString> &&m) noexcept;
+//    Music& operator=(const QVector<QString> &m);
     Music& operator=(Music &&m) noexcept;
     Music& operator=(const Music &m);
     QString &operator[](int i);

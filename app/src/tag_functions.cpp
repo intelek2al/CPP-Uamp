@@ -2,6 +2,8 @@
 #include <QImage>
 #include <mp4/mp4file.h>
 #include <QTime>
+#include <QBuffer>
+#include <QPixmap>
 #include "tag_functions.h"
 #include "loggingcategories.h"
 #include "music.h"
@@ -189,6 +191,26 @@ Music TagFunctions::read_tags(char *file_name, char *file_path) {
                  << std::setw(2) << seconds << endl;
             */
         }
+
+        QByteArray byte_cover;
+        QImage coverQImg;
+        QString fileType = QFileInfo(file_path).completeSuffix();
+        qDebug(logDebug()) << "file type = " << fileType;
+
+        if (fileType == "mp3") {
+            qDebug (logDebug()) << "SqlBase::AddtoLibrary file type = mp3";
+//                coverQImg = TagFunctions::load_cover_image_mpeg(curent_song.m_path.toStdString().data());
+            coverQImg = TagFunctions::load_cover_image(file_path);
+        }
+        if (fileType == "m4a") {
+            coverQImg = TagFunctions::load_cover_image_m4a(file_path);
+        }
+
+        QBuffer buffer(&byte_cover);
+        buffer.open(QIODevice::WriteOnly);
+        QPixmap pix_cover(QPixmap::fromImage(coverQImg));
+        pix_cover.save(&buffer,"PNG");
+        data.m_cover = byte_cover;
     }
     return data;
 }

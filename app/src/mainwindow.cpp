@@ -91,7 +91,8 @@ void MainWindow::setupMusicTableModel() {
 
     ui->mainMusicTable->setModel(m_SQL_model);
     ui->mainMusicTable->hideColumn(0); // song_id
-    ui->mainMusicTable->hideColumn(13);  // cover
+    ui->mainMusicTable->hideColumn(11);  // path
+    ui->mainMusicTable->hideColumn(12);  // cover
 }
 
 void MainWindow::setupPlayListTableModel() {

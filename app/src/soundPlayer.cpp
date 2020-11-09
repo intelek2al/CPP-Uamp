@@ -286,6 +286,7 @@ Playlist SoundPlayer::handlerPlaylist(QSqlTableModel *model) {
         current_song.m_comment = model->record(i).value("Comment").toString();
         current_song.m_name = model->record(i).value("Name").toString();
         current_song.m_path = model->record(i).value("Path").toString();
+        current_song.m_cover = model->record(i).value("Cover").toByteArray();
         std::cout << "  Song : " << current_song.m_title.toStdString() << std::endl;
         playlist.addMusic(current_song);
     }
