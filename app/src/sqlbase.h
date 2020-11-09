@@ -18,9 +18,11 @@ public:
    Playlist ExportPlaylist(const QString& name);
    bool AddtoPlaylist(const QString& path, const QString& cur_playlist);
 
+
 public slots:
     bool insertIntoTable(const QVariantList &data);      // Добавление записей в таблицу
     bool insertIntoTable(const QString &name, const QByteArray &pic);
+    bool ImportPlayList(Playlist import_playlist);
 
 private:
     bool createConnection();

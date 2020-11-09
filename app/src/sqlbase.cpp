@@ -326,17 +326,22 @@ Playlist SqlBase::ExportPlaylist(const QString &name) {
     if (!query.exec()) {
         qDebug(logDebug()) << "error  line 302"  << query.lastError();
         return Playlist{};
-    }
 
+    }
+    Playlist export_playlist();
+    QVector<QUrl> urls;
     while (query.next()) {
         QString song_path = query.value("Path").toString();
+        urls.push_back(QUrl::fromLocalFile(song_path));
         qInfo(logInfo()) << "song_path = " << song_path;
     }
-
 //    m_url = QUrl::fromLocalFile(m_path);
+    return {urls, name};
+}
 
-    Playlist export_playlist{};
-    return export_playlist;
+
+bool SqlBase::insertIntoTable(const QVariantList &data) {
+    return false;
 }
 
 

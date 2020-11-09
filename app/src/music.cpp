@@ -163,7 +163,6 @@ QString &Music::operator[](int i) {
         case 9: return m_name;
         case 10: return m_path;
         case 11: return m_lyrics;
-
 //        case 12: return m_count;
         default: return m_name;
     }
