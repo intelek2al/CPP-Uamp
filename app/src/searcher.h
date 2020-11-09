@@ -17,7 +17,7 @@ public:
     ~Searcher() override = default;
     void setDown();
 
-//public slots:
+public slots:
     void search();
 
 private:

@@ -344,6 +344,10 @@ bool SqlBase::insertIntoTable(const QVariantList &data) {
     return false;
 }
 
+bool SqlBase::importPlayList(Playlist import_playlist) {
+    return false;
+}
+
 
 
 /*

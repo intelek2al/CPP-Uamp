@@ -39,7 +39,6 @@ void Searcher::search() {
             if (i != m_box.size() - 1)
                 filter += " OR ";
         }
-        std::cout << "FILTRE " << filter.toStdString() << std::endl;
     } else {
         filter = m_box[m_handler->currentIndex()];
         filter += m_searchParam;

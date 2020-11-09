@@ -361,6 +361,11 @@ color: rgb(132, 130, 133);</string>
           <string>Year</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Rating</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item>
