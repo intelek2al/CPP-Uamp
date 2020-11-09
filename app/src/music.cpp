@@ -36,6 +36,8 @@ Music::Music(const QUrl &url) {
             m_time =(QString::fromStdString(std::to_string(minutes) +
                                                  ":" + std::to_string(seconds)));
         }
+
+        m_cover = nullptr;  // rework
     }
 }
 
@@ -63,6 +65,7 @@ Music::Music(const Music &m) {
     m_rate = m.m_rate;
     m_year = m.m_year;
     m_track = m.m_track;
+    m_cover = m.m_cover;
     m_url = QUrl::fromLocalFile(m_path);
 }
 
@@ -80,6 +83,7 @@ Music::Music(Music &&m) noexcept {
     m_rate = m.m_rate;
     m_year = m.m_year;
     m_track = m.m_track;
+    m_cover = m.m_cover;
     m_url = QUrl::fromLocalFile(m_path);
 }
 
@@ -119,7 +123,7 @@ Music& Music::operator=(const Music &m) {
     return *this;
 }
 
-Music::Music(const QVector<QString> &m) {
+Music::Music(const QVector<QString> &m) {  // depracated
     m_name = m[0];
     m_time = m[1];
     m_title = m[2];

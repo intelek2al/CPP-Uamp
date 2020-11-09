@@ -39,10 +39,6 @@ private:
     virtual bool save() { return false; }
 };
 
-
-using std::cout;
-using std::endl;
-
 namespace TagFunctions {
 
     char *toChar(QString str);

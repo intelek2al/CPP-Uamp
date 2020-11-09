@@ -6,7 +6,7 @@
 #include "loggingcategories.h"
 #include "music.h"
 
-#define default_cover ":/logo1.png"
+#define default_cover ":/def_cover_grey.png"
 
 class ImageFile;
 

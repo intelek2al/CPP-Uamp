@@ -90,7 +90,7 @@ Playlist MediaLibrary::dataPlaylist() const {
 //        cout << "---- " << music.getStr().toStdString() << endl;
         list.addMusic(music);
     }
-    cout << endl;
+    std::cout << endl;
     return list;
 }
 

@@ -42,6 +42,7 @@ public:
     QString m_path;
     QString m_lyrics;
     quint8 m_count;
+    QByteArray m_cover;
     QUrl m_url;
 };
 

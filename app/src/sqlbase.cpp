@@ -5,6 +5,8 @@
 #include "music.h"
 #include "tag_functions.h"
 
+#define DATABASE_NAME   "media_db.sqlite"
+
 //    {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
 
 SqlBase::SqlBase() {
@@ -17,6 +19,7 @@ SqlBase::SqlBase() {
         // exit from app !!!
     }
 }
+
 
 bool SqlBase::createNewBase() {
     bool result = createTableSongs();
@@ -60,7 +63,8 @@ bool SqlBase::createTableSongs() {
       "Track          TEXT    ," \
       "Comment        TEXT    ," \
       "Name           TEXT    NOT NULL," \
-      "Path           TEXT    UNIQUE  NOT NULL"  \
+      "Path           TEXT    UNIQUE  NOT NULL,"  \
+      "Cover          BLOB    "  \
       ");";
 
   if (!query.exec(str)) {
@@ -152,13 +156,28 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
             qDebug (logDebug()) << "SqlBase::AddtoLibrary";
 
             Music curent_song = TagFunctions::LoadSongTags(list.at(i).filePath());
+
+            QByteArray byte_cover;
+            QImage coverQImg;
+            QString fileType = QFileInfo(curent_song.m_url.path().toStdString().data()).completeSuffix();
+            if (fileType == "mp3") {
+                coverQImg = TagFunctions::load_cover_image_mpeg(curent_song.m_path.toStdString().data());
+            }
+            if (fileType == "m4a") {
+                coverQImg = TagFunctions::load_cover_image_m4a(curent_song.m_path.toStdString().data());
+            }
+
+            QBuffer buffer(&byte_cover);
+            buffer.open(QIODevice::WriteOnly);
+            coverQImg.save(&buffer,"PNG");
+
             if (!curent_song.empty()) {
 
                 qDebug(logDebug()) << "Music current : " << curent_song.m_name, curent_song.m_title;
                 query.prepare("INSERT INTO SONGS (Title, Time, Artist, Rating, Genre, Album, Year, "
-                                                        "Track, Comment, Name, Path) "
+                                                        "Track, Comment, Name, Path, Cover) "
                         "VALUES (:Title, :Time, :Artist, :Rating, :Genre, :Album, :Year, :Track, :Comment, "
-                                ":Name, :Path)");
+                                ":Name, :Path, :Cover)");
                 query.bindValue(":Title", curent_song.m_title);
                 query.bindValue(":Time", curent_song.m_time);
                 query.bindValue(":Artist", curent_song.m_artist);
@@ -171,6 +190,7 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
                 query.bindValue(":Comment", curent_song.m_comment);
                 query.bindValue(":Name", curent_song.m_name);
                 query.bindValue(":Path", curent_song.m_path);
+                query.bindValue(":Cover", byte_cover);
 
                 if (!query.exec()) {
                     qDebug(logDebug()) << "error = " << query.lastError();
@@ -315,6 +335,7 @@ Playlist SqlBase::ExportPlaylist(const QString &name) {
 }
 
 
+
 /*
 query.prepare("INSERT INTO PLAYLIST (PLAYLIST, SONG_ID) "
               "VALUES (:PLAYLIST, :SONG_ID)");
@@ -323,3 +344,16 @@ query.addBindValue(cur_playlist);
 query.bindValue(":SONG_ID", "SELECT FROM SONGS WHERE Path = ?");
 query.addBindValue(path);
 */
+
+/*
+ * void SqlBase::connectToDataBase() {
+    if (!QFile("/Users/Shared/" DATABASE_NAME).exists()) {
+        qDebug(logDebug()) << "Database = " << "/Users/Shared/" DATABASE_NAME << "does not exists";
+        this->createNewBase();
+    }
+    else {
+
+    }
+}
+
+ */
