@@ -20,9 +20,9 @@ public:
 
 
 public slots:
-    bool insertIntoTable(const QVariantList &data);      // Добавление записей в таблицу
+    bool insertIntoTable(const Music& curent_song);      // Добавление записей в таблицу
     bool insertIntoTable(const QString &name, const QByteArray &pic);
-    bool ImportPlayList(Playlist import_playlist);
+    bool importPlayList(Playlist import_playlist);
 
 private:
     bool createConnection();

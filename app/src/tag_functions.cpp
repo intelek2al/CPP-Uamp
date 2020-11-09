@@ -194,8 +194,13 @@ Music TagFunctions::read_tags(char *file_name, char *file_path) {
 
         QByteArray byte_cover;
         QImage coverQImg;
-        QString fileType = QFileInfo(file_path).completeSuffix();
-        qDebug(logDebug()) << "file type = " << fileType;
+//        QString fileName = QFileInfo(file_path).fileName();
+        std::string current_file = file_name;
+        std::string fileType = current_file.substr(current_file.size() - 3);
+
+
+//        QString fileType = QFileInfo(file_path).completeSuffix();
+        qDebug(logDebug()) << "file type = " << fileType.data();
 
         if (fileType == "mp3") {
             qDebug (logDebug()) << "SqlBase::AddtoLibrary file type = mp3";
@@ -214,6 +219,38 @@ Music TagFunctions::read_tags(char *file_name, char *file_path) {
     }
     return data;
 }
+
+
+QByteArray TagFunctions::load_cover_array(char *file_path) {
+    QByteArray byte_cover;
+    QImage coverQImg;
+
+//    QString fileType = QFileInfo(file_path).completeSuffix();
+
+    QString fileName = QFileInfo(file_path).fileName();
+    std::string current_file = fileName.toStdString();
+    std::string fileType = current_file.substr(current_file.size() - 3);
+
+    qDebug(logDebug()) << "file type = " << fileType.data();
+
+    if (fileType == "mp3") {
+        qDebug (logDebug()) << "SqlBase::AddtoLibrary file type = mp3";
+//                coverQImg = TagFunctions::load_cover_image_mpeg(curent_song.m_path.toStdString().data());
+        coverQImg = TagFunctions::load_cover_image(file_path);
+    }
+    if (fileType == "m4a") {
+        coverQImg = TagFunctions::load_cover_image_m4a(file_path);
+    }
+
+    QBuffer buffer(&byte_cover);
+    buffer.open(QIODevice::WriteOnly);
+    QPixmap pix_cover(QPixmap::fromImage(coverQImg));
+    pix_cover.save(&buffer,"PNG");
+
+
+    return byte_cover;
+}
+
 
 void TagFunctions::modify_tag_artist(char *file_path, char *new_artist)
 {
@@ -433,3 +470,4 @@ Music TagFunctions::LoadSongTags(const QString &file_name) {
     if (!tmp.empty())
         return tmp;
 }
+

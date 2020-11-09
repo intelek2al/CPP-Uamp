@@ -45,6 +45,8 @@ namespace TagFunctions {
 
     Music read_tags(char *file_name, char *file_path);
 
+    QByteArray load_cover_array(char *file_path);
+
     void load_lyrics(char *file_name);
 
     void load_cover(char *file_name);

@@ -154,6 +154,7 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
         for (int i = 0; i < list.size(); ++i)
         {
             qDebug (logDebug()) << "SqlBase::AddtoLibrary";
+
             Music curent_song = TagFunctions::LoadSongTags(list.at(i).filePath());
 
             QByteArray byte_cover;
@@ -206,8 +207,40 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
     return true;
 }
 
-SqlBase::~SqlBase() {
+bool SqlBase::insertIntoTable(const Music &curent_song) {
 
+    QSqlQuery query;
+
+    if (!curent_song.empty()) {
+        qDebug(logDebug()) << "Music current : " << curent_song.m_name, curent_song.m_title;
+        query.prepare("INSERT INTO SONGS (Title, Time, Artist, Rating, Genre, Album, Year, "
+                      "Track, Comment, Name, Path, Cover) "
+                      "VALUES (:Title, :Time, :Artist, :Rating, :Genre, :Album, :Year, :Track, :Comment, "
+                      ":Name, :Path, :Cover)");
+        query.bindValue(":Title", curent_song.m_title);
+        query.bindValue(":Time", curent_song.m_time);
+        query.bindValue(":Artist", curent_song.m_artist);
+        query.bindValue(":Time", curent_song.m_time);
+        query.bindValue(":Rating", "0");
+        query.bindValue(":Genre", curent_song.m_genre);
+        query.bindValue(":Album", curent_song.m_album);
+        query.bindValue(":Year", curent_song.m_year);
+        query.bindValue(":Track", curent_song.m_track);
+        query.bindValue(":Comment", curent_song.m_comment);
+        query.bindValue(":Name", curent_song.m_name);
+        query.bindValue(":Path", curent_song.m_path);
+        query.bindValue(":Cover", curent_song.m_cover);
+
+        if (!query.exec()) {
+            qDebug(logDebug()) << "error = " << query.lastError();
+        }
+    }
+
+    return false;
+}
+
+
+SqlBase::~SqlBase() {
     m_media_base.close();
     m_media_base.removeDatabase(m_media_base.connectionName());
 }
@@ -340,9 +373,20 @@ Playlist SqlBase::ExportPlaylist(const QString &name) {
 }
 
 
-bool SqlBase::insertIntoTable(const QVariantList &data) {
-    return false;
+bool SqlBase::importPlayList(Playlist import_playlist) {
+    qDebug(logDebug()) << "SqlBase::ImportPlayList name = " << import_playlist.playlistName();
+
+   this->AddNewPlaylist(import_playlist.playlistName());
+
+   for (int i = 0; i < import_playlist.size(); ++i) {
+       if (!import_playlist[i].empty()) {
+           this->insertIntoTable(import_playlist[i]);
+       }
+   }
+    return true;
 }
+
+
 
 
 
