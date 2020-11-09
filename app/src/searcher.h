@@ -17,7 +17,7 @@ public:
     ~Searcher() override = default;
     void setDown();
 
-//public slots:
+public slots:
     void search();
 
 private:
@@ -25,7 +25,7 @@ private:
     QLineEdit *m_parent = nullptr;
     QComboBox *m_handler = nullptr;
     QSqlTableModel *m_list;
-    QVector<QString> m_box = {"* = ", "Name = ", "Title = ", "Artist = ", "Album = ", "Genre = ", "Year = ", "Rating = "};
+    QVector<QString> m_box = {"*", "Name", "Title", "Artist", "Album", "Genre", "Year", "Rating"};
 };
 
 #endif // SEARCHER_H

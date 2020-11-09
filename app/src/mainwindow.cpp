@@ -71,8 +71,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_SQL_model, &QSqlTableModel::dataChanged, m_player, &SoundPlayer::modelChanged);
     connect(m_SQL_model, &QSqlTableModel::rowsMoved, m_player, &SoundPlayer::modelChanged);
     connect(m_SQL_model, &QSqlTableModel::layoutChanged, m_player, &SoundPlayer::modelChanged);
-
-//    connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::ImportPlayList);
+    connect(m_SQL_model, &QSqlTableModel::modelReset, m_player, &SoundPlayer::modelChanged);
+    connect(ui->search_line, &QLineEdit::textChanged, m_searcher, &Searcher::search);
+    connect(ui->filterBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_searcher, &Searcher::search);
+    connect(m_player, &SoundPlayer::playlistImported, [=](Playlist pl){ m_base->importPlayList(pl); });
 }
 
 

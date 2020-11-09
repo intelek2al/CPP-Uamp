@@ -386,6 +386,10 @@ bool SqlBase::importPlayList(Playlist import_playlist) {
     return true;
 }
 
+bool SqlBase::importPlayList(Playlist import_playlist) {
+    return false;
+}
+
 
 
 
