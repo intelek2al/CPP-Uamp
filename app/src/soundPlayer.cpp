@@ -227,7 +227,7 @@ void SoundPlayer::exportPlaylist(const Playlist &playlist, QString path) {
 }
 
 
-Playlist SoundPlayer::importPlaylist(const QString &path) {
+void SoundPlayer::importPlaylist(const QString &path) {
     QMediaPlaylist _pl;
     Playlist playlist;
     _pl.load(QUrl::fromLocalFile(path), "m3u");
@@ -238,7 +238,7 @@ Playlist SoundPlayer::importPlaylist(const QString &path) {
     }
     emit playlistImported(playlist);
 
-    return playlist;
+//    return playlist;
 //    std::cout << " = = = = = = = = = = Loaded = = = = = = = = = = = " << std::endl;
 //    for (size_t i = 0; i < playlist.size(); ++i) {
 //        std::cout << playlist[i].getStr().toStdString() << std::endl;

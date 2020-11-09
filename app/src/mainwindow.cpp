@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
+
 //    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
     ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
 
@@ -71,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_SQL_model, &QSqlTableModel::rowsMoved, m_player, &SoundPlayer::modelChanged);
     connect(m_SQL_model, &QSqlTableModel::layoutChanged, m_player, &SoundPlayer::modelChanged);
     connect(m_SQL_model, &QSqlTableModel::modelReset, m_player, &SoundPlayer::modelChanged);
+//    connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::ImportPlayList);
 }
 
 
@@ -97,7 +99,6 @@ void MainWindow::setupMusicTableModel() {
 }
 
 void MainWindow::setupPlayListTableModel() {
-
     m_PlayList_model = new QSqlTableModel;
     m_PlayList_model->setTable("LIST_PLAYLISTS");
     m_PlayList_model->select();
@@ -348,7 +349,7 @@ Music MainWindow::getMusicfromTable() {
     current_song.m_comment = m_SQL_model->record(m_table_index.row()).value("Comment").toString();
     current_song.m_name = m_SQL_model->record(m_table_index.row()).value("Name").toString();
     current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
-
+    current_song.m_cover = m_SQL_model->record(m_table_index.row()).value("Cover").toByteArray();
     return current_song;
 }
 
@@ -487,18 +488,36 @@ void MainWindow::on_actionNewPlaylist_triggered()
 
 void MainWindow::on_actionImportPlaylist_triggered() {
     bool ok;
-    QString import_playlist_name = QInputDialog::getText(this,"New PlayList",
-                                                      tr("Enter the name for new PlayList"),
-                                                      QLineEdit::Normal,
-                                                      "",
-                                                      &ok);
-    if (ok) {
-        qInfo(logInfo()) << "on_actionImportPlaylist_triggered " << import_playlist_name;
 
+
+    QString import_playlist_name = QFileDialog::getOpenFileName(this);
+    if (!import_playlist_name.isEmpty()) {
+        qInfo(logInfo()) << "on_actionImportPlaylist_triggered import_playlist_name =" << import_playlist_name;
+
+        m_player->importPlaylist(import_playlist_name);
     }
-    else {
-        qInfo(logInfo()) << "on_actionImportPlaylist_triggered  canceled";
-    }
+    qInfo(logInfo()) << "on_actionImportPlaylist_triggered import_playlist_name =" << import_playlist_name;
+
+
+
+
+//        QString fileName = QFileDialog::getOpenFileName(this);
+//        if (!fileName.isEmpty()) {
+//            m_file_manager->loadFile(fileName);
+//        }
+//
+//        QFile file(fullFileName);
+//        if (!file.open(QFile::ReadOnly | QFile::Text)) {
+//            QString warning = QString("Cannot read file %1:\n%2.").arg(QDir::toNativeSeparators(fullFileName),
+//                                                                       file.errorString());
+//            QMessageBox::warning (0, "Application", warning);  // show warning
+//            qWarning(logWarning()) << warning;  // log warning
+//            return;
+//
+//    }
+//    else {
+//        qInfo(logInfo()) << "on_actionImportPlaylist_triggered  canceled";
+//    }
 }
 
 void MainWindow::on_actionExportPlaylist_triggered() {
@@ -638,6 +657,8 @@ if (t) {
 void MainWindow::on_songs_clicked()
 {
     ui->mainMusicTable->setModel(m_SQL_model);
+    ui->mainMusicTable->hideColumn(0);
+    ui->mainMusicTable->hideColumn(12);
     m_SQL_model->select();
 }
 
