@@ -213,6 +213,7 @@ bool SqlBase::insertIntoTable(const Music &curent_song) {
 
     if (!curent_song.empty()) {
         qDebug(logDebug()) << "Music current : " << curent_song.m_name, curent_song.m_title;
+
         query.prepare("INSERT INTO SONGS (Title, Time, Artist, Rating, Genre, Album, Year, "
                       "Track, Comment, Name, Path, Cover) "
                       "VALUES (:Title, :Time, :Artist, :Rating, :Genre, :Album, :Year, :Track, :Comment, "
@@ -246,9 +247,10 @@ SqlBase::~SqlBase() {
 }
 
 bool SqlBase::AddNewPlaylist(const QString &name) {
-    qDebug(logDebug()) << "Create newPlaylist in LIST_PLAYLISTS";
+    qDebug(logDebug()) << "SqlBase::AddNewPlaylist in LIST_PLAYLISTS";
 
     if (name.isEmpty()) {
+        qDebug(logDebug()) << "SqlBase::AddNewPlaylist name is Empty";
         return false;
     }
 
@@ -258,7 +260,7 @@ bool SqlBase::AddNewPlaylist(const QString &name) {
     query.bindValue(":Name", name);
 
     if (!query.exec()) {
-        qDebug(logDebug()) << "Create newPlaylist in LIST_PLAYLISTS failed, error = " << query.lastError();
+        qDebug(logDebug()) << "SqlBase::AddNewPlaylist Create newPlaylist in LIST_PLAYLISTS failed, error = " << query.lastError();
         return false;
     }
     return true;
@@ -376,20 +378,15 @@ Playlist SqlBase::ExportPlaylist(const QString &name) {
 bool SqlBase::importPlayList(Playlist import_playlist) {
     qDebug(logDebug()) << "SqlBase::ImportPlayList name = " << import_playlist.playlistName();
 
-   this->AddNewPlaylist(import_playlist.playlistName());
-
-   for (int i = 0; i < import_playlist.size(); ++i) {
-       if (!import_playlist[i].empty()) {
-           this->insertIntoTable(import_playlist[i]);
-       }
-   }
+    this->AddNewPlaylist(import_playlist.playlistName());
+    emit modelPlaylistSelect();
+    for (int i = 0; i < import_playlist.size(); ++i) {
+        if (!import_playlist[i].empty()) {
+            this->insertIntoTable(import_playlist[i]);
+        }
+    }
     return true;
 }
-
-bool SqlBase::importPlayList(Playlist import_playlist) {
-    return false;
-}
-
 
 
 

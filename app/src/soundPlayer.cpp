@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QMediaMetaData>
 #include <QWidget>
+#include <QFileInfo>
 
 SoundPlayer::SoundPlayer(Ui::MainWindow *child)
 {
@@ -231,6 +232,8 @@ void SoundPlayer::importPlaylist(const QString &path) {
     QMediaPlaylist _pl;
     Playlist playlist;
     _pl.load(QUrl::fromLocalFile(path), "m3u");
+    playlist.setPlaylistName(QFileInfo(path).fileName());
+
 //    std::cout << "Loaded " << _pl.mediaCount() << "songs :: " <<  _pl.errorString().toStdString() << std::endl;
     for (int i = 0; i < _pl.mediaCount(); ++i) {
         auto media = _pl.media(i).canonicalUrl();

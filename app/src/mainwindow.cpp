@@ -75,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->search_line, &QLineEdit::textChanged, m_searcher, &Searcher::search);
     connect(ui->filterBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_searcher, &Searcher::search);
     connect(m_player, &SoundPlayer::playlistImported, [=](Playlist pl){ m_base->importPlayList(pl); });
+    connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::importPlayList);
+    connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
 }
 
 
@@ -108,8 +110,7 @@ void MainWindow::setupPlayListTableModel() {
     ui->listPlaylist->setModelColumn(1);
     ui->listPlaylist->setEditTriggers(
 //            QAbstractItemView::DoubleClicked |
-            QAbstractItemView::SelectedClicked);
-
+    QAbstractItemView::SelectedClicked);
 }
 
 
@@ -497,6 +498,8 @@ void MainWindow::on_actionImportPlaylist_triggered() {
         qInfo(logInfo()) << "on_actionImportPlaylist_triggered import_playlist_name =" << import_playlist_name;
 
         m_player->importPlaylist(import_playlist_name);
+        m_PlayList_model->select();
+
     }
     qInfo(logInfo()) << "on_actionImportPlaylist_triggered import_playlist_name =" << import_playlist_name;
 

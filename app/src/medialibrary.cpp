@@ -64,12 +64,13 @@ void MediaLibrary::add_file(const QString &file_name) {
     try
     {
 //            Sound_tags current;
+//        tmp = Music(QUrl::fromLocalFile(QString(fileInfo.filePath())));
         tmp = TagFunctions::read_tags(TagFunctions::toChar(QString(fileInfo.fileName())),
                                       TagFunctions::toChar(QString(fileInfo.filePath())));
     }
     catch (std::exception &e)
     {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "QQQQQQQQQ " << e.what() << std::endl;
     }
     if (!tmp.empty())
         m_media_list.push_back(tmp);

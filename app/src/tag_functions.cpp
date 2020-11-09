@@ -134,8 +134,8 @@ Music TagFunctions::read_tags(char *file_name, char *file_path) {
 //      0       1       2           3      4          5       6       7        8       9
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
     Music data;
-    std::string file_n= file_name;
-    std::string file_p= file_path;
+    std::string file_n = file_name;
+    std::string file_p = file_path;
     TagLib::FileRef f(file_path);
 
     if (!f.isNull() && f.tag()) {
@@ -194,13 +194,14 @@ Music TagFunctions::read_tags(char *file_name, char *file_path) {
 
         QByteArray byte_cover;
         QImage coverQImg;
-//        QString fileName = QFileInfo(file_path).fileName();
-        std::string current_file = file_name;
-        std::string fileType = current_file.substr(current_file.size() - 3);
+        QString fileName = QFileInfo(file_path).fileName();
+
+//        std::string current_file = file_name;
+//        std::string fileType = current_file.substr(current_file.size() - 3);
 
 
-//        QString fileType = QFileInfo(file_path).completeSuffix();
-        qDebug(logDebug()) << "file type = " << fileType.data();
+        QString fileType = QFileInfo(file_path).completeSuffix();
+        qDebug(logDebug()) << "file type = " << fileType;
 
         if (fileType == "mp3") {
             qDebug (logDebug()) << "SqlBase::AddtoLibrary file type = mp3";
@@ -465,8 +466,10 @@ Music TagFunctions::LoadSongTags(const QString &file_name) {
     }
     catch (std::exception &e)
     {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "QQQQQQQQQ " << e.what() << std::endl;
+
     }
+    std::cout << "MediaLibrary" << tmp.m_path.toStdString() << std::endl;
     if (!tmp.empty())
         return tmp;
 }

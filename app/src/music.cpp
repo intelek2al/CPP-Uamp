@@ -3,7 +3,9 @@
 #include "tag_functions.h"
 
 Music::Music(QObject *parent) : QObject(parent)
-{}
+{
+    m_url = QUrl();
+}
 
 Music::Music(const QUrl &url) {
     m_url = url;
@@ -18,10 +20,10 @@ Music::Music(const QUrl &url) {
         m_artist = tag->artist().toCString();
         m_genre = tag->genre().toCString();
         m_album = tag->album().toCString();
-        m_year = static_cast<short>(tag->year() != 0 ? tag->year(): -1);
-        m_track = static_cast<short>(tag->track() != 0 ? tag->track(): -1);
+        m_year = QString::number(tag->year());
+        m_track = QString::number(tag->track());
         m_path = QString(file_p.data());
-        m_comment =tag->comment().toCString();
+        m_comment = tag->comment().toCString();
         TagLib::PropertyMap tags = f.file()->properties();
         unsigned int longest = 0;
         for (TagLib::PropertyMap::ConstIterator i = tags.begin(); i != tags.end(); ++i) {
