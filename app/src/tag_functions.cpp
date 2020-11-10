@@ -4,11 +4,12 @@
 #include <QTime>
 #include <QBuffer>
 #include <QPixmap>
+#include <QStringRef>
 #include "tag_functions.h"
 #include "loggingcategories.h"
 #include "music.h"
 
-#define default_cover ":/def_cover_grey.png"
+#define default_cover ":/def_cover_color.png"
 
 class ImageFile;
 
@@ -130,26 +131,31 @@ unsigned int str_to_uint(const char* new_value) {
 }
 
 
-Music TagFunctions::read_tags(char *file_name, char *file_path) {
+Music TagFunctions::read_tags(QString file_path) {
 //      0       1       2           3      4          5       6       7        8       9
 //    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
+    qDebug(logDebug()) << "TagFunctions::read_tags file_path =" << file_path;
     Music data;
-    std::string file_n = file_name;
-    std::string file_p = file_path;
-    TagLib::FileRef f(file_path);
+//    std::string file_n = file_name;
+//    std::string file_p = file_path;
+    TagLib::FileRef f(file_path.toStdString().data());
 
     if (!f.isNull() && f.tag()) {
         TagLib::Tag *tag = f.tag();
-        data.m_name = QString(file_n.data());
+//        data.m_name = QString(file_n.data());
+        data.m_name = QFileInfo(file_path).fileName();
         data.m_title = tag->title().toCString();
         data.m_artist = tag->artist().toCString();
         data.m_genre = tag->genre().toCString();
         data.m_album = tag->album().toCString();
         data.m_year = QString::number(tag->year());
         data.m_track = QString::number(tag->track());
-        data.m_path = QString(file_p.data());
+        data.m_path = file_path;
         data.m_comment =tag->comment().toCString();
         data.m_url = QUrl(data.m_path);
+
+        qDebug(logDebug()) << "TagFunctions::read_tags" << data.m_name;
+        qDebug(logDebug()) << "TagFunctions::read_tags" << data.m_path;
 
         /*
         cout << "-- TAG (basic) --" << endl;
@@ -191,64 +197,41 @@ Music TagFunctions::read_tags(char *file_name, char *file_path) {
                  << std::setw(2) << seconds << endl;
             */
         }
-
-        QByteArray byte_cover;
-        QImage coverQImg;
-        QString fileName = QFileInfo(file_path).fileName();
-
-//        std::string current_file = file_name;
-//        std::string fileType = current_file.substr(current_file.size() - 3);
-
-
-        QString fileType = QFileInfo(file_path).completeSuffix();
-        qDebug(logDebug()) << "file type = " << fileType;
-
-        if (fileType == "mp3") {
-            qDebug (logDebug()) << "SqlBase::AddtoLibrary file type = mp3";
-//                coverQImg = TagFunctions::load_cover_image_mpeg(curent_song.m_path.toStdString().data());
-            coverQImg = TagFunctions::load_cover_image(file_path);
-        }
-        if (fileType == "m4a") {
-            coverQImg = TagFunctions::load_cover_image_m4a(file_path);
-        }
-
-        QBuffer buffer(&byte_cover);
-        buffer.open(QIODevice::WriteOnly);
-        QPixmap pix_cover(QPixmap::fromImage(coverQImg));
-        pix_cover.save(&buffer,"PNG");
-        data.m_cover = byte_cover;
+        data.m_cover = load_cover_array(file_path);
+    } else {
+        qDebug(logDebug()) << "TagFunctions::read_tags  = else";
     }
     return data;
 }
 
-
-QByteArray TagFunctions::load_cover_array(char *file_path) {
+QByteArray TagFunctions::load_cover_array(QString file_path) {
+    if (file_path.isEmpty()) {
+        qDebug(logDebug()) << "TagFunctions::load_cover_array << file_path EMPTY";
+        return QByteArray();
+    }
     QByteArray byte_cover;
     QImage coverQImg;
 
-//    QString fileType = QFileInfo(file_path).completeSuffix();
-
     QString fileName = QFileInfo(file_path).fileName();
-    std::string current_file = fileName.toStdString();
-    std::string fileType = current_file.substr(current_file.size() - 3);
+    QString fileType = fileName.mid(fileName.lastIndexOf(".") + 1, -1);
 
-    qDebug(logDebug()) << "file type = " << fileType.data();
-
+//    qDebug(logDebug()) << "file_path = " << file_path;
+//    qDebug(logDebug()) << "file type = " << fileType;
     if (fileType == "mp3") {
-        qDebug (logDebug()) << "SqlBase::AddtoLibrary file type = mp3";
-//                coverQImg = TagFunctions::load_cover_image_mpeg(curent_song.m_path.toStdString().data());
-        coverQImg = TagFunctions::load_cover_image(file_path);
+        coverQImg = TagFunctions::load_cover_image_mpeg(file_path.toStdString().data());
+//        coverQImg = TagFunctions::load_cover_image(file_path);
     }
     if (fileType == "m4a") {
-        coverQImg = TagFunctions::load_cover_image_m4a(file_path);
+        coverQImg = TagFunctions::load_cover_image_m4a(file_path.toStdString().data());
     }
 
     QBuffer buffer(&byte_cover);
     buffer.open(QIODevice::WriteOnly);
     QPixmap pix_cover(QPixmap::fromImage(coverQImg));
     pix_cover.save(&buffer,"PNG");
-
-
+    if (byte_cover.isEmpty()) {
+        qDebug(logDebug()) << "TagFunctions::load_cover_array empty";
+    }
     return byte_cover;
 }
 
@@ -373,6 +356,9 @@ bool TagFunctions::modify_tags(const Music& changes) {
 
 QImage TagFunctions::load_cover_image_mpeg(char *file_path)
 {
+    if (!file_path) {
+       return QImage();
+    }
     static const char *IdPicture = "APIC";  //  APIC    [#sec4.15 Attached picture]
     TagLib::MPEG::File mpegFile(file_path);
     TagLib::ID3v2::Tag *tag = mpegFile.ID3v2Tag();
@@ -393,6 +379,9 @@ QImage TagFunctions::load_cover_image_mpeg(char *file_path)
 
 QImage TagFunctions::load_cover_image_m4a(char *file_path)
 {
+    if (!file_path) {
+        return QImage();
+    }
     QImage image;
     TagLib::MP4::File file(file_path);
     TagLib::MP4::Tag* tag = file.tag();
@@ -408,9 +397,6 @@ QImage TagFunctions::load_cover_image_m4a(char *file_path)
         TagLib::MP4::CoverArt coverArt = coverArtList.front();
         image.loadFromData((const uchar *)
                                    coverArt.data().data(), coverArt.data().size());
-//        if (image.size().width() > 200 || image.size().height() > 200) {
-//            image = image.scaled(200, 200);
-//        }
         return QImage();
     }
 }
@@ -451,9 +437,9 @@ bool TagFunctions::set_image_mpeg(char *file_path, char *image_path)
 }
 
 
-Music TagFunctions::LoadSongTags(const QString &file_name) {
+Music TagFunctions::LoadSongTags(QString file_path) {
 
-    QFileInfo fileInfo(file_name);
+    QFileInfo fileInfo(file_path);
     if (!fileInfo.isReadable()) {
         qWarning(logWarning()) << fileInfo.fileName() << " not readable";
         return Music();
@@ -461,16 +447,13 @@ Music TagFunctions::LoadSongTags(const QString &file_name) {
     Music tmp;
     try
     {
-        tmp = TagFunctions::read_tags(TagFunctions::toChar(QString(fileInfo.fileName())),
-                                      TagFunctions::toChar(QString(fileInfo.filePath())));
+        tmp = TagFunctions::read_tags(file_path);
     }
     catch (std::exception &e)
     {
-        std::cerr << "QQQQQQQQQ " << e.what() << std::endl;
-
+//        std::cerr << "QQQQQQQQQ "dd << e.what() << std::endl;
     }
     std::cout << "MediaLibrary" << tmp.m_path.toStdString() << std::endl;
-    if (!tmp.empty())
         return tmp;
 }
 

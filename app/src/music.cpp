@@ -182,6 +182,8 @@ QString Music::getStr() const {
 }
 
 
+
+
 /*
 QVector<QString> Music::getMusicInfo() const {
     QVector<QString> info;

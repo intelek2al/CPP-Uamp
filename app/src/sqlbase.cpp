@@ -157,26 +157,6 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
 
             Music curent_song = TagFunctions::LoadSongTags(list.at(i).filePath());
 
-            QByteArray byte_cover;
-            QImage coverQImg;
-            QString fileType = QFileInfo(curent_song.m_url.path().toStdString().data()).completeSuffix();
-
-            qDebug (logDebug()) << "SqlBase::AddtoLibrary  path =" << curent_song.m_path;
-            qDebug (logDebug()) << "SqlBase::AddtoLibrary file type =" << fileType;
-
-            if (fileType == "mp3") {
-                qDebug (logDebug()) << "SqlBase::AddtoLibrary file type = mp3";
-//                coverQImg = TagFunctions::load_cover_image_mpeg(curent_song.m_path.toStdString().data());
-                coverQImg = TagFunctions::load_cover_image(curent_song.m_path.toStdString().data());
-            }
-            if (fileType == "m4a") {
-                coverQImg = TagFunctions::load_cover_image_m4a(curent_song.m_path.toStdString().data());
-            }
-            QBuffer buffer(&byte_cover);
-            buffer.open(QIODevice::WriteOnly);
-            QPixmap pix(QPixmap::fromImage(coverQImg));
-            pix.save(&buffer,"PNG");
-
             if (!curent_song.empty()) {
                 qDebug(logDebug()) << "Music current : " << curent_song.m_name, curent_song.m_title;
                 query.prepare("INSERT INTO SONGS (Title, Time, Artist, Rating, Genre, Album, Year, "
@@ -236,7 +216,6 @@ bool SqlBase::insertIntoTable(const Music &curent_song) {
             qDebug(logDebug()) << "error = " << query.lastError();
         }
     }
-
     return false;
 }
 

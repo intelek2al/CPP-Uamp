@@ -43,9 +43,9 @@ namespace TagFunctions {
 
     char *toChar(QString str);
 
-    Music read_tags(char *file_name, char *file_path);
+    Music read_tags(QString file_path);
 
-    QByteArray load_cover_array(char *file_path);
+    QByteArray load_cover_array(QString file_path);
 
     void load_lyrics(char *file_name);
 
@@ -79,7 +79,7 @@ namespace TagFunctions {
 
     bool modify_tags(const Music &changes);
 
-    Music LoadSongTags(const QString &file_name);
+    Music LoadSongTags(QString file_path);
 
 }
 

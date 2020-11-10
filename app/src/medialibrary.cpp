@@ -48,8 +48,7 @@ void MediaLibrary::add_dir(const QString &dir_name) {
     {
         add_file(list.at(i).filePath());
     }
-
-//    qInfo(logInfo()) << "m_media_list size =" << m_media_list.size();
+    qInfo(logInfo()) << "m_media_list size =" << m_media_list.size();
 }
 
 void MediaLibrary::add_file(const QString &file_name) {
@@ -65,8 +64,7 @@ void MediaLibrary::add_file(const QString &file_name) {
     {
 //            Sound_tags current;
 //        tmp = Music(QUrl::fromLocalFile(QString(fileInfo.filePath())));
-        tmp = TagFunctions::read_tags(TagFunctions::toChar(QString(fileInfo.fileName())),
-                                      TagFunctions::toChar(QString(fileInfo.filePath())));
+        tmp = TagFunctions::read_tags(file_name);
     }
     catch (std::exception &e)
     {
