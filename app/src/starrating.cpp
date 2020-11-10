@@ -4,7 +4,7 @@
 #include "starrating.h"
 #include "loggingcategories.h"
 
-const int PaintingScaleFactor = 15;
+const int PaintingScaleFactor = 12;
 
 StarRating::StarRating(int starCount, int maxStarCount)
     : myStarCount(starCount),
@@ -16,7 +16,6 @@ StarRating::StarRating(int starCount, int maxStarCount)
   for (int i = 1; i < 5; ++i)
     starPolygon << QPointF(0.5 + 0.5 * std::cos(0.8 * i * 3.14),
                            0.5 + 0.5 * std::sin(0.8 * i * 3.14));
-
   diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4)
                  << QPointF(0.6, 0.5) << QPointF(0.5, 0.6)
                  << QPointF(0.4, 0.5);

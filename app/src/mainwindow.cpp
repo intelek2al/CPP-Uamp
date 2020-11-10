@@ -23,17 +23,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
     readSettings();
-
     m_settings = new Settings();
     m_base = new SqlBase();
-//    m_library = new MediaLibrary(); //!!!!!!!!!!!!!
-//    m_tableModel = new MusicTableModel(*m_library,  ui->mainMusicTable);
-
     setupMusicTableModel();
     setupPlayListTableModel();
 
     m_player = new SoundPlayer(ui);
-//    m_player->setPlaylist(m_library->dataPlaylist());
     m_player->setPlaylist(m_SQL_model);
 
 //    m_selection_model = new QItemSelectionModel(m_tableModel);
@@ -54,9 +49,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->cover_label->setPixmap(pix);
 
     // context menu for ...
-    ui->sideBar->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->sideBar, SIGNAL(customContextMenuRequested(const QPoint &)), this,
-            SLOT(onSideBarContextMenu(const QPoint &)));
+    ui->listPlaylist->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->listPlaylist, SIGNAL(customContextMenuRequested(const QPoint &)), this,
+            SLOT(onPlayListContextMenu(const QPoint &)));
 
 //    m_searcher = new Searcher{ui->search_line, ui->filterBox, &m_music_list};
     ui->statusbar->hide();
@@ -78,11 +73,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->filterBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_searcher, &Searcher::search);
     connect(m_player, &SoundPlayer::playlistImported, [=](Playlist pl){ m_base->importPlayList(pl); });
     connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::importPlayList);
-
     connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
     connect(m_base, &SqlBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
-
-
 }
 
 void MainWindow::setupMusicTableModel() {
@@ -105,6 +97,7 @@ void MainWindow::setupMusicTableModel() {
     ui->mainMusicTable->hideColumn(0); // song_id
 //    ui->mainMusicTable->hideColumn(11);  // path
     ui->mainMusicTable->hideColumn(12);  // cover
+    ui->mainMusicTable->resizeColumnsToContents();
 }
 
 void MainWindow::setupPlayListTableModel() {
@@ -159,12 +152,11 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
     QAction action_del_from_library("Delete from Library", this);
     connect(&action_del_from_library, &QAction::triggered, this, &MainWindow::on_actionDelete_from_Library_triggered);
     contextMenu.addAction(&action_del_from_library);
-
-    contextMenu.exec(mapToGlobal(point));
+    contextMenu.exec(ui->mainMusicTable->viewport()->mapToGlobal(point));
 }
 
 
-void MainWindow::onSideBarContextMenu(const QPoint &point)
+void MainWindow::onPlayListContextMenu(const QPoint &point)
 {
     QMenu contextMenu(tr("SideBar context menu"), this);
 //    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
@@ -191,7 +183,7 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
     QAction action_delete("Delete Playlist", this);
     connect(&action_delete, &QAction::triggered, this, &MainWindow::on_actionDeletePlaylist_triggered);
     contextMenu.addAction(&action_delete);
-    contextMenu.exec(mapToGlobal(point));
+    contextMenu.exec(ui->listPlaylist->viewport()->mapToGlobal(point));
 }
 
 MainWindow::~MainWindow()

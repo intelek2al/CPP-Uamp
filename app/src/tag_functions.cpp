@@ -199,14 +199,14 @@ Music TagFunctions::read_tags(QString file_path) {
         }
         data.m_cover = load_cover_array(file_path);
     } else {
-        qDebug(logDebug()) << "TagFunctions::read_tags  = else";
+        qWarning(logWarning()) << "TagFunctions::read_tags  tags doesn't read";
     }
     return data;
 }
 
 QByteArray TagFunctions::load_cover_array(QString file_path) {
     if (file_path.isEmpty()) {
-        qDebug(logDebug()) << "TagFunctions::load_cover_array << file_path EMPTY";
+        qDebug(logDebug()) << "TagFunctions::load_cover_array file_path EMPTY";
         return QByteArray();
     }
     QByteArray byte_cover;
@@ -459,7 +459,7 @@ Music TagFunctions::LoadSongTags(QString file_path) {
     {
         qWarning(logWarning()) << e.what();
     }
-    std::cout << "MediaLibrary" << tmp.m_path.toStdString() << std::endl;
-        return tmp;
+//    std::cout << "MediaLibrary" << tmp.m_path.toStdString() << std::endl;
+    return tmp;
 }
 

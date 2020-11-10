@@ -57,7 +57,7 @@ private slots:
     void on_statusPlay_valueChanged(int value);
     void on_statusVolume_valueChanged(int value);
     void on_actionQuit_triggered();
-    void onSideBarContextMenu(const QPoint &point);
+    void onPlayListContextMenu(const QPoint &point);
     void onMusicTableContextMenu(const QPoint &point);
     void on_actionNewPlaylist_triggered();
     void on_actionPlqyPlaylist_triggered();
