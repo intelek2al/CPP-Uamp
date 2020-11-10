@@ -27,23 +27,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_base = new SqlBase();
     setupMusicTableModel();
     setupPlayListTableModel();
-
     m_player = new SoundPlayer(ui);
     m_player->setPlaylist(m_SQL_model);
 
-//    m_selection_model = new QItemSelectionModel(m_tableModel);
-//    ui->mainMusicTable->setSelectionModel(m_selection_model);
-
     connect(this, &MainWindow::editTagsCompleted, m_base, &SqlBase::updateTableRow);  // edit tags from Info
 
-//    ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-//    ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
-
-//    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
-//    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
-
     // default cover in player
-
     QImage def_cover(":/def_cover_black.jpg");
     QPixmap pix(QPixmap::fromImage(def_cover));
     ui->cover_label->setPixmap(pix);
@@ -55,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 //    m_searcher = new Searcher{ui->search_line, ui->filterBox, &m_music_list};
     ui->statusbar->hide();
-
     ui->mainMusicTable->setContextMenuPolicy(Qt::CustomContextMenu);
 //    connect(ui->filterBox, SIGNAL(activated(int)), this, SLOT(on_search_line_editingFinished()));
     // context menu for music table
@@ -84,13 +72,10 @@ void MainWindow::setupMusicTableModel() {
     m_SQL_model->select();
 
     m_star_delegate = new StarDelegate(ui->mainMusicTable);
-//    ui->mainMusicTable->setModel(m_tableModel);
-
     ui->mainMusicTable->setItemDelegateForColumn(4, m_star_delegate);
     ui->mainMusicTable->setEditTriggers(
 //            QAbstractItemView::DoubleClicked |
             QAbstractItemView::SelectedClicked);
-
     ui->mainMusicTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     ui->mainMusicTable->setModel(m_SQL_model);
@@ -123,27 +108,13 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
     connect(&action_add_to_playlist, &QAction::triggered, this, &MainWindow::on_actionAddtoPlaylist_triggered);
     contextMenu.addAction(&action_add_to_playlist);
 
-    QAction* actionA_Setup = contextMenu.addAction( "Setup" );
-
     QAction action_play_next("Play Next", this);
     connect(&action_play_next, &QAction::triggered, this, &MainWindow::playNext);
     contextMenu.addAction(&action_play_next);
 
-//    QAction action_play_later("Play Later", this);
-//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
-//    contextMenu.addAction(&action_play_later);
-
     QAction action_song_info("Song Info", this);
     connect(&action_song_info, &QAction::triggered, this, &MainWindow::on_actionInfo_triggered);
     contextMenu.addAction(&action_song_info);
-
-//    QAction action_like("Like", this);
-//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
-//    contextMenu.addAction(&action_like);
-
-//    QAction action_dislike("Dislike", this);
-//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
-//    contextMenu.addAction(&action_dislike);
 
     QAction action_show_in_finder("Show in Finder", this);
 //    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
@@ -167,10 +138,9 @@ void MainWindow::onPlayListContextMenu(const QPoint &point)
     contextMenu.addAction(&action_new);
 
     QAction action_play("Play Playlist", this);
-    connect(&action_play, &QAction::triggered, this, &MainWindow::on_actionPlqyPlaylist_triggered);
+    connect(&action_play, &QAction::triggered, this, &MainWindow::on_actionPlayPlaylist_triggered);
 //    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
     contextMenu.addAction(&action_play);
-
 
     QAction action_import_plst("Import Playlist", this);
     connect(&action_import_plst, &QAction::triggered, this, &MainWindow::on_actionImportPlaylist_triggered);
@@ -202,12 +172,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
-//    Music current = m_library->data()[index.row()];
-//    outputCurrentInfo(current, index);
-
 //    setMusicPlay(current.m_path);
     setMusicPlay(index.row());
-
     loadCoverImage(index);
 }
 
@@ -304,10 +270,6 @@ void MainWindow::on_actionPreferences_triggered()
 void MainWindow::on_actionInfo_triggered()
 {
   qInfo(logInfo()) << "on_actionInfo_triggered";
-//      Music current = m_library->data()[m_table_index.row()];
-//    auto index = m_selection_model->selection().indexes();
-
-//    if (!index.front().isValid() && (!(m_library->data().empty()))) {
     if (!m_table_index.isValid()) {
         qDebug(logDebug()) << "on_actionInfo_triggered return";
         return;
@@ -319,31 +281,20 @@ void MainWindow::on_actionInfo_triggered()
     }
 
     Music current_song = getMusicfromTable();
-
-//            m_library->data()[index.front().row()];
-
+    if (current_song.m_path.toStdString().empty()) {
+      return;
+    }
     DialogInfo window_songInfo = DialogInfo(current_song, 0);
-
 //  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
     window_songInfo.setModal(true);
-
     if (window_songInfo.exec() == QDialog::Accepted) {
       qInfo(logInfo()) << "ok DialogInfo";
-
         window_songInfo.get_tag_changes(new_song_info);  // get settings from QDialog
-        qDebug(logDebug()) << "curent_music =" << new_song_info.m_name;
-        qDebug(logDebug()) << "curent_music =" << new_song_info.m_title;
-        qDebug(logDebug()) << "curent_music =" << new_song_info.m_artist;
-
-
       if (!(current_song == new_song_info)) {
-          // save new tags;
           if (!(TagFunctions::modify_tags(new_song_info))) {
               qInfo(logInfo()) << new_song_info.m_path << " is not writable";
           } else {
               emit editTagsCompleted(m_table_index, new_song_info);
-//                m_library->setData(m_table_index.row(), new_song_info);
-//                m_SQL_model->setRecord();
               qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
           }
       }
@@ -353,7 +304,6 @@ void MainWindow::on_actionInfo_triggered()
 }
 
 Music MainWindow::getMusicfromTable() {
-    //    {"Title", "Time", "Artist", "Rating", "Genre", "Album", "Year", "Track", "Comment", "Name","Path"};
     Music current_song;
     current_song.m_title = m_SQL_model->record(m_table_index.row()).value("Title").toString();
     current_song.m_time = m_SQL_model->record(m_table_index.row()).value("Time").toString();
@@ -367,14 +317,13 @@ Music MainWindow::getMusicfromTable() {
     current_song.m_name = m_SQL_model->record(m_table_index.row()).value("Name").toString();
     current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
     current_song.m_cover = m_SQL_model->record(m_table_index.row()).value("Cover").toByteArray();
+    current_song.m_rate = m_SQL_model->record(m_table_index.row()).value("Rating").toString();
     return current_song;
 }
 
 
 void MainWindow::on_actionDelete_from_Library_triggered()
 {
-//    auto index = m_selection_model->selection().indexes();
-
     qInfo(logInfo()) << " on_actionDelete_from_Library_triggered";
     if (!m_table_index.isValid()) {
         qDebug(logDebug()) << "on_actionDelete_from_Library_triggered return";
@@ -384,24 +333,17 @@ void MainWindow::on_actionDelete_from_Library_triggered()
     m_SQL_model->select();
 }
 
-
-
 void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 {
     QString f_name = QFileDialog::getExistingDirectory(this, "Add media", "");
-//    m_library->add_media(f_name);
-
     m_base->AddtoLibrary(f_name);
     m_SQL_model->select();
 
     emit m_SQL_model->layoutChanged();
     emit m_SQL_model->sort(0, Qt::AscendingOrder);
-
     m_SQL_model->select();
 
-
 //    m_player->setPlaylist(m_library->dataPlaylist()); !!!!
-
 //    cout << "===================Setting==================" << endl;
 //    for (int i = 0; i < m_library->dataPlaylist().size(); ++i )
 //        cout << m_library->dataPlaylist()[i].m_path.toStdString() << endl;
@@ -425,22 +367,18 @@ void MainWindow::loadCoverImage(const QModelIndex &index) {
 
 void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
     m_table_index = index;
-
 }
 
 void MainWindow::currentPlayListIndex(const QModelIndex &index) {
-    m_playList_index = index;
-
+  qInfo(logInfo()) << "MainWindow::currentPlayListIndex";
+  m_playList_index = index;
 //  auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
   auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
+  qDebug(logDebug()) << "cur_playlist =" << cur_playlist;
 
-    qDebug(logDebug()) << "click on playlists";
-    qDebug(logDebug()) << "cur_playlist =" << cur_playlist;
-
-    QSqlQuery query;
-
-    QSqlQueryModel *model = new QSqlQueryModel;
-    int PLAY_LISTS_R;
+  QSqlQuery query;
+  QSqlQueryModel *model = new QSqlQueryModel;
+  int PLAY_LISTS_R;
 
   query.prepare("SELECT PLAY_LISTS_ID FROM LIST_PLAYLISTS WHERE Name = ?");
   query.addBindValue(cur_playlist);
@@ -449,18 +387,13 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
   PLAY_LISTS_R =  query.value(0).toInt();
   qDebug(logDebug()) << "PLAY_LISTS_R = " << PLAY_LISTS_R;
 
-//  query.prepare("SELECT * FROM SONGS "
-//                "INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
-//                "INNER JOIN LIST_PLAYLISTS ON PLAYLIST.PLAYLIST_R = ?");
 
-//    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Rating, SONGS.Year, SONGS.Genre, SONGS.Time "
     query.prepare("SELECT * "
                   "FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
                   "WHERE PLAYLIST.PLAYLIST_R = ?");
   query.addBindValue(PLAY_LISTS_R);
   query.exec();
   model->setQuery(query);
-
   ui->mainMusicTable->setModel(model);
 
 //    QSqlRelationalTableModel *r_model = new QSqlRelationalTableModel;
@@ -483,46 +416,21 @@ void MainWindow::on_actionNewPlaylist_triggered()
         m_base->AddNewPlaylist(new_playlist_name);
         m_PlayList_model->select();
     } else {
-//            QMessageBox::warning(0, "Warning ", "You cannot delete the folder");  // show warning
-        qInfo(logInfo()) << "Warning You cannot delete the folder " << new_playlist_name;
+        qInfo(logInfo()) << "on_actionNewPlaylist_triggered canceled";
     }
 
 }
 
-void MainWindow::on_actionImportPlaylist_triggered() {
-    bool ok;
-
-
+void MainWindow::on_actionImportPlaylist_triggered()
+{
     QString import_playlist_name = QFileDialog::getOpenFileName(this);
     if (!import_playlist_name.isEmpty()) {
         qInfo(logInfo()) << "on_actionImportPlaylist_triggered import_playlist_name =" << import_playlist_name;
-
         m_player->importPlaylist(import_playlist_name);
         m_PlayList_model->select();
-
+    } else {
+      qInfo(logInfo()) << "on_actionImportPlaylist_triggered import_playlist_name  canceled";
     }
-    qInfo(logInfo()) << "on_actionImportPlaylist_triggered import_playlist_name =" << import_playlist_name;
-
-
-
-
-//        QString fileName = QFileDialog::getOpenFileName(this);
-//        if (!fileName.isEmpty()) {
-//            m_file_manager->loadFile(fileName);
-//        }
-//
-//        QFile file(fullFileName);
-//        if (!file.open(QFile::ReadOnly | QFile::Text)) {
-//            QString warning = QString("Cannot read file %1:\n%2.").arg(QDir::toNativeSeparators(fullFileName),
-//                                                                       file.errorString());
-//            QMessageBox::warning (0, "Application", warning);  // show warning
-//            qWarning(logWarning()) << warning;  // log warning
-//            return;
-//
-//    }
-//    else {
-//        qInfo(logInfo()) << "on_actionImportPlaylist_triggered  canceled";
-//    }
 }
 
 void MainWindow::on_actionExportPlaylist_triggered() {
@@ -573,7 +481,6 @@ void MainWindow::on_actionRewind_triggered()
 
 
 void MainWindow::on_actionAddtoPlaylist_triggered() {
-
     auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
     auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
     m_base->AddtoPlaylist(current_song_path, cur_playlist);
@@ -583,81 +490,9 @@ void MainWindow::on_actionAddtoPlaylist_triggered() {
 
 void MainWindow::on_search_line_editingFinished()
 {
-//    cout << "ASDASDASDASDASDASDASDASDASDASDASDASD" << endl;
-//    readDir(ui->fileBrowser->currentIndex());
     m_searcher->search();
-//    if (!m_tableModel)
-//        delete m_tableModel;
-//    m_tableModel = new MusicTableModel(ui->mainMusicTable);
-//    m_tableModel->music_list_add(m_music_list);
-//    ui->mainMusicTable->setModel(m_tableModel);
-//    ui->mainMusicTable->viewport()->update();
 }
 
-
-
-//void MainWindow::outputCurrentInfo(const QVector<QString> &current, const QModelIndex &index)
-//{
-//    m_tableViewer->setNewItems(current, index);
-//}
-
-
-//void MainWindow::on_pushButton_clicked()
-//{
-//    auto newSongTag = m_tableViewer->getResult();
-//
-//    if (newSongTag[8].isEmpty() || newSongTag[0].isEmpty()) {
-//        return;
-//    }
-//    if (!(modify_tags(newSongTag))) {
-//        ui->statusbar->showMessage(newSongTag[8] + " is not writable", 200);
-////        m_log->add_log_massage(newSongTag[8] + " is not writable");
-//    }
-//
-//    m_music_list[m_tableViewer->getIndex().row()] = std::move(newSongTag);
-//    m_tableModel->music_list_add(m_music_list);
-//    ui->mainMusicTable->setModel(m_tableModel);
-//    ui->mainMusicTable->viewport()->update();
-//}
-
-
-
-
-
-
-
-/*
-QFileDialog* _f_dlg = new QFileDialog(this);
-_f_dlg->setFileMode(QFileDialog::Directory);
-_f_dlg->setOption(QFileDialog::DontUseNativeDialog, true);
-
-// Try to select multiple files and directories at the same time in QFileDialog
-QListView *l = _f_dlg->findChild<QListView*>("listView");
-if (l) {
-    l->setSelectionMode(QAbstractItemView::MultiSelection);
-}
-QTreeView *t = _f_dlg->findChild<QTreeView*>();
-if (t) {
-    t->setSelectionMode(QAbstractItemView::MultiSelection);
-}
-
-//    int nMode =
-    if (_f_dlg->exec()) {
-        QStringList _fnames = _f_dlg->selectedFiles();
-        qDebug(logDebug()) << "add media " << _fnames.size();
-        for (int i = 0; i < _fnames.size(); ++i) {
-            m_library->add_media(_fnames.at(i));
-        }
-
-
-        if (!m_tableModel)
-            delete m_tableModel;
-        m_tableModel = new MusicTableModel(ui->mainMusicTable);
-//            m_searcher->setDown();
-        m_tableModel->music_list_add(m_library->data());
-        ui->mainMusicTable->setModel(m_tableModel);
-    }
-    */
 
 void MainWindow::on_songs_clicked()
 {
@@ -696,9 +531,44 @@ void MainWindow::on_upNextButton_clicked()
     nextUp->show();
 }
 
-void MainWindow::on_actionPlqyPlaylist_triggered() {
+void MainWindow::on_actionPlayPlaylist_triggered() {
     // play selected playlist
 }
 
 
+/*
+QFileDialog* _f_dlg = new QFileDialog(this);
+_f_dlg->setFileMode(QFileDialog::Directory);
+_f_dlg->setOption(QFileDialog::DontUseNativeDialog, true);
 
+// Try to select multiple files and directories at the same time in QFileDialog
+QListView *l = _f_dlg->findChild<QListView*>("listView");
+if (l) {
+    l->setSelectionMode(QAbstractItemView::MultiSelection);
+}
+QTreeView *t = _f_dlg->findChild<QTreeView*>();
+if (t) {
+    t->setSelectionMode(QAbstractItemView::MultiSelection);
+}
+
+//    int nMode =
+    if (_f_dlg->exec()) {
+        QStringList _fnames = _f_dlg->selectedFiles();
+        qDebug(logDebug()) << "add media " << _fnames.size();
+        for (int i = 0; i < _fnames.size(); ++i) {
+            m_library->add_media(_fnames.at(i));
+        }
+
+
+        if (!m_tableModel)
+            delete m_tableModel;
+        m_tableModel = new MusicTableModel(ui->mainMusicTable);
+//            m_searcher->setDown();
+        m_tableModel->music_list_add(m_library->data());
+        ui->mainMusicTable->setModel(m_tableModel);
+    }
+    */
+//  query.prepare("SELECT * FROM SONGS "
+//                "INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
+//                "INNER JOIN LIST_PLAYLISTS ON PLAYLIST.PLAYLIST_R = ?");
+//    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Rating, SONGS.Year, SONGS.Genre, SONGS.Time "
