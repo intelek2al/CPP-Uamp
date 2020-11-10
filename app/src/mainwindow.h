@@ -5,7 +5,6 @@
 #include "tag_functions.h"
 #include "tableviewer.h"
 #include "musictablemodel.h"
-#include "sound_tags.h"
 #include "soundPlayer.h"
 #include "searcher.h"
 #include "settings.h"

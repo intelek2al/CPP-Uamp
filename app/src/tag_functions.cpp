@@ -405,34 +405,40 @@ QImage TagFunctions::load_cover_image_ogg(char *file_path) {
     return QImage();
 }
 
-bool TagFunctions::set_image_mpeg(char *file_path, char *image_path)
+bool TagFunctions::set_image_mpeg(const QString& file_path, const QString& image_path)
 {
     QFileInfo file(file_path);
     if (!file.isWritable()) {
-
+        qInfo(logInfo()) << "file =" << file << "isn't Writable";
         return false;
     }
 
-    TagLib::MPEG::File mpegFile(file_path);
+    qDebug(logDebug()) << "file_path =" << file_path;
+    qDebug(logDebug()) << "image_path =" << image_path;
+
+    TagLib::MPEG::File mpegFile(file_path.toStdString().data());
     TagLib::ID3v2::Tag *tag = mpegFile.ID3v2Tag();
     TagLib::ID3v2::FrameList frames = tag->frameList("APIC");
     TagLib::ID3v2::AttachedPictureFrame *frame = 0;
 
     if(frames.isEmpty())
     {
+        qDebug(logDebug()) << "line 423";
         frame = new TagLib::ID3v2::AttachedPictureFrame;
         tag->addFrame(frame);
-    }
-    else
+    } else
     {
+        qDebug(logDebug()) << "line 428";
+        frame = new TagLib::ID3v2::AttachedPictureFrame;
         frame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frames.front());
     }
 
-    ImageFile imageFile(image_path);
+    ImageFile imageFile(image_path.toStdString().data());
     TagLib::ByteVector imageData = imageFile.data();
     frame->setMimeType("image/jpeg");
     frame->setPicture(imageData);
     mpegFile.save();
+    qDebug(logDebug()) << "TagFunctions::set_image_mpeg END";
     return true;
 }
 
@@ -451,7 +457,7 @@ Music TagFunctions::LoadSongTags(QString file_path) {
     }
     catch (std::exception &e)
     {
-//        std::cerr << "QQQQQQQQQ "dd << e.what() << std::endl;
+        qWarning(logWarning()) << e.what();
     }
     std::cout << "MediaLibrary" << tmp.m_path.toStdString() << std::endl;
         return tmp;

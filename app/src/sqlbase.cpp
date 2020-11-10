@@ -128,6 +128,8 @@ bool SqlBase::loadData() {
     return true;
 }
 
+///=============================================================
+
 bool SqlBase::AddtoLibrary(const QString &media_path) {
     if (QDir cur_dir(media_path); !cur_dir.isReadable())
     {
@@ -146,7 +148,6 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
                                              << "*.aif");
 
         QFileInfoList list = cur_dir2.entryInfoList();
-
         QSqlQuery query(m_media_base.connectionName());
 
         qDebug(logDebug()) << m_media_base.connectionName();
@@ -154,9 +155,12 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
         for (int i = 0; i < list.size(); ++i)
         {
             qDebug (logDebug()) << "SqlBase::AddtoLibrary";
-
             Music curent_song = TagFunctions::LoadSongTags(list.at(i).filePath());
+            if (!insertIntoTable(curent_song)) {
+                qDebug(logDebug()) << "Insert into base failed";
+            }
 
+            /*
             if (!curent_song.empty()) {
                 qDebug(logDebug()) << "Music current : " << curent_song.m_name, curent_song.m_title;
                 query.prepare("INSERT INTO SONGS (Title, Time, Artist, Rating, Genre, Album, Year, "
@@ -179,18 +183,17 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
 //                query.bindValue(":Cover", byte_cover);
 
                 if (!query.exec()) {
-                    qDebug(logDebug()) << "error = " << query.lastError();
+                    qDebug(logDebug()) << "SqlBase::AddtoLibrary error = " << query.lastError();
                 }
             }
+             */
         }
     }
     return true;
 }
 
 bool SqlBase::insertIntoTable(const Music &curent_song) {
-
     QSqlQuery query;
-
     if (!curent_song.empty()) {
         qDebug(logDebug()) << "Music current : " << curent_song.m_name, curent_song.m_title;
 
@@ -201,7 +204,6 @@ bool SqlBase::insertIntoTable(const Music &curent_song) {
         query.bindValue(":Title", curent_song.m_title);
         query.bindValue(":Time", curent_song.m_time);
         query.bindValue(":Artist", curent_song.m_artist);
-        query.bindValue(":Time", curent_song.m_time);
         query.bindValue(":Rating", "0");
         query.bindValue(":Genre", curent_song.m_genre);
         query.bindValue(":Album", curent_song.m_album);
@@ -214,9 +216,10 @@ bool SqlBase::insertIntoTable(const Music &curent_song) {
 
         if (!query.exec()) {
             qDebug(logDebug()) << "error = " << query.lastError();
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
 
@@ -357,14 +360,72 @@ Playlist SqlBase::ExportPlaylist(const QString &name) {
 bool SqlBase::importPlayList(Playlist import_playlist) {
     qDebug(logDebug()) << "SqlBase::ImportPlayList name = " << import_playlist.playlistName();
 
-    this->AddNewPlaylist(import_playlist.playlistName());
+    if (!(this->AddNewPlaylist(import_playlist.playlistName()))) {
+        return false;
+    }
+
     emit modelPlaylistSelect();
+
     for (int i = 0; i < import_playlist.size(); ++i) {
         if (!import_playlist[i].empty()) {
             this->insertIntoTable(import_playlist[i]);
+            this->AddtoPlaylist(import_playlist[i].m_path, import_playlist.playlistName());
+        }
+        else {
+                return false;
         }
     }
     return true;
+}
+
+bool SqlBase::updateTableRow(const QModelIndex &index, const Music &new_tags) {
+    qDebug(logDebug()) << "SqlBase::updateTableRow";
+    QSqlQuery query;
+    int current_song_id;
+
+    if (!new_tags.empty()) {
+        qDebug(logDebug()) << "Music current : " << new_tags.m_name, new_tags.m_title;
+
+
+        QSqlQuery query;
+
+        query.prepare("SELECT SONG_ID FROM SONGS WHERE Path = ?");
+        query.addBindValue(new_tags.m_path);
+        if (!query.exec()) {
+            qDebug(logDebug()) << "error "  << query.lastError();
+            return false;
+        }
+        query.next();
+        current_song_id = query.value(0).toInt();
+
+        qDebug(logDebug()) << "current_song_id = " << current_song_id;
+
+                           query.prepare("UPDATE SONGS SET (Title, Time, Artist, Rating, Genre, Album, Year, Track, Comment, Cover) "
+                      "VALUES (:Title, :Time, :Artist, :Rating, :Genre, :Album, :Year, :Track, :Comment, :Cover) "
+                      "WHERE SONG_ID = 452");
+//                      "WHERE SONG_ID = (song_id) VALUES (:song_id)");
+        query.bindValue(":Title", new_tags.m_title);
+        query.bindValue(":Time", new_tags.m_time);
+        query.bindValue(":Artist", new_tags.m_artist);
+        query.bindValue(":Rating", new_tags.m_rate);
+        query.bindValue(":Genre", new_tags.m_genre);
+        query.bindValue(":Album", new_tags.m_album);
+        query.bindValue(":Year", new_tags.m_year);
+        query.bindValue(":Track", new_tags.m_track);
+        query.bindValue(":Comment", new_tags.m_comment);
+//        query.bindValue(":Name", new_tags.m_name);
+//        query.bindValue(":Path", new_tags.m_path);
+        query.bindValue(":Cover", new_tags.m_cover);
+//        query.bindValue(":song_id", current_song_id);
+
+        if (!query.exec()) {
+            qDebug(logDebug()) << "error = " << query.lastError();
+            return false;
+        }
+    }
+    return true;
+
+    return false;
 }
 
 

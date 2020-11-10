@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 //    m_selection_model = new QItemSelectionModel(m_tableModel);
 //    ui->mainMusicTable->setSelectionModel(m_selection_model);
 
-    connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
+    connect(this, &MainWindow::editTagsCompleted, m_base, &SqlBase::updateTableRow);  // edit tags from Info
 
     ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
@@ -310,19 +310,25 @@ void MainWindow::on_actionInfo_triggered()
         return;
     }
 
-    Music current = getMusicfromTable();
+    Music current_song = getMusicfromTable();
 
 //            m_library->data()[index.front().row()];
 
-    DialogInfo songInfo = DialogInfo(current, 0);
-//  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
-    songInfo.setModal(true);
+    DialogInfo window_songInfo = DialogInfo(current_song, 0);
 
-    if (songInfo.exec() == QDialog::Accepted) {
+//  songInfo->setWindowFlags(Qt::CustomizeWindowHint);
+    window_songInfo.setModal(true);
+
+    if (window_songInfo.exec() == QDialog::Accepted) {
       qInfo(logInfo()) << "ok DialogInfo";
 
-      songInfo.get_tag_changes(new_song_info);  // get settings from QDialog
-      if (!(current == new_song_info)) {
+        window_songInfo.get_tag_changes(new_song_info);  // get settings from QDialog
+        qDebug(logDebug()) << "curent_music =" << new_song_info.m_name;
+        qDebug(logDebug()) << "curent_music =" << new_song_info.m_title;
+        qDebug(logDebug()) << "curent_music =" << new_song_info.m_artist;
+
+
+      if (!(current_song == new_song_info)) {
           // save new tags;
           if (!(TagFunctions::modify_tags(new_song_info))) {
               qInfo(logInfo()) << new_song_info.m_path << " is not writable";
@@ -427,8 +433,6 @@ void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
 void MainWindow::currentPlayListIndex(const QModelIndex &index) {
     m_playList_index = index;
 
-
-
 //  auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
   auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
 
@@ -451,16 +455,14 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
 //                "INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
 //                "INNER JOIN LIST_PLAYLISTS ON PLAYLIST.PLAYLIST_R = ?");
 
-    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Rating, SONGS.Year, SONGS.Genre, SONGS.Time "
+//    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Rating, SONGS.Year, SONGS.Genre, SONGS.Time "
+    query.prepare("SELECT * "
                   "FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
                   "WHERE PLAYLIST.PLAYLIST_R = ?");
   query.addBindValue(PLAY_LISTS_R);
   query.exec();
   model->setQuery(query);
 
-//  model->setQuery("SELECT name, salary FROM employee");
-//  model->setHeaderData(0, Qt::Horizontal, tr("Name"));
-//  model->setHeaderData(1, Qt::Horizontal, tr("Salary"));
   ui->mainMusicTable->setModel(model);
 
 //    QSqlRelationalTableModel *r_model = new QSqlRelationalTableModel;
