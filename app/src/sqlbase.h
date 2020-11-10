@@ -22,6 +22,7 @@ public:
 
 signals:
     void modelPlaylistSelect();
+    void modelMusicSelect();
 
 public slots:
     bool insertIntoTable(const Music& curent_song);      // Добавление записей в таблицу

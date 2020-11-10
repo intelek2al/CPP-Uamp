@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
 
     // default cover in player
-    QImage def_cover(":/def_cover_color.png");
+    QImage def_cover(":/def_cover_black.jpg");
     QPixmap pix(QPixmap::fromImage(def_cover));
     ui->cover_label->setPixmap(pix);
 
@@ -76,7 +76,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->filterBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_searcher, &Searcher::search);
     connect(m_player, &SoundPlayer::playlistImported, [=](Playlist pl){ m_base->importPlayList(pl); });
     connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::importPlayList);
+
     connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
+    connect(m_base, &SqlBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
+
+
 }
 
 
@@ -98,7 +102,7 @@ void MainWindow::setupMusicTableModel() {
 
     ui->mainMusicTable->setModel(m_SQL_model);
     ui->mainMusicTable->hideColumn(0); // song_id
-    ui->mainMusicTable->hideColumn(11);  // path
+//    ui->mainMusicTable->hideColumn(11);  // path
     ui->mainMusicTable->hideColumn(12);  // cover
 }
 
@@ -168,6 +172,12 @@ void MainWindow::onSideBarContextMenu(const QPoint &point)
     connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
 //    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
     contextMenu.addAction(&action_new);
+
+    QAction action_play("Play Playlist", this);
+    connect(&action_play, &QAction::triggered, this, &MainWindow::on_actionPlqyPlaylist_triggered);
+//    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
+    contextMenu.addAction(&action_play);
+
 
     QAction action_import_plst("Import Playlist", this);
     connect(&action_import_plst, &QAction::triggered, this, &MainWindow::on_actionImportPlaylist_triggered);
@@ -368,18 +378,12 @@ void MainWindow::on_actionDelete_from_Library_triggered()
 //    auto index = m_selection_model->selection().indexes();
 
     qInfo(logInfo()) << " on_actionDelete_from_Library_triggered";
-//    qInfo(logInfo()) << " song =" << m_library->data()[index.front().row()][0];
-
     if (!m_table_index.isValid()) {
         qDebug(logDebug()) << "on_actionDelete_from_Library_triggered return";
         return;
     }
     m_SQL_model->removeRows(m_table_index.row(), 1);
     m_SQL_model->select();
-
-//    m_tableModel->removeRows(index.front().row(), 1, index.front());
-//    m_SQL_model->select()
-//    m_SQL_model->removeRows(m_table_index.row(), 1, m_table_index);
 }
 
 
@@ -407,22 +411,18 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 }
 
 void MainWindow::loadCoverImage(const QModelIndex &index) {
-    QString filePath = m_SQL_model->record(index.row()).value("Path").toString();
-    QString fileName = m_SQL_model->record(index.row()).value("Name").toString();
-    QString fileType = QFileInfo(filePath).completeSuffix();
+    QByteArray cover = m_SQL_model->record(index.row()).value("Cover").toByteArray();
 
-    QImage coverQImg(":/def_cover_color.png");
+    QImage coverQImg(":/def_cover_black.jpg");
+    QPixmap outPixmap = QPixmap();
 
-    if (fileType == "mp3") {
-        coverQImg = TagFunctions::load_cover_image_mpeg(filePath.toStdString().data());
-        ui->statusbar->showMessage(tr( " loaded"), 200);
+    if (cover == nullptr) {
+        outPixmap = (QPixmap::fromImage(coverQImg));
     }
-    if (fileType == "m4a") {
-        coverQImg = TagFunctions::load_cover_image_m4a(filePath.toStdString().data());
-        ui->statusbar->showMessage(tr( " loaded"), 200);
+    else {
+        outPixmap.loadFromData(cover);
     }
-    QPixmap pix(QPixmap::fromImage(coverQImg));
-    ui->cover_label->setPixmap(pix);
+    ui->cover_label->setPixmap(outPixmap);
 }
 
 void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
@@ -696,6 +696,10 @@ void MainWindow::on_upNextButton_clicked()
     nextUp->setGeometry(this->x() + ui->upNextButton->x() - 291 / 2, this->y() + ui->upNextButton->y() + 60, 291, 441);
     nextUp->setWindowFlags(Qt::Popup);
     nextUp->show();
+}
+
+void MainWindow::on_actionPlqyPlaylist_triggered() {
+    // play selected playlist
 }
 
 
