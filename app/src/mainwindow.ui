@@ -84,31 +84,6 @@
        <number>20</number>
       </property>
       <item>
-       <widget class="QPushButton" name="playButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>40</horstretch>
-          <verstretch>40</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>40</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>40</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pauseButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -118,15 +93,82 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>40</width>
-          <height>40</height>
+          <width>30</width>
+          <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>40</width>
-          <height>40</height>
+          <width>30</width>
+          <height>30</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+image: url(:/image/image/image/pre.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+}
+QPushButton:hover{
+image: url(:/image/image/image-hover/pre-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+QPushButton:pressed{
+image: url(:/image/image/image/pre.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="playButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>30</horstretch>
+          <verstretch>30</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+image: url(:/image/image/image/pase.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+}
+
+QPushButton:hover{
+image: url(:/image/image/image-hover/pase-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+
+QPushButton:pressed{
+image: url(:/image/image/image/pase.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+</string>
         </property>
         <property name="text">
          <string/>
@@ -137,21 +179,41 @@
        <widget class="QPushButton" name="stopButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>40</horstretch>
-          <verstretch>40</verstretch>
+          <horstretch>30</horstretch>
+          <verstretch>30</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>40</width>
-          <height>40</height>
+          <width>30</width>
+          <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>40</width>
-          <height>40</height>
+          <width>30</width>
+          <height>30</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+image: url(:/image/image/image/next.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+}
+QPushButton:hover{
+image: url(:/image/image/image-hover/next-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+QPushButton:pressed{
+image: url(:/image/image/image/next.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+</string>
         </property>
         <property name="text">
          <string/>
@@ -160,6 +222,63 @@
       </item>
       <item>
        <widget class="QSlider" name="statusVolume">
+        <property name="styleSheet">
+         <string notr="true">QSlider::groove:horizontal {
+border: 1px solid lightgray;
+background: white;
+height: 2px;
+border-radius: 2px;
+}
+
+QSlider::sub-page:horizontal {
+background: qlineargradient(x1: 0, y1: 0,    x2: 0, y2: 1,
+    stop: 0 #eee, stop: 1 #ddd);
+
+border: 1px solid #777;
+height: 10px;
+border-radius: 4px;
+}
+
+QSlider::add-page:horizontal {
+background: #aaa;
+border: 1px solid #777;
+height: 10px;
+border-radius: 10px;
+}
+
+QSlider::handle:horizontal {
+background: white;
+border: 1px solid white;
+width: 10px;
+height: 10px;
+margin-top: -5px;
+margin-bottom: -5px;
+border-radius: 5px;
+}
+
+QSlider::handle:horizontal:hover {
+background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+    stop:0 #fff, stop:1 #ddd);
+border: 1px solid #444;
+border-radius: 5px;
+}
+
+QSlider::sub-page:horizontal:disabled {
+background: #bbb;
+border-color: #999;
+}
+
+QSlider::add-page:horizontal:disabled {
+background: #eee;
+border-color: #999;
+}
+
+QSlider::handle:horizontal:disabled {
+background: #eee;
+border: 1px solid #aaa;
+border-radius: 5px;
+}</string>
+        </property>
         <property name="maximum">
          <number>100</number>
         </property>
@@ -204,8 +323,30 @@
           <height>40</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+image: url(:/image/image/image/loop.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+}
+
+QPushButton:hover{
+image: url(:/image/image/image-hover/loop-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+
+QPushButton:pressed{
+image: url(:/image/image/image/loop.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+</string>
+        </property>
         <property name="text">
-         <string>L</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -214,7 +355,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,8,1">
           <property name="spacing">
-           <number>0</number>
+           <number>10</number>
           </property>
           <property name="sizeConstraint">
            <enum>QLayout::SetFixedSize</enum>
@@ -322,9 +463,46 @@ color: rgb(132, 130, 133);</string>
         </property>
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>119</width>
           <height>25</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+}
+
+QComboBox:editable {
+    background: gray;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    /*border-left-color: darkgray;*/
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}
+
+/*QComboBox::down-arrow:on { /* shift the arrow when popup is open 
+    top: 1px;
+    left: 1px;
+}*/</string>
         </property>
         <item>
          <property name="text">
@@ -370,8 +548,46 @@ color: rgb(132, 130, 133);</string>
       </item>
       <item>
        <widget class="QPushButton" name="upNextButton">
+        <property name="minimumSize">
+         <size>
+          <width>35</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>35</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+border: 1px solid lightgray;
+border-radius: 8px;
+image: url(:/image/image/image/music_list.png);
+padding: 5px;
+background-repeat:no-repeat;
+background-position:center center;
+}
+
+QPushButton:hover{
+border: 1px solid white;
+}
+
+QPushButton:pressed{
+border: 1px solid lightgray;
+}
+</string>
+        </property>
         <property name="text">
-         <string>|||</string>
+         <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>10</width>
+          <height>10</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -390,12 +606,23 @@ color: rgb(132, 130, 133);</string>
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true"> QLineEdit {
-     border: 2px solid rgb(100, 149, 237) ;
+         <string notr="true">QLineEdit
+ {
+     border: 2px solid gray ;
      border-radius: 7px;
      padding: 0 8px;
      background: rgb(169, 169, 169);
-     selection-background-color: blue;
+     selection-background-color: none;
+ }
+
+QLineEdit:focus
+ {
+	outline: none;
+ }
+
+QLineEdit:pressed
+ {
+	outline: none;
  }</string>
         </property>
        </widget>
@@ -448,11 +675,27 @@ color: rgb(132, 130, 133);</string>
            <item>
             <widget class="QPushButton" name="pushButton_2">
              <property name="styleSheet">
-              <string notr="true">QPushButton {
-    border-width: 1px;
+              <string notr="true">QPushButton
+{
+color:rgb(255, 255, 255);
+border-radius:0px;
+background-color: rgba(0, 0, 0, 100);
+background-repeat:no-repeat;
+border:none;
+padding: 5px;
+mergin:0;
+background-position:center center;
 }
-
-*background-color: black;</string>
+QPushButton:hover{
+	background-color: rgb(255, 255, 255,100);
+}
+QPushButton:pressed{
+background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgb(255, 255, 255);
+}
+</string>
              </property>
              <property name="text">
               <string>Recently Added</string>
@@ -461,6 +704,29 @@ color: rgb(132, 130, 133);</string>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_3">
+             <property name="styleSheet">
+              <string notr="true">QPushButton
+{
+color:rgb(255, 255, 255);
+border-radius:0px;
+background-color: rgba(0, 0, 0, 100);
+background-repeat:no-repeat;
+border:none;
+padding: 5px;
+mergin:0;
+background-position:center center;
+}
+QPushButton:hover{
+	background-color: rgb(255, 255, 255,100);
+}
+QPushButton:pressed{
+background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgb(255, 255, 255);
+}
+</string>
+             </property>
              <property name="text">
               <string>Artists</string>
              </property>
@@ -468,6 +734,29 @@ color: rgb(132, 130, 133);</string>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_4">
+             <property name="styleSheet">
+              <string notr="true">QPushButton
+{
+color:rgb(255, 255, 255);
+border-radius:0px;
+background-color: rgba(0, 0, 0, 100);
+background-repeat:no-repeat;
+border:none;
+padding: 5px;
+mergin:0;
+background-position:center center;
+}
+QPushButton:hover{
+	background-color: rgb(255, 255, 255,100);
+}
+QPushButton:pressed{
+background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgb(255, 255, 255);
+}
+</string>
+             </property>
              <property name="text">
               <string>Albums</string>
              </property>
@@ -475,6 +764,29 @@ color: rgb(132, 130, 133);</string>
            </item>
            <item>
             <widget class="QPushButton" name="songs">
+             <property name="styleSheet">
+              <string notr="true">QPushButton
+{
+color:rgb(255, 255, 255);
+border-radius:0px;
+background-color: rgba(0, 0, 0, 100);
+background-repeat:no-repeat;
+border:none;
+padding: 5px;
+mergin:0;
+background-position:center center;
+}
+QPushButton:hover{
+	background-color: rgb(255, 255, 255,100);
+}
+QPushButton:pressed{
+background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgb(255, 255, 255);
+}
+</string>
+             </property>
              <property name="text">
               <string>Songs</string>
              </property>
@@ -482,6 +794,29 @@ color: rgb(132, 130, 133);</string>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_6">
+             <property name="styleSheet">
+              <string notr="true">QPushButton
+{
+color:rgb(255, 255, 255);
+border-radius:0px;
+background-color: rgba(0, 0, 0, 100);
+background-repeat:no-repeat;
+border:none;
+padding: 5px;
+mergin:0;
+background-position:center center;
+}
+QPushButton:hover{
+	background-color: rgb(255, 255, 255,100);
+}
+QPushButton:pressed{
+background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgb(255, 255, 255);
+}
+</string>
+             </property>
              <property name="text">
               <string>Genres</string>
              </property>
@@ -497,14 +832,40 @@ color: rgb(132, 130, 133);</string>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="font">
+            <font>
+             <family>.SF NS Symbols</family>
+             <pointsize>20</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+             <underline>false</underline>
+            </font>
+           </property>
            <property name="toolTipDuration">
             <number>-1</number>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel
+{
+color:rgb(255, 255, 255);
+border-radius:0px;
+background-color: rgba(255, 255, 255, 0);
+background-repeat:no-repeat;
+border:none;
+border-top: 1px solid darkgray;
+mergin:0;
+background-position:center center;
+}
+QLable:hover{
+	background-color: rgb(255, 255, 255,100);
+}</string>
            </property>
            <property name="text">
             <string>Library</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            <set>Qt::AlignHCenter|Qt::AlignTop</set>
            </property>
            <property name="margin">
             <number>1</number>
@@ -516,8 +877,32 @@ color: rgb(132, 130, 133);</string>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="label_2">
+           <property name="font">
+            <font>
+             <family>.SF NS Rounded</family>
+             <pointsize>20</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel
+{
+color:rgb(255, 255, 255);
+border-radius:0px;
+background-color: rgba(255, 255, 255, 0);
+background-repeat:no-repeat;
+border:none;
+mergin:0;
+background-position:center center;
+}
+QLable:hover{
+	background-color: rgb(255, 255, 255,100);
+}</string>
+           </property>
            <property name="text">
             <string>PlayLists</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
            <property name="margin">
             <number>1</number>
@@ -525,7 +910,31 @@ color: rgb(132, 130, 133);</string>
           </widget>
          </item>
          <item row="3" column="0">
-          <widget class="QListView" name="listPlaylist"/>
+          <widget class="QListView" name="listPlaylist">
+           <property name="styleSheet">
+            <string notr="true">QListView
+{
+color:rgb(255, 255, 255);
+border-radius:0px;
+background-color: rgba(0, 0, 0, 100);
+background-repeat:no-repeat;
+border:none;
+padding: 5px;
+mergin:0;
+background-position:center center;
+}
+QListView::item:hover{
+	background-color: rgb(255, 255, 255,100);
+}
+QListView::item:pressed{
+background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgb(255, 255, 255);
+}
+</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -536,7 +945,12 @@ color: rgb(132, 130, 133);</string>
          <bool>false</bool>
         </property>
         <property name="styleSheet">
-         <string notr="true"/>
+         <string notr="true">QTableView {
+/*border: 0.5px solid darkgray;*/
+border:none;
+border-top: 1px solid darkgray;
+border-left: 1px solid darkgray;
+}</string>
         </property>
         <property name="dragEnabled">
          <bool>true</bool>
@@ -575,6 +989,9 @@ color: rgb(132, 130, 133);</string>
          <number>30</number>
         </attribute>
         <attribute name="horizontalHeaderStretchLastSection">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
          <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderCascadingSectionResizes">

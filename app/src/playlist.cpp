@@ -131,6 +131,8 @@ void Playlist::shuffle() {
 }
 
 void Playlist::unshuffle() {
+    if (m_musicPlaylist.empty())
+        return;
     Music tmp = m_musicPlaylist[0];
     auto it = std::remove(m_unshuff.begin(), m_unshuff.end(), tmp);
     std::copy(m_unshuff.begin() , it, m_musicPlaylist.begin() + 1);

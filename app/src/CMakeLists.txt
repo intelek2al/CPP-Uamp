@@ -48,9 +48,10 @@ set(HEADERS mainwindow.h
         sqlbase.h
         nextup.h
         nextupwidget.h
+        playerqss.h
         )
 
-set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui nextup.ui nextupwidget.ui)
+set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui nextup.ui nextupwidget.ui playerqss.h)
 
 link_directories(../../build/3dparty/taglib/)
 

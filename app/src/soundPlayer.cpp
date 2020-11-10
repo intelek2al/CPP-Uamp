@@ -1,5 +1,6 @@
 #include "soundPlayer.h"
 #include "ui_mainwindow.h"
+#include "playerqss.h"
 #include <QMediaMetaData>
 #include <QWidget>
 #include <QFileInfo>
@@ -49,10 +50,11 @@ void SoundPlayer::setSound(QString path)
     ui->playButton->click();
 }
 
-void SoundPlayer::setSound(int index) {
+void SoundPlayer::setSound(int index, QSqlQueryModel *model) {
     if (!isPlaylistExist)
         return;
-
+    if (model)
+        setPlaylist(model);
     m_list.setStartSong(index);
 //    QStringList list = m_player->availableMetaData();
     ui->playButton->click();
@@ -99,11 +101,13 @@ void SoundPlayer::setPlay()
     metaData(m_player->isMetaDataAvailable());
     if (m_player->state() == QMediaPlayer::State::PausedState || m_player->state() == QMediaPlayer::State::StoppedState) {
         m_player->play();
-        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPause));
+//        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPause));
+        ui->playButton->setStyleSheet(PlayStyle());
     }
     else if(m_player->state() == QMediaPlayer::State::PlayingState) {
         m_player->pause();
-        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPlay));
+//        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPlay));
+        ui->playButton->setStyleSheet(PauseStyle());
     }
     ui->statusPlay->setEnabled(true);
 }
@@ -166,7 +170,7 @@ void SoundPlayer::setPlaylist(const Playlist &playlist) {
     isPlaylistExist = true;
 }
 
-void SoundPlayer::setPlaylist(QSqlTableModel *model) {
+void SoundPlayer::setPlaylist(QSqlQueryModel *model) {
     m_model = model;
     Playlist playlist = handlerPlaylist(m_model);
     setPlaylist(playlist);
@@ -273,7 +277,7 @@ void SoundPlayer::modelChanged() {
     m_list.setChangedPlaylist(playlist);
 }
 
-Playlist SoundPlayer::handlerPlaylist(QSqlTableModel *model) {
+Playlist SoundPlayer::handlerPlaylist(QSqlQueryModel *model) {
     Playlist playlist;
     std::cout << "= = = = = = = Loading = = = = = = = " << std::endl;
     for (int i = 0; i < model->rowCount(); ++i) {

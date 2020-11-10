@@ -21,7 +21,7 @@ public:
     ~SoundPlayer();
 
     void setSound(QString path);
-    void setSound(int index);
+    void setSound(int index, QSqlQueryModel *model = nullptr);
     void next();
     void changeMode();
 
@@ -38,7 +38,7 @@ public slots:
     void setMovedPosition(int position);
     void stateCheck(QMediaPlayer::State state);
     void setPlaylist(const Playlist &playlist);
-    void setPlaylist(QSqlTableModel *model);
+    void setPlaylist(QSqlQueryModel *model);
     void fastForward();
     void rewind();
     void metaData(bool check);
@@ -52,7 +52,7 @@ public slots:
     void importPlaylist(const QString &path);
     void exportPlaylist(const Playlist &playlist = Playlist(), QString path = "/Users/msavytskyi/Desktop/");
 
-    static Playlist handlerPlaylist(QSqlTableModel *model);
+    static Playlist handlerPlaylist(QSqlQueryModel *model);
 
 private slots:
 //    void on_statusPlay_valueChangedålay_valueChanged(int value);
@@ -66,7 +66,7 @@ private:
     static QMediaPlaylist *m_playlist;
     Ui::MainWindow *ui;
     bool isPlaylistExist = false;
-    QSqlTableModel *m_model;
+    QSqlQueryModel *m_model;
 
 };
 

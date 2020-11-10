@@ -40,6 +40,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Core Gui Multimedia Multim
 add_subdirectory(src)
 
 qt5_add_resources(RESOURCES resources/myresource.qrc)
+qt5_add_resources(RESOURCES resources/imagefile.qrc)
 
 add_executable(${CMAKE_PROJECT_NAME} main.cpp ${RESOURCES})
 

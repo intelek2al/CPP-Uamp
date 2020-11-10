@@ -6,6 +6,7 @@
 #include "dialogpreferences.h"
 #include "dialoginfo.h"
 #include "stardelegate.h"
+#include "playerqss.h"
 #include <QAbstractItemView>
 #include <QItemSelectionModel>
 
@@ -40,14 +41,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(this, &MainWindow::editTagsCompleted, m_tableModel, &MusicTableModel::saveTags);
 
-    ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-    ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
+//    ui->playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+//    ui->pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
 
 //    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
-    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
+//    ui->stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
 
     // default cover in player
-    QImage def_cover(":/def_cover_color.png");
+    QImage def_cover(":/def_cover_grey.png");
     QPixmap pix(QPixmap::fromImage(def_cover));
     ui->cover_label->setPixmap(pix);
 
@@ -78,7 +79,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::importPlayList);
     connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
 }
-
 
 void MainWindow::setupMusicTableModel() {
     m_SQL_model = new QSqlTableModel(this);
@@ -215,7 +215,12 @@ void MainWindow::setMusicPlay(QString soundPath)
 
 void MainWindow::setMusicPlay(int index)
 {
-    m_player->setSound(index);
+//    QSqlQueryModel *model = nullptr;
+//    if (qobject_cast<QSqlQueryModel *>(ui->mainMusicTable->model()) != m_SQL_model) {
+//        std::cout << "new model" << std::endl;
+//        model = qobject_cast<QSqlQueryModel *>(ui->mainMusicTable->model());
+//    }
+    m_player->setSound(index, qobject_cast<QSqlQueryModel *>(ui->mainMusicTable->model()));
 }
 
 void MainWindow::on_playButton_clicked()
@@ -672,15 +677,15 @@ void MainWindow::on_modeButton_clicked()
     static QString tmp = "L";
     if (tmp == "L") {
         tmp = "S";
-        ui->modeButton->setText("S");
+        ui->modeButton->setStyleSheet(RandomStyle());
     }
     else if (tmp == "S") {
         tmp = "C";
-        ui->modeButton->setText("C");
+        ui->modeButton->setStyleSheet(LoopOneStyle());
     }
     else if (tmp == "C") {
         tmp = "L";
-        ui->modeButton->setText("L");
+        ui->modeButton->setStyleSheet(LoopStyle());
     }
     m_player->changeMode();
 }
