@@ -59,7 +59,7 @@ namespace TagFunctions {
 
     QImage load_cover_image_ogg(char *file_path);
 
-    bool set_image_mpeg(char *file_path, char *image_path);
+    bool set_image_mpeg(const QString& file_path, const QString& image_path);
 
     void modify_tag_artist(char *file_path, char *new_artist);
 

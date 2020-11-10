@@ -2,5 +2,6 @@
     <qresource>
         <file>def_cover_grey.png</file>
         <file>def_cover_color.png</file>
+        <file>def_cover_black.jpg</file>
     </qresource>
 </RCC>

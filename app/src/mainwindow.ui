@@ -835,7 +835,7 @@ color:rgb(255, 255, 255);
            <property name="font">
             <font>
              <family>.SF NS Symbols</family>
-             <pointsize>20</pointsize>
+             <pointsize>12</pointsize>
              <weight>50</weight>
              <italic>false</italic>
              <bold>false</bold>
@@ -848,7 +848,7 @@ color:rgb(255, 255, 255);
            <property name="styleSheet">
             <string notr="true">QLabel
 {
-color:rgb(255, 255, 255);
+color: rgb(132, 130, 133);
 border-radius:0px;
 background-color: rgba(255, 255, 255, 0);
 background-repeat:no-repeat;
@@ -865,7 +865,7 @@ QLable:hover{
             <string>Library</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignHCenter|Qt::AlignTop</set>
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
            </property>
            <property name="margin">
             <number>1</number>
@@ -879,14 +879,14 @@ QLable:hover{
           <widget class="QLabel" name="label_2">
            <property name="font">
             <font>
-             <family>.SF NS Rounded</family>
-             <pointsize>20</pointsize>
+             <family>.SF NS Symbols</family>
+             <pointsize>12</pointsize>
             </font>
            </property>
            <property name="styleSheet">
             <string notr="true">QLabel
 {
-color:rgb(255, 255, 255);
+color: rgb(132, 130, 133);
 border-radius:0px;
 background-color: rgba(255, 255, 255, 0);
 background-repeat:no-repeat;
@@ -899,10 +899,10 @@ QLable:hover{
 }</string>
            </property>
            <property name="text">
-            <string>PlayLists</string>
+            <string>Playlists</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignCenter</set>
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
            </property>
            <property name="margin">
             <number>1</number>

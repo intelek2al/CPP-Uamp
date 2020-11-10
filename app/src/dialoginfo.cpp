@@ -1,4 +1,5 @@
 #include <QFileDialog>
+#include <QBuffer>
 #include "dialoginfo.h"
 #include "ui_dialoginfo.h"
 #include "tag_functions.h"
@@ -14,9 +15,6 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     m_tagsInfo = songInfo;
 
     qInfo(logInfo()) << "DialogInfo()";
-    qDebug(logDebug()) << "m_tagsInfo.m_name " << m_tagsInfo.m_name;
-    qDebug(logDebug()) << "m_tagsInfo.m_time " << m_tagsInfo.m_time;
-
     ui->line_title->setText(songInfo.m_title);
     ui->line_artist->setText(songInfo.m_artist);
     ui->line_album->setText(songInfo.m_album);
@@ -35,19 +33,16 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
 
 
 void DialogInfo::load_cover() {
-    QString fileType = QFileInfo(m_tagsInfo.m_path).completeSuffix();
-
     QImage coverQImg(":/def_cover_color.png");
+    QPixmap outPixmap = QPixmap();
 
-    if (fileType == "mp3") {
-        coverQImg = TagFunctions::load_cover_image_mpeg(m_tagsInfo.m_path.toStdString().data());
+    if (m_tagsInfo.m_cover == nullptr) {
+        outPixmap = (QPixmap::fromImage(coverQImg));
     }
-    if (fileType == "m4a") {
-        coverQImg = TagFunctions::load_cover_image_m4a(m_tagsInfo.m_path.toStdString().data());
+    else {
+        outPixmap.loadFromData(m_tagsInfo.m_cover);
     }
-
-    QPixmap pix(QPixmap::fromImage(coverQImg));
-    ui->coverInfo->setPixmap(pix);
+    ui->coverInfo->setPixmap(outPixmap);
 }
 
 DialogInfo::~DialogInfo()
@@ -63,8 +58,8 @@ void DialogInfo::coverInfoDoubleclicked() {
         return;
     }
 
-    std::string current_file = m_tagsInfo.m_name.toStdString();
-    std::string fileType = current_file.substr(current_file.size() - 3);
+    QString fileName = QFileInfo(m_tagsInfo.m_path).fileName();
+    QString fileType = fileName.mid(fileName.lastIndexOf(".") + 1, -1);
 
     if (fileType == "mp3") {
         QString file_image = QFileDialog::getOpenFileName(
@@ -75,26 +70,20 @@ void DialogInfo::coverInfoDoubleclicked() {
         );
         qDebug(logDebug()) << "new file name cover" << file_image;
 
-        if (!(TagFunctions::set_image_mpeg(m_tagsInfo.m_path.toStdString().data(), file_image.toStdString().data()))) {
+        if (!(TagFunctions::set_image_mpeg(m_tagsInfo.m_path, file_image))) {
             qInfo(logInfo()) << m_tagsInfo.m_name <<  " not editable";
 //            ui->statusbar->showMessage(m_tagsInfo[0] + "not editable", 2000);
         }
-        load_cover();  // reopen cover
-    }
 
-//    else if (fileType == "m4a") {
-//        QString file_image = QFileDialog::getOpenFileName(
-//                this,
-//                tr("Open File"),
-//                "~/",
-//                tr("Images (*.png *.jpg)")
-//        );
-//        if (!(load_cover_image_m4a(currentSongTag[8].toStdString().data(), file_image.toStdString().data()))) {
-//            m_log->add_log_massage(currentSongTag[8] + " not editable");
-//            ui->statusbar->showMessage(currentSongTag[0] + "not editable", 2000);
-//        }
-//        ui->statusbar->showMessage(tr(file_image.toStdString().data()), 2000);
-//    }
+        QImage coverQImg(file_image);
+        QByteArray byte_cover;
+        QBuffer buffer(&byte_cover);
+        buffer.open(QIODevice::WriteOnly);
+        coverQImg.save(&buffer,"PNG");
+        m_tagsInfo.m_cover = byte_cover;
+        load_cover();  // reopen cover
+        qInfo(logInfo()) << "cover changed";
+    }
     else {
         qInfo(logInfo()) << "cover not editable";
     }
@@ -110,14 +99,9 @@ void DialogInfo::accepted() {
 
 Music DialogInfo::get_tag_changes(Music &music_tags) {
 
-    qDebug(logDebug()) << "music_tags.m_name " << music_tags.m_name;
-    qDebug(logDebug()) << "music_tags.m_time " << music_tags.m_time;
-
     music_tags.m_name = m_tagsInfo.m_name;
     music_tags.m_time = m_tagsInfo.m_time;
-
     music_tags.m_rate = ui->line_raiting->text();
-
     music_tags.m_title = ui->line_title->text();
     music_tags.m_artist = ui->line_artist->text();
     music_tags.m_album = ui->line_album->text();
@@ -126,16 +110,17 @@ Music DialogInfo::get_tag_changes(Music &music_tags) {
 //    music_tags.m_track = std::stoi(ui->line_track->text().toStdString());
     music_tags.m_year = ui->line_year->text();
     music_tags.m_track = ui->line_track->text();
+    music_tags.m_rate = ui->line_raiting->text();
     music_tags.m_comment = ui->line_comments->text();
-
+    music_tags.m_cover = m_tagsInfo.m_cover;
     music_tags.m_path = m_tagsInfo.m_path;
+    music_tags.m_url = m_tagsInfo.m_url;
 
+    qDebug(logDebug()) << "music_tags.m_name " << music_tags.m_name;
+    qDebug(logDebug()) << "music_tags.m_time " << music_tags.m_time;
     qInfo(logInfo()) << "music_tags " << music_tags.getStr();
     return Music();
 }
-
-
-
 
 //void DialogInfo::on_nextInfo_clicked()
 //{

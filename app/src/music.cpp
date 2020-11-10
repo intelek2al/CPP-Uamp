@@ -43,13 +43,12 @@ Music::Music(const QUrl &url) {
 }
 
 
-
 bool Music::operator==(const Music &m) const {
-    /*return std::tie(m_name, m_time, m_title, m_artist, m_genre, m_album,
-                    m_path, m_lyrics, m_comment, m_count, m_rate, m_year, m_track)
+    return std::tie(m_name, m_time, m_title, m_artist, m_genre, m_album,
+                    m_path, m_lyrics, m_comment, m_count, m_rate, m_year, m_track, m_cover)
                     == std::tie(m.m_name, m.m_time, m.m_title, m.m_artist, m.m_genre, m.m_album,
-                           m.m_path, m.m_lyrics, m.m_comment, m.m_count, m.m_rate, m.m_year, m.m_track);*/
-    return m_path == m.m_path;
+                           m.m_path, m.m_lyrics, m.m_comment, m.m_count, m.m_rate, m.m_year, m.m_track, m.m_cover);
+//    return m_path == m.m_path;
 }
 
 Music::Music(const Music &m) {

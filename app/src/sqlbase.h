@@ -22,9 +22,11 @@ public:
 
 signals:
     void modelPlaylistSelect();
+    void modelMusicSelect();
 
 public slots:
     bool insertIntoTable(const Music& curent_song);      // Добавление записей в таблицу
+    bool updateTableRow(const QModelIndex &index, const Music &new_tags);
 //    bool insertIntoTable(const QString &name, const QByteArray &pic);
     bool importPlayList(Playlist import_playlist);
 

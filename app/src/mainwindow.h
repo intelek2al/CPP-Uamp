@@ -5,7 +5,6 @@
 #include "tag_functions.h"
 #include "tableviewer.h"
 #include "musictablemodel.h"
-#include "sound_tags.h"
 #include "soundPlayer.h"
 #include "searcher.h"
 #include "settings.h"
@@ -61,6 +60,7 @@ private slots:
     void onSideBarContextMenu(const QPoint &point);
     void onMusicTableContextMenu(const QPoint &point);
     void on_actionNewPlaylist_triggered();
+    void on_actionPlqyPlaylist_triggered();
     void on_actionImportPlaylist_triggered();
     void on_actionExportPlaylist_triggered();
     void on_actionDeletePlaylist_triggered();
