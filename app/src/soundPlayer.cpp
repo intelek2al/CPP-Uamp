@@ -319,6 +319,7 @@ Music SoundPlayer::getMusicfromTable(QModelIndex index) const {
     current_song.m_comment = m_model->record(index.row()).value("Comment").toString();
     current_song.m_name = m_model->record(index.row()).value("Name").toString();
     current_song.m_path = m_model->record(index.row()).value("Path").toString();
+    current_song.m_lyrics = m_model->record(index.row()).value("Lyrics").toString();
     current_song.m_cover = m_model->record(index.row()).value("Cover").toByteArray();
     return current_song;
 }

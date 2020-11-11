@@ -84,6 +84,7 @@ void MainWindow::setupMusicTableModel() {
     ui->mainMusicTable->hideColumn(11);  // path
     ui->mainMusicTable->hideColumn(12);  // count
     ui->mainMusicTable->hideColumn(13);  // cover
+    ui->mainMusicTable->hideColumn(14);  // cover
     ui->mainMusicTable->resizeColumnsToContents();
 }
 
@@ -336,6 +337,7 @@ Music MainWindow::getMusicfromTable() {
     current_song.m_comment = m_SQL_model->record(m_table_index.row()).value("Comment").toString();
     current_song.m_name = m_SQL_model->record(m_table_index.row()).value("Name").toString();
     current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
+    current_song.m_lyrics = m_SQL_model->record(m_table_index.row()).value("Lyrics").toString();
     current_song.m_cover = m_SQL_model->record(m_table_index.row()).value("Cover").toByteArray();
     current_song.m_count = m_SQL_model->record(m_table_index.row()).value("Count").toInt();
     return current_song;

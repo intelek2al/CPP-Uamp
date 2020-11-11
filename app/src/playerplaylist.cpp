@@ -104,14 +104,14 @@ void PlayerPlaylist::setStartSong(const Music &song) {
 void PlayerPlaylist::setStartSong(const QUrl &song) {
 //    if (!m_auto.empty())
 //        m_history.addFrontMusic(m_auto[0], Auto);
-    int pos = 0;
+    size_t pos = 0;
     for (; pos < m_list.size(); ++pos) {
         if (m_list[pos].m_url == song)
             break;
     }
     if (pos == m_list.size())
         return;
-    for (int i = 0; i < m_list.size(); ++i) {
+    for (size_t i = 0; i < m_list.size(); ++i) {
         m_auto.addMusic(m_list[(pos++)]);
         pos = pos == m_list.size() ? 0 : pos;
     }

@@ -31,6 +31,7 @@ void DialogInfo::setLines() {
     ui->line_path->setText(m_tagsInfo.m_path);
     ui->title_large->setText(m_tagsInfo.m_title);
     ui->artisti_large->setText(m_tagsInfo.m_artist);
+    ui->line_lyrics->setText(m_tagsInfo.m_lyrics);
     connect(ui->coverInfo, &ClickedLabel::doubleClicked, this, &DialogInfo::coverInfoDoubleclicked);
     load_cover();
 }
@@ -119,6 +120,7 @@ Music DialogInfo::get_tag_changes(Music &music_tags) {
     music_tags.m_comment = ui->line_comments->text();
     music_tags.m_cover = m_tagsInfo.m_cover;
     music_tags.m_path = m_tagsInfo.m_path;
+    music_tags.m_lyrics = ui->line_lyrics->toPlainText();
     music_tags.m_url = m_tagsInfo.m_url;
 
     qDebug(logDebug()) << "music_tags.m_name " << music_tags.m_name;

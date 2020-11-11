@@ -182,9 +182,6 @@ Music TagFunctions::read_tags(QString file_path) {
         data.m_lyrics = load_lyrics(file_path);
         data.m_url = QUrl(data.m_path);
 
-        qDebug(logDebug()) << "TagFunctions::read_tags" << data.m_name;
-        qDebug(logDebug()) << "TagFunctions::read_tags" << data.m_path;
-
         /*
         cout << "-- TAG (basic) --" << endl;
         cout << "Artist  - \"" << tag->artist() << "\"" << endl;
@@ -225,6 +222,8 @@ Music TagFunctions::read_tags(QString file_path) {
                  << std::setw(2) << seconds << endl;
             */
         }
+        data.m_lyrics = load_lyrics(file_path);
+        qDebug(logDebug()) << "TagFunctions::read_tags lyrics =" << data.m_lyrics;
         data.m_cover = load_cover_array(file_path);
         load_lyrics(file_path);
 
@@ -382,7 +381,7 @@ bool TagFunctions::modify_tags(const Music& changes) {
     f.save();
     modify_tag_year(changes);
     modify_tag_track(changes);
-    qDebug(logDebug()) << "lurics " << changes.m_lyrics;
+    qDebug(logDebug()) << "lyrics " << changes.m_lyrics;
     set_lyrics(changes.m_path, changes.m_lyrics);
     return true;
 }

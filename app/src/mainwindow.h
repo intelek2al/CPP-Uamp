@@ -67,7 +67,7 @@ private slots:
     void on_actionPreferences_triggered();
     void on_actionInfo_triggered(); // Info song
     void on_actionAdd_to_Library_triggered();  // cmd + O
-    void on_actionAdd_Song_to_Library_triggered();  // cmd + O
+    void on_actionAdd_Song_to_Library_triggered();  // cmd shift + O
     void on_actionDelete_from_Library_triggered();  // delete song from library
     void on_actionAddtoPlaylist_triggered();
     void playNext();
