@@ -24,6 +24,8 @@ public:
     void setSound(int index, QSqlQueryModel *model = nullptr);
     void next();
     void changeMode();
+    Music getMusicfromTable(QModelIndex index) const;
+    int volume() const;
 
 signals:
     void playlistImported(Playlist import_playlist);
