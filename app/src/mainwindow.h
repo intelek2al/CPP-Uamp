@@ -119,13 +119,14 @@ private:
     Settings *m_settings;
     QModelIndex m_table_index {};
     QModelIndex m_playList_index {};
-    QSystemTrayIcon *mySystemTray;
+    QSystemTrayIcon *m_systemTray;
     Music new_song_info;
     SqlBase *m_base;
     QSqlTableModel *m_SQL_model;
     QSqlTableModel *m_PlayList_model;
     StarDelegate *m_star_delegate;
     NextUp *nextUp {nullptr};
+    QMenu *m_contextMenu {nullptr};
 
 //    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);

@@ -23,6 +23,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     readSettings();
     m_settings = new Settings();
     m_base = new SqlBase();
@@ -676,14 +677,14 @@ void MainWindow::systemTrayIcon_activated(QSystemTrayIcon::ActivationReason reas
 
 void MainWindow::init_systemTrayIcon()
 {
-    mySystemTray = new QSystemTrayIcon(this);
-    mySystemTray->setIcon(QIcon(":/image/image/image/systemTrayIcon.png"));
-    mySystemTray->setToolTip("Uamp");
-    connect(mySystemTray,&QSystemTrayIcon::activated,this,&MainWindow::systemTrayIcon_activated);
+    m_systemTray = new QSystemTrayIcon(this);
+    m_systemTray->setIcon(QIcon(":/image/image/image/systemTrayIcon.png"));
+    m_systemTray->setToolTip("Uamp");
+    connect(m_systemTray, &QSystemTrayIcon::activated, this, &MainWindow::systemTrayIcon_activated);
     //添加菜单项
     QAction *action_systemTray_pre = new QAction(QIcon(":/image/image/image/pre.png"), "Previous");
     connect(action_systemTray_pre, &QAction::triggered, this, &MainWindow::on_actionPrevious_triggered);
-    QAction *action_systemTray_play = new QAction(QIcon(":/image/image/image/play.png"), "Play");
+    QAction *action_systemTray_play = new QAction(QIcon(":/image/image/image/pase.png"), "Play");
     connect(action_systemTray_play, &QAction::triggered, this, &MainWindow::on_playButton_clicked);
     QAction *action_systemTray_next = new QAction(QIcon(":/image/image/image/next.png"), "Next");
     connect(action_systemTray_next, &QAction::triggered, this, &MainWindow::on_actionNext_triggered);
@@ -692,12 +693,13 @@ void MainWindow::init_systemTrayIcon()
     QAction *action_systemTray_quit = new QAction(QIcon(":/image/image/image/exit.png"), "Exit");
     connect(action_systemTray_quit, &QAction::triggered, &QCoreApplication::quit);
 
-    QMenu *pContextMenu = new QMenu(this);
-    pContextMenu->addAction(action_systemTray_pre);
-    pContextMenu->addAction(action_systemTray_play);
-    pContextMenu->addAction(action_systemTray_next);
-    pContextMenu->addAction(action_systemTray_playmode);
-    pContextMenu->addAction(action_systemTray_quit);
-    mySystemTray->setContextMenu(pContextMenu);
-    mySystemTray->show();
+    m_contextMenu = new QMenu(this);
+    m_contextMenu->addAction(action_systemTray_pre);
+    m_contextMenu->addAction(action_systemTray_play);
+    m_contextMenu->addAction(action_systemTray_next);
+    m_contextMenu->addAction(action_systemTray_playmode);
+    m_contextMenu->addAction(action_systemTray_quit);
+    m_contextMenu->actions();
+    m_systemTray->setContextMenu(m_contextMenu);
+    m_systemTray->show();
 }

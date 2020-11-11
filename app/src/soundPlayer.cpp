@@ -104,6 +104,7 @@ void SoundPlayer::setPlay()
         m_player->play();
 //        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPause));
         ui->playButton->setStyleSheet(PlayStyle());
+
     }
     else if(m_player->state() == QMediaPlayer::State::PlayingState) {
         m_player->pause();
