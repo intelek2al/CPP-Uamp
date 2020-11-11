@@ -35,22 +35,49 @@ char *TagFunctions::toChar(QString str)
     return test;
 }
 
-void TagFunctions::load_lyrics(char *file_name) {
-    TagLib::MPEG::File f1(file_name);
+QString TagFunctions::load_lyrics(const QString& file_path) {
+    qDebug (logDebug()) << "TagFunctions::load_lyrics";
+    TagLib::MPEG::File f1(file_path.toStdString().data());
+    TagLib::String lyrics;
+//    QString lyrics;
 
     if (f1.ID3v2Tag()) {
         TagLib::ID3v2::FrameList frames = f1.ID3v2Tag()->frameListMap()["USLT"];
-
+        TagLib::ID3v2::UnsynchronizedLyricsFrame *frame = NULL;
         if (!frames.isEmpty()) {
-            TagLib::ID3v2::UnsynchronizedLyricsFrame *frame =
-                    dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(frames.front());
+            frame = dynamic_cast<TagLib::ID3v2::UnsynchronizedLyricsFrame *>(frames.front());
             // There could be multiple frames here; you may want to look at language
             // and/or description, instead of just picking the first.
-//            if (frame)
-//                std::cout << frames.front()->toString() << " here" << std::endl;
+            if (frame) {
+                lyrics = frame->text();
+                qDebug (logDebug()) << "TagFunctions::load_lyrics  if frame";
+                qDebug(logDebug()) << lyrics.toCString();
+            }
         }
+        return QString(lyrics.toCString());
+    }
+    return QString();
+}
+
+void TagFunctions::set_lyrics(const QString &file_path, const QString &lyrics) {
+    qDebug (logDebug()) << "TagFunctions::set_lyrics";
+
+    if (!file_path.isEmpty()) {
+        TagLib::MPEG::File file(file_path.toStdString().data());
+        TagLib::ID3v2::FrameList frames = file.ID3v2Tag()->frameListMap()["USLT"];
+        auto *frame = new TagLib::ID3v2::UnsynchronizedLyricsFrame;
+
+        if (!file.ID3v2Tag()->frameListMap()["USLT"].isEmpty()) {
+            file.ID3v2Tag()->removeFrames(file.ID3v2Tag()->frameListMap()["USLT"].front()->frameID());
+        }
+        frame->setText(lyrics.toStdString().data());
+        file.ID3v2Tag()->addFrame(frame);
+        file.save();
+    } else {
+        qDebug (logDebug()) << "TagFunctions::set_lyrics not editable lyrics";
     }
 }
+
 
 /*
  *
@@ -152,6 +179,7 @@ Music TagFunctions::read_tags(QString file_path) {
         data.m_track = QString::number(tag->track());
         data.m_path = file_path;
         data.m_comment =tag->comment().toCString();
+        data.m_lyrics = load_lyrics(file_path);
         data.m_url = QUrl(data.m_path);
 
         qDebug(logDebug()) << "TagFunctions::read_tags" << data.m_name;
@@ -198,6 +226,8 @@ Music TagFunctions::read_tags(QString file_path) {
             */
         }
         data.m_cover = load_cover_array(file_path);
+        load_lyrics(file_path);
+
     } else {
         qWarning(logWarning()) << "TagFunctions::read_tags  tags doesn't read";
     }
@@ -352,6 +382,8 @@ bool TagFunctions::modify_tags(const Music& changes) {
     f.save();
     modify_tag_year(changes);
     modify_tag_track(changes);
+    qDebug(logDebug()) << "lurics " << changes.m_lyrics;
+    set_lyrics(changes.m_path, changes.m_lyrics);
     return true;
 }
 
@@ -414,9 +446,6 @@ bool TagFunctions::set_image_mpeg(const QString& file_path, const QString& image
         return false;
     }
 
-    qDebug(logDebug()) << "file_path =" << file_path;
-    qDebug(logDebug()) << "image_path =" << image_path;
-
     TagLib::MPEG::File mpegFile(file_path.toStdString().data());
     TagLib::ID3v2::Tag *tag = mpegFile.ID3v2Tag();
     TagLib::ID3v2::FrameList frames = tag->frameList("APIC");
@@ -424,12 +453,10 @@ bool TagFunctions::set_image_mpeg(const QString& file_path, const QString& image
 
     if(frames.isEmpty())
     {
-        qDebug(logDebug()) << "line 423";
         frame = new TagLib::ID3v2::AttachedPictureFrame;
         tag->addFrame(frame);
     } else
     {
-        qDebug(logDebug()) << "line 428";
         frame = new TagLib::ID3v2::AttachedPictureFrame;
         frame = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(frames.front());
     }
@@ -439,7 +466,6 @@ bool TagFunctions::set_image_mpeg(const QString& file_path, const QString& image
     frame->setMimeType("image/jpeg");
     frame->setPicture(imageData);
     mpegFile.save();
-    qDebug(logDebug()) << "TagFunctions::set_image_mpeg END";
     return true;
 }
 
@@ -463,4 +489,5 @@ Music TagFunctions::LoadSongTags(QString file_path) {
 //    std::cout << "MediaLibrary" << tmp.m_path.toStdString() << std::endl;
     return tmp;
 }
+
 
