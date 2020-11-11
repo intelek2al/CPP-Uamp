@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 {
     App app(argc, argv, "Ucode", "uamp");
 
-    m_logFile.reset(new QFile("../../app/logFile.txt"));  // run from Clion
+    m_logFile.reset(new QFile("./logFile.txt"));  // run from Clion
     m_logFile.data()->open(QFile::Append | QFile::Text);
     // Устанавливаем обработчик. To restore the message handler, call qInstallMessageHandler(0).
     qInstallMessageHandler(messageHandler);
