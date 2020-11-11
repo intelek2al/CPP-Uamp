@@ -1106,12 +1106,19 @@ border-left: 1px solid darkgray;
     <property name="title">
      <string>Window</string>
     </property>
+    <widget class="QMenu" name="menuShutDown">
+     <property name="title">
+      <string>ShutDown</string>
+     </property>
+     <addaction name="actionStart"/>
+     <addaction name="actionStopShutdown"/>
+    </widget>
     <addaction name="actionEqualizer"/>
     <addaction name="actionViz"/>
     <addaction name="actionActyvyti"/>
     <addaction name="separator"/>
     <addaction name="actionVizualizer"/>
-    <addaction name="actionShutDown"/>
+    <addaction name="menuShutDown"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -1420,12 +1427,17 @@ border-left: 1px solid darkgray;
     <string>Ctrl+Shift+O</string>
    </property>
   </action>
-  <action name="actionShutDown">
+  <action name="actionStart">
    <property name="text">
-    <string>ShutDown</string>
+    <string>Start</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Q</string>
+   </property>
+  </action>
+  <action name="actionStopShutdown">
+   <property name="text">
+    <string>Stop Shutdown</string>
    </property>
   </action>
  </widget>
