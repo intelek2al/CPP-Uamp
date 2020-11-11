@@ -27,6 +27,7 @@
 #include <QMediaMetaData>
 #include <QMetaDataReaderControl>
 #include <QSqlTableModel>
+#include <QSystemTrayIcon>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -83,24 +84,27 @@ private slots:
 
     void on_actionNext_triggered();
 
+
     void on_actionPrevious_triggered();
 
     void on_actionShuffle_triggered();
 
+    void systemTrayIcon_activated(QSystemTrayIcon::ActivationReason reason);
+
     void on_actionIncrease_Volume_triggered();
 
     void on_actionDecrease_Volume_triggered();
-
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);
-    void deleteSong(const QModelIndex &);
 
+    void deleteSong(const QModelIndex &);
 private:
     void readSettings();
     void writeSettings();
     void loadCoverImage(const QModelIndex &index);
     void setupMusicTableModel();
     void setupPlayListTableModel();
+    void init_systemTrayIcon();
 
     Music getMusicfromTable();
 
@@ -115,7 +119,7 @@ private:
     Settings *m_settings;
     QModelIndex m_table_index {};
     QModelIndex m_playList_index {};
-
+    QSystemTrayIcon *mySystemTray;
     Music new_song_info;
     SqlBase *m_base;
     QSqlTableModel *m_SQL_model;

@@ -1123,6 +1123,11 @@ border-left: 1px solid darkgray;
     </property>
     <addaction name="actionUamp_Help"/>
    </widget>
+   <widget class="QMenu" name="menuShoutdown">
+    <property name="title">
+     <string>Shoutdown</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSong"/>
    <addaction name="menuView"/>
@@ -1130,6 +1135,7 @@ border-left: 1px solid darkgray;
    <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
    <addaction name="menuHelp_2"/>
+   <addaction name="menuShoutdown"/>
   </widget>
   <action name="actionPreferences">
    <property name="text">
@@ -1417,6 +1423,11 @@ border-left: 1px solid darkgray;
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+O</string>
+   </property>
+  </action>
+  <action name="actionshoutdown">
+   <property name="text">
+    <string>shoutdown</string>
    </property>
   </action>
  </widget>
