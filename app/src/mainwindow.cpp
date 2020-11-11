@@ -119,7 +119,7 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
     contextMenu.addAction(&action_song_info);
 
     QAction action_show_in_finder("Show in Finder", this);
-//    connect(&action_play_layte, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+    connect(&action_show_in_finder, &QAction::triggered, this, &MainWindow::on_action_show_in_finder_triggered);
     contextMenu.addAction(&action_show_in_finder);
 
     QAction action_del_from_library("Delete from Library", this);
@@ -570,6 +570,21 @@ void MainWindow::on_actionAdd_Song_to_Library_triggered() {
     emit m_SQL_model->layoutChanged();
     emit m_SQL_model->sort(0, Qt::AscendingOrder);
     m_SQL_model->select();
+}
+
+void MainWindow::on_action_show_in_finder_triggered() {
+    qDebug (logDebug()) << "on_action_show_in_finder_triggered";
+    auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
+
+    QStringList scriptArgs;
+    scriptArgs << QLatin1String("-e")
+               << QString::fromLatin1("tell application \"Finder\" to reveal POSIX file \"%1\"")
+                       .arg(current_song_path);
+    QProcess::execute(QLatin1String("/usr/bin/osascript"), scriptArgs);
+    scriptArgs.clear();
+    scriptArgs << QLatin1String("-e")
+               << QLatin1String("tell application \"Finder\" to activate");
+    QProcess::execute("/usr/bin/osascript", scriptArgs);
 }
 
 

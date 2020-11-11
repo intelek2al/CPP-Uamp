@@ -78,7 +78,7 @@ private slots:
     void on_modeButton_clicked();
     void on_upNextButton_clicked();
     void on_editTableModel_clicked(int row, QSqlRecord & record);
-
+    void on_action_show_in_finder_triggered();
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);
     void deleteSong(const QModelIndex &);
