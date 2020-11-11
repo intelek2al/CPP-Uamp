@@ -66,6 +66,7 @@ Music::Music(const Music &m) {
     m_year = m.m_year;
     m_track = m.m_track;
     m_cover = m.m_cover;
+    m_count = m.m_count;
     m_url = QUrl::fromLocalFile(m_path);
 }
 
@@ -84,6 +85,7 @@ Music::Music(Music &&m) noexcept {
     m_year = m.m_year;
     m_track = m.m_track;
     m_cover = m.m_cover;
+    m_count = m.m_count;
     m_url = QUrl::fromLocalFile(m_path);
 }
 
@@ -102,6 +104,7 @@ Music& Music::operator=(Music &&m) noexcept {
     m_year = m.m_year;
     m_track = m.m_track;
     m_cover = m.m_cover;
+    m_count = m.m_count;
     m_url = QUrl::fromLocalFile(m_path);
     return *this;
 }
@@ -121,6 +124,7 @@ Music& Music::operator=(const Music &m) {
     m_year = m.m_year;
     m_track = m.m_track;
     m_cover = m.m_cover;
+    m_count = m.m_count;
     m_url = QUrl::fromLocalFile(m_path);
     return *this;
 }

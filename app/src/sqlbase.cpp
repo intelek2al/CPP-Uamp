@@ -49,7 +49,7 @@ bool SqlBase::createTableSongs() {
   qDebug(logDebug()) << "Create table SONGS";
   QSqlQuery query;
   QString str = "CREATE TABLE IF NOT EXISTS SONGS ("  \
-      "SONG_ID             INTEGER PRIMARY KEY  AUTOINCREMENT," \
+      "SONG_ID        INTEGER PRIMARY KEY  AUTOINCREMENT," \
       "Title          TEXT    ," \
       "Time           TEXT    ," \
       "Artist         TEXT    ," \
@@ -61,6 +61,7 @@ bool SqlBase::createTableSongs() {
       "Comment        TEXT    ," \
       "Name           TEXT    NOT NULL," \
       "Path           TEXT    UNIQUE  NOT NULL,"  \
+      "Count          INTEGER ," \
       "Cover          BLOB    "  \
       ");";
 
@@ -194,6 +195,7 @@ bool SqlBase::insertIntoTable(const Music &curent_song) {
         query.bindValue(":Name", curent_song.m_name);
         query.bindValue(":Path", curent_song.m_path);
         query.bindValue(":Cover", curent_song.m_cover);
+        query.bindValue(":Count", curent_song.m_count);
 
         if (!query.exec()) {
             qDebug(logDebug()) << "error = " << query.lastError();
@@ -391,6 +393,7 @@ bool SqlBase::updateTableRow(const QModelIndex &index, const Music &new_tags) {
         query.bindValue(":Track", new_tags.m_track);
         query.bindValue(":Comment", new_tags.m_comment);
         query.bindValue(":Cover", new_tags.m_cover);
+        query.bindValue(":Count", new_tags.m_count);
         query.bindValue(":SONG_ID", current_song_id);
 
         if (!query.exec()) {

@@ -82,7 +82,8 @@ void MainWindow::setupMusicTableModel() {
     ui->mainMusicTable->setModel(m_SQL_model);
     ui->mainMusicTable->hideColumn(0); // song_id
     ui->mainMusicTable->hideColumn(11);  // path
-    ui->mainMusicTable->hideColumn(12);  // cover
+    ui->mainMusicTable->hideColumn(12);  // count
+    ui->mainMusicTable->hideColumn(13);  // cover
     ui->mainMusicTable->resizeColumnsToContents();
 }
 
@@ -336,6 +337,7 @@ Music MainWindow::getMusicfromTable() {
     current_song.m_name = m_SQL_model->record(m_table_index.row()).value("Name").toString();
     current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
     current_song.m_cover = m_SQL_model->record(m_table_index.row()).value("Cover").toByteArray();
+    current_song.m_count = m_SQL_model->record(m_table_index.row()).value("Count").toInt();
     return current_song;
 }
 
@@ -366,6 +368,7 @@ void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 //    for (int i = 0; i < m_library->dataPlaylist().size(); ++i )
 //        cout << m_library->dataPlaylist()[i].m_path.toStdString() << endl;
 //    cout << "============================================" << endl;
+    ui->mainMusicTable->resizeColumnsToContents();
 }
 
 void MainWindow::loadCoverImage(const QModelIndex &index) {
@@ -562,6 +565,7 @@ void MainWindow::on_actionAdd_Song_to_Library_triggered() {
     emit m_SQL_model->layoutChanged();
     emit m_SQL_model->sort(0, Qt::AscendingOrder);
     m_SQL_model->select();
+    ui->mainMusicTable->resizeColumnsToContents();
 }
 
 void MainWindow::on_action_show_in_finder_triggered() {
