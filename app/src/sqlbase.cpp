@@ -61,6 +61,7 @@ bool SqlBase::createTableSongs() {
       "Comment        TEXT    ," \
       "Name           TEXT    NOT NULL," \
       "Path           TEXT    UNIQUE  NOT NULL,"  \
+      "Lyrics         TEXT    ,"  \
       "Count          INTEGER ," \
       "Cover          BLOB    "  \
       ");";
@@ -180,9 +181,9 @@ bool SqlBase::insertIntoTable(const Music &curent_song) {
         qDebug(logDebug()) << "Music current : " << curent_song.m_name, curent_song.m_title;
 
         query.prepare("INSERT INTO SONGS (Title, Time, Artist, Rating, Genre, Album, Year, "
-                      "Track, Comment, Name, Path, Cover) "
+                      "Track, Comment, Name, Lyrics, Path, Cover) "
                       "VALUES (:Title, :Time, :Artist, :Rating, :Genre, :Album, :Year, :Track, :Comment, "
-                      ":Name, :Path, :Cover)");
+                      ":Name, :Lyrics, :Path, :Cover)");
         query.bindValue(":Title", curent_song.m_title);
         query.bindValue(":Time", curent_song.m_time);
         query.bindValue(":Artist", curent_song.m_artist);
@@ -193,6 +194,7 @@ bool SqlBase::insertIntoTable(const Music &curent_song) {
         query.bindValue(":Track", curent_song.m_track);
         query.bindValue(":Comment", curent_song.m_comment);
         query.bindValue(":Name", curent_song.m_name);
+        query.bindValue(":Lyrics", curent_song.m_lyrics);
         query.bindValue(":Path", curent_song.m_path);
         query.bindValue(":Cover", curent_song.m_cover);
         query.bindValue(":Count", curent_song.m_count);
@@ -306,7 +308,6 @@ bool SqlBase::AddtoPlaylist(const QString &path, const QString &cur_playlist) {
 Playlist SqlBase::ExportPlaylist(const QString &name) {
     qInfo(logInfo()) <<"SqlBase::ExportPlaylist";
     int PLAY_LISTS_R;
-    int SONG_ID;
 
     if (name.isEmpty())
         return Playlist{};
@@ -380,7 +381,7 @@ bool SqlBase::updateTableRow(const QModelIndex &index, const Music &new_tags) {
 
         query.prepare("UPDATE SONGS SET Title = :Title, Time =:Time, Artist = :Artist,"
                       "Rating = :Rating, Genre = :Genre, Album = :Album, Year = :Year, Track = :Track,"
-                      "Comment = :Comment, Cover =:Cover "
+                      "Comment = :Comment, Cover =:Cover, Lyrics =:Lyrics "
                       "WHERE SONG_ID = :SONG_ID ");
 
         query.bindValue(":Title", new_tags.m_title);
@@ -394,6 +395,7 @@ bool SqlBase::updateTableRow(const QModelIndex &index, const Music &new_tags) {
         query.bindValue(":Comment", new_tags.m_comment);
         query.bindValue(":Cover", new_tags.m_cover);
         query.bindValue(":Count", new_tags.m_count);
+        query.bindValue(":Lyrics", new_tags.m_lyrics);
         query.bindValue(":SONG_ID", current_song_id);
 
         if (!query.exec()) {

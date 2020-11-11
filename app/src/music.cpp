@@ -38,6 +38,7 @@ Music::Music(const QUrl &url) {
             m_time =(QString::fromStdString(std::to_string(minutes) +
                                                  ":" + std::to_string(seconds)));
         }
+        m_lyrics = TagFunctions::load_lyrics(file_p.data());
         m_cover = TagFunctions::load_cover_array(file_p.data());
     }
 }

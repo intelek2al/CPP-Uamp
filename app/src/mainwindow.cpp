@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_base = new SqlBase();
     setupMusicTableModel();
     setupPlayListTableModel();
-    m_player = new SoundPlayer(ui);
+    m_player = new SoundPlayer(ui, this);
     m_player->setPlaylist(m_SQL_model);
 
     connect(this, &MainWindow::editTagsCompleted, m_base, &SqlBase::updateTableRow);  // edit tags from Info
@@ -87,6 +87,7 @@ void MainWindow::setupMusicTableModel() {
     ui->mainMusicTable->hideColumn(11);  // path
     ui->mainMusicTable->hideColumn(12);  // count
     ui->mainMusicTable->hideColumn(13);  // cover
+    ui->mainMusicTable->hideColumn(14);  // cover
     ui->mainMusicTable->resizeColumnsToContents();
 }
 
@@ -335,6 +336,7 @@ Music MainWindow::getMusicfromTable() {
     current_song.m_comment = m_SQL_model->record(m_table_index.row()).value("Comment").toString();
     current_song.m_name = m_SQL_model->record(m_table_index.row()).value("Name").toString();
     current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
+    current_song.m_lyrics = m_SQL_model->record(m_table_index.row()).value("Lyrics").toString();
     current_song.m_cover = m_SQL_model->record(m_table_index.row()).value("Cover").toByteArray();
     current_song.m_count = m_SQL_model->record(m_table_index.row()).value("Count").toInt();
     return current_song;
@@ -527,14 +529,18 @@ void MainWindow::on_modeButton_clicked()
     if (tmp == "L") {
         tmp = "S";
         ui->modeButton->setStyleSheet(RandomStyle());
+        m_systemTray->contextMenu()->actions()[3]->setIcon(QIcon(":/image/image/image/play-random.png"));
     }
     else if (tmp == "S") {
         tmp = "C";
         ui->modeButton->setStyleSheet(LoopOneStyle());
+        m_systemTray->contextMenu()->actions()[3]->setIcon(QIcon(":/image/image/image/loop-one.png"));
     }
     else if (tmp == "C") {
         tmp = "L";
         ui->modeButton->setStyleSheet(LoopStyle());
+        m_systemTray->contextMenu()->actions()[3]->setIcon(QIcon(":/image/image/image/loop.png"));
+
     }
     m_player->changeMode();
 }
@@ -681,7 +687,7 @@ void MainWindow::init_systemTrayIcon()
     m_systemTray->setIcon(QIcon(":/image/image/image/systemTrayIcon.png"));
     m_systemTray->setToolTip("Uamp");
     connect(m_systemTray, &QSystemTrayIcon::activated, this, &MainWindow::systemTrayIcon_activated);
-    //添加菜单项
+
     QAction *action_systemTray_pre = new QAction(QIcon(":/image/image/image/pre.png"), "Previous");
     connect(action_systemTray_pre, &QAction::triggered, this, &MainWindow::on_actionPrevious_triggered);
     QAction *action_systemTray_play = new QAction(QIcon(":/image/image/image/pase.png"), "Play");
@@ -702,4 +708,15 @@ void MainWindow::init_systemTrayIcon()
     m_contextMenu->actions();
     m_systemTray->setContextMenu(m_contextMenu);
     m_systemTray->show();
+}
+
+void MainWindow::on_actionShutDown_triggered() {
+    bool ok;
+    int m_timer = QInputDialog::getInt(this, tr("ShutDown"),
+                                       tr("Set minutes:"), 0, 0, 100, 1, &ok);
+    if (ok) {
+        qInfo(logInfo()) << "time to shutDown = " << m_timer;
+    } else {
+        qInfo(logInfo()) << "on_actionShutDown_triggered canceled";
+    }
 }

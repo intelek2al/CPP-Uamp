@@ -657,6 +657,16 @@
          <attribute name="title">
           <string>Lyrics</string>
          </attribute>
+         <widget class="QTextEdit" name="line_lyrics">
+          <property name="geometry">
+           <rect>
+            <x>30</x>
+            <y>0</y>
+            <width>331</width>
+            <height>331</height>
+           </rect>
+          </property>
+         </widget>
         </widget>
        </widget>
       </item>

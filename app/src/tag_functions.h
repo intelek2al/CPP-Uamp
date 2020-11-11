@@ -47,7 +47,9 @@ namespace TagFunctions {
 
     QByteArray load_cover_array(QString file_path);
 
-    void load_lyrics(char *file_name);
+    QString load_lyrics(const QString& file_path);
+
+    void set_lyrics(const QString &file_path, const QString &lyrics);
 
     void load_cover(char *file_name);
 

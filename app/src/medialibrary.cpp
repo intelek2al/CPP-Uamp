@@ -68,7 +68,7 @@ void MediaLibrary::add_file(const QString &file_name) {
     }
     catch (std::exception &e)
     {
-        std::cerr << "QQQQQQQQQ " << e.what() << std::endl;
+//        std::cerr << "QQQQQQQQQ " << e.what() << std::endl;
     }
     if (!tmp.empty())
         m_media_list.push_back(tmp);
@@ -89,7 +89,7 @@ Playlist MediaLibrary::dataPlaylist() const {
 //        cout << "---- " << music.getStr().toStdString() << endl;
         list.addMusic(music);
     }
-    std::cout << endl;
+//    std::cout << endl;
     return list;
 }
 
