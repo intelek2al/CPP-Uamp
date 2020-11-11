@@ -277,7 +277,7 @@ void MainWindow::on_actionInfo_triggered()
         return;
     }
 
-    Music current_song = getMusicfromTable();
+    Music current_song = m_player->getMusicfromTable(m_table_index);
     if (current_song.m_path.toStdString().empty()) {
       return;
     }
@@ -486,7 +486,7 @@ void MainWindow::on_actionDeletePlaylist_triggered() {
 
 void MainWindow::playNext() {
 //    Music song = getMusicfromTable();
-    m_player->playNext(getMusicfromTable());
+    m_player->playNext(m_player->getMusicfromTable(m_table_index));
 }
 
 void MainWindow::on_actionFast_forward_triggered()
@@ -627,3 +627,35 @@ if (t) {
 //                "INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
 //                "INNER JOIN LIST_PLAYLISTS ON PLAYLIST.PLAYLIST_R = ?");
 //    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Rating, SONGS.Year, SONGS.Genre, SONGS.Time "
+
+void MainWindow::on_actionPlay_triggered()
+{
+    on_playButton_clicked();
+}
+
+void MainWindow::on_actionNext_triggered()
+{
+    on_stopButton_clicked();
+}
+
+void MainWindow::on_actionPrevious_triggered()
+{
+    on_pauseButton_clicked();
+}
+
+void MainWindow::on_actionShuffle_triggered()
+{
+    on_modeButton_clicked();
+}
+
+void MainWindow::on_actionIncrease_Volume_triggered()
+{
+    int vol = m_player->volume();
+    m_player->setVolume(vol + 5);
+}
+
+void MainWindow::on_actionDecrease_Volume_triggered()
+{
+    int vol = m_player->volume();
+    m_player->setVolume(vol - 5);
+}

@@ -13,6 +13,7 @@ SoundPlayer::SoundPlayer(Ui::MainWindow *child)
     m_player->setPlaylist(m_playlist);
     ui = child;
     connect(m_player, &QMediaPlayer::positionChanged, this, &SoundPlayer::setPosition);
+    connect(m_player, &QMediaPlayer::volumeChanged, this, &SoundPlayer::setVolume);
     connect(m_player, &QMediaPlayer::stateChanged, this, &SoundPlayer::stateCheck);
 //    connect(m_player, QOverload<bool>::of(&QMediaObject::availabilityChanged) &SoundPlayer::metaData);
     connect(m_player, &QMediaPlayer::metaDataAvailableChanged, this, &SoundPlayer::metaData);
@@ -124,6 +125,7 @@ void SoundPlayer::setStop()
 
 void SoundPlayer::setVolume(int position)
 {
+    ui->statusVolume->setSliderPosition(position);
     m_player->setVolume(position);
 }
 
@@ -158,6 +160,10 @@ void SoundPlayer::setMovedPosition(int position)
 }
 
 QMediaPlaylist *SoundPlayer::m_playlist = nullptr;
+
+int SoundPlayer::volume() const {
+    return m_player->volume();
+}
 
 QMediaPlaylist *SoundPlayer::playlist() {
     if (m_playlist == nullptr)
@@ -212,6 +218,7 @@ void SoundPlayer::previous() {
     }
 }
 
+
 void SoundPlayer::exportPlaylist(const Playlist &playlist, QString path) {
     QMediaPlaylist _pl;
 
@@ -230,7 +237,6 @@ void SoundPlayer::exportPlaylist(const Playlist &playlist, QString path) {
     else
         ui->statusbar->showMessage("not saved: " + _pl.errorString(), 1200);
 }
-
 
 void SoundPlayer::importPlaylist(const QString &path) {
     QMediaPlaylist _pl;
@@ -298,6 +304,23 @@ Playlist SoundPlayer::handlerPlaylist(QSqlQueryModel *model) {
         playlist.addMusic(current_song);
     }
     return playlist;
+}
+
+Music SoundPlayer::getMusicfromTable(QModelIndex index) const {
+    Music current_song;
+    current_song.m_title = m_model->record(index.row()).value("Title").toString();
+    current_song.m_time = m_model->record(index.row()).value("Time").toString();
+    current_song.m_artist = m_model->record(index.row()).value("Artist").toString();
+    current_song.m_rate = m_model->record(index.row()).value("Rating").toString();
+    current_song.m_genre = m_model->record(index.row()).value("Genre").toString();
+    current_song.m_album = m_model->record(index.row()).value("Album").toString();
+    current_song.m_year = m_model->record(index.row()).value("Year").toString();
+    current_song.m_track = m_model->record(index.row()).value("Track").toString();
+    current_song.m_comment = m_model->record(index.row()).value("Comment").toString();
+    current_song.m_name = m_model->record(index.row()).value("Name").toString();
+    current_song.m_path = m_model->record(index.row()).value("Path").toString();
+    current_song.m_cover = m_model->record(index.row()).value("Cover").toByteArray();
+    return current_song;
 }
 
 Playlist SoundPlayer::upNext() {

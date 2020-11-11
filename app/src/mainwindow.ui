@@ -221,6 +221,47 @@ background-position:center center;
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="modeButton">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+image: url(:/image/image/image/loop.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+}
+
+QPushButton:hover{
+image: url(:/image/image/image-hover/loop-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+
+QPushButton:pressed{
+image: url(:/image/image/image/loop.png);
+background-repeat:no-repeat;
+background-position:center center;
+}
+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QSlider" name="statusVolume">
         <property name="styleSheet">
          <string notr="true">QSlider::groove:horizontal {
@@ -310,47 +351,6 @@ border-radius: 5px;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="modeButton">
-        <property name="minimumSize">
-         <size>
-          <width>40</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>40</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton
-{
-image: url(:/image/image/image/loop.png);
-background-repeat:no-repeat;
-background-position:center center;
-border:none;
-}
-
-QPushButton:hover{
-image: url(:/image/image/image-hover/loop-hover.png);
-background-repeat:no-repeat;
-background-position:center center;
-}
-
-QPushButton:pressed{
-image: url(:/image/image/image/loop.png);
-background-repeat:no-repeat;
-background-position:center center;
-}
-</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,8,1">
@@ -414,9 +414,48 @@ color: rgb(132, 130, 133);</string>
             <item>
              <widget class="QSlider" name="statusPlay">
               <property name="styleSheet">
-               <string notr="true">QSlider::handle:horizontal {
-/*	background-color:rgb(0, 0, 0);*/
-	border: 0 solid;
+               <string notr="true">QSlider::groove:horizontal {
+border: 1px solid lightgray;
+background: white;
+height: 2px;
+border-radius: 2px;
+}
+
+QSlider::sub-page:horizontal {
+background: qlineargradient(x1: 0, y1: 0,    x2: 0, y2: 1,
+    stop: 0 #eee, stop: 1 #ddd);
+
+border: 1px solid #777;
+height: 10px;
+border-radius: 4px;
+}
+
+QSlider::add-page:horizontal {
+background: #aaa;
+border: 1px solid #777;
+height: 10px;
+border-radius: 10px;
+}
+
+QSlider::handle:horizontal {
+
+}
+
+QSlider::handle:horizontal:hover {
+ 
+}
+
+QSlider::sub-page:horizontal:disabled {
+background: #bbb;
+border-color: #999;
+}
+
+QSlider::add-page:horizontal:disabled {
+background: #eee;
+border-color: #999;
+}
+
+QSlider::handle:horizontal:disabled {
 }</string>
               </property>
               <property name="value">
@@ -854,7 +893,6 @@ background-color: rgba(255, 255, 255, 0);
 background-repeat:no-repeat;
 border:none;
 border-top: 1px solid darkgray;
-mergin:0;
 background-position:center center;
 }
 QLable:hover{
@@ -1054,24 +1092,15 @@ border-left: 1px solid darkgray;
      <string>Contorls</string>
     </property>
     <addaction name="actionPlay"/>
-    <addaction name="actionStop"/>
     <addaction name="actionNext"/>
     <addaction name="actionPrevious"/>
     <addaction name="separator"/>
     <addaction name="actionIncrease_Volume"/>
     <addaction name="actionDecrease_Volume"/>
     <addaction name="actionShuffle"/>
-    <addaction name="actionRepeat"/>
     <addaction name="separator"/>
     <addaction name="actionFast_forward"/>
     <addaction name="actionRewind"/>
-   </widget>
-   <widget class="QMenu" name="menuAccount">
-    <property name="title">
-     <string>Account</string>
-    </property>
-    <addaction name="actionSign_In"/>
-    <addaction name="actionSign_Out"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
@@ -1098,7 +1127,6 @@ border-left: 1px solid darkgray;
    <addaction name="menuSong"/>
    <addaction name="menuView"/>
    <addaction name="menuContorl"/>
-   <addaction name="menuAccount"/>
    <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
    <addaction name="menuHelp_2"/>
@@ -1235,7 +1263,7 @@ border-left: 1px solid darkgray;
   </action>
   <action name="actionPlay">
    <property name="text">
-    <string>Play</string>
+    <string>Play/Pause</string>
    </property>
    <property name="shortcut">
     <string>Space</string>
@@ -1283,7 +1311,10 @@ border-left: 1px solid darkgray;
   </action>
   <action name="actionShuffle">
    <property name="text">
-    <string>Shuffle</string>
+    <string>Shuffle/Repeat</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
    </property>
   </action>
   <action name="actionRepeat">
