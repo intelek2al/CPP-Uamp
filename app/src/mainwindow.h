@@ -59,7 +59,7 @@ private slots:
     void on_actionQuit_triggered();
     void onPlayListContextMenu(const QPoint &point);
     void onMusicTableContextMenu(const QPoint &point);
-    void on_actionNewPlaylist_triggered();
+    void on_actionPlaylist_triggered();
     void on_actionPlayPlaylist_triggered();
     void on_actionImportPlaylist_triggered();
     void on_actionExportPlaylist_triggered();
@@ -93,7 +93,6 @@ private:
     Music getMusicfromTable();
 
     Ui::MainWindow *ui;
-
 //    MediaLibrary *m_library = nullptr;
 //    QItemSelectionModel *m_selection_model;
 //    QString m_path;

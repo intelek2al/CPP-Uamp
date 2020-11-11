@@ -32,8 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(this, &MainWindow::editTagsCompleted, m_base, &SqlBase::updateTableRow);  // edit tags from Info
 
-    // default cover in player
-    QImage def_cover(":/def_cover_black.jpg");
+    QImage def_cover(":/def_cover_black.jpg"); // default cover in player
     QPixmap pix(QPixmap::fromImage(def_cover));
     ui->cover_label->setPixmap(pix);
 
@@ -82,7 +81,7 @@ void MainWindow::setupMusicTableModel() {
 
     ui->mainMusicTable->setModel(m_SQL_model);
     ui->mainMusicTable->hideColumn(0); // song_id
-//    ui->mainMusicTable->hideColumn(11);  // path
+    ui->mainMusicTable->hideColumn(11);  // path
     ui->mainMusicTable->hideColumn(12);  // cover
     ui->mainMusicTable->resizeColumnsToContents();
 }
@@ -135,13 +134,13 @@ void MainWindow::onPlayListContextMenu(const QPoint &point)
 //    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
 
     QAction action_new("New Playlist", this);
-    connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
-//    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
+    connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
+//    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
     contextMenu.addAction(&action_new);
 
     QAction action_play("Play Playlist", this);
     connect(&action_play, &QAction::triggered, this, &MainWindow::on_actionPlayPlaylist_triggered);
-//    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionNewPlaylist_triggered);
+//    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
     contextMenu.addAction(&action_play);
 
     QAction action_import_plst("Import Playlist", this);
@@ -166,11 +165,6 @@ MainWindow::~MainWindow()
     delete ui;
     system("leaks -q uamp");
 }
-
-//void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
-//{
-//    m_table_index = index;
-//}
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
@@ -427,7 +421,7 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
     // show in table list of songs current playList
 }
 
-void MainWindow::on_actionNewPlaylist_triggered()
+void MainWindow::on_actionPlaylist_triggered()
 {
     bool ok;
     QString new_playlist_name = QInputDialog::getText(this,"New PlayList",
@@ -440,7 +434,7 @@ void MainWindow::on_actionNewPlaylist_triggered()
         m_base->AddNewPlaylist(new_playlist_name);
         m_PlayList_model->select();
     } else {
-        qInfo(logInfo()) << "on_actionNewPlaylist_triggered canceled";
+        qInfo(logInfo()) << "on_actionPlaylist_triggered canceled";
     }
 
 }
@@ -480,7 +474,6 @@ void MainWindow::on_actionExportPlaylist_triggered() {
 
     m_player->exportPlaylist(current, dialog.selectedFiles().first());
 }
-
 
 void MainWindow::on_actionDeletePlaylist_triggered() {
     QString name = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
@@ -544,7 +537,6 @@ void MainWindow::on_modeButton_clicked()
     m_player->changeMode();
 }
 
-
 void MainWindow::on_upNextButton_clicked()
 {
     if (!nextUp)
@@ -588,6 +580,11 @@ void MainWindow::on_action_show_in_finder_triggered() {
 }
 
 
+
+//void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
+//{
+//    m_table_index = index;
+//}
 
 
 /*

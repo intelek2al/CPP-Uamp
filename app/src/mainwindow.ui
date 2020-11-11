@@ -1021,9 +1021,9 @@ border-left: 1px solid darkgray;
     <addaction name="actionAdd_to_Library"/>
     <addaction name="actionQuit"/>
     <addaction name="actionPlaylist"/>
-    <addaction name="actionImport_Playlist"/>
-    <addaction name="actionExport_Playlist"/>
-    <addaction name="actionDelete_Playlist"/>
+    <addaction name="actionImportPlaylist"/>
+    <addaction name="actionExportPlaylist"/>
+    <addaction name="actionDeletePlaylist"/>
    </widget>
    <widget class="QMenu" name="menuSong">
     <property name="title">
@@ -1092,7 +1092,6 @@ border-left: 1px solid darkgray;
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionSearch"/>
     <addaction name="actionUamp_Help"/>
    </widget>
    <addaction name="menuFile"/>
@@ -1360,17 +1359,17 @@ border-left: 1px solid darkgray;
     <string>Search</string>
    </property>
   </action>
-  <action name="actionImport_Playlist">
+  <action name="actionImportPlaylist">
    <property name="text">
     <string>Import Playlist</string>
    </property>
   </action>
-  <action name="actionExport_Playlist">
+  <action name="actionExportPlaylist">
    <property name="text">
     <string>Export Playlist</string>
    </property>
   </action>
-  <action name="actionDelete_Playlist">
+  <action name="actionDeletePlaylist">
    <property name="text">
     <string>Delete Playlist</string>
    </property>
