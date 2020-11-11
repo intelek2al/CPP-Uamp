@@ -535,6 +535,19 @@ void MainWindow::on_actionPlayPlaylist_triggered() {
     // play selected playlist
 }
 
+void MainWindow::on_actionAdd_Song_to_Library_triggered() {
+    qDebug(logDebug) << "MainWindow::on_actionAdd_Song_to_Library_triggered";
+    QStringList files = QFileDialog::getOpenFileNames(this, "Add song", "/home",
+                                                  tr("Audio (*.mp3 *.flac *.wav *.m4a *.aif)"));
+
+    m_base->AddtoLibrary(files);
+    m_SQL_model->select();
+
+    emit m_SQL_model->layoutChanged();
+    emit m_SQL_model->sort(0, Qt::AscendingOrder);
+    m_SQL_model->select();
+}
+
 
 /*
 QFileDialog* _f_dlg = new QFileDialog(this);

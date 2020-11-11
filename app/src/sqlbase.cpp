@@ -125,8 +125,6 @@ bool SqlBase::loadData() {
     return true;
 }
 
-///=============================================================
-
 bool SqlBase::AddtoLibrary(const QString &media_path) {
     if (QDir cur_dir(media_path); !cur_dir.isReadable())
     {
@@ -159,6 +157,21 @@ bool SqlBase::AddtoLibrary(const QString &media_path) {
     }
     return true;
 }
+
+bool SqlBase::AddtoLibrary(const QStringList &files) {
+    qDebug(logDebug()) << "SqlBase::AddtoLibrary";
+
+    QSqlQuery query(m_media_base.connectionName());
+
+    for (int i = 0; i < files.size(); ++i) {
+        Music curent_song = TagFunctions::LoadSongTags(files.at(i));
+        if (!insertIntoTable(curent_song)) {
+            qDebug(logDebug()) << "Insert into base failed";
+        }
+    }
+    return true;
+}
+
 
 bool SqlBase::insertIntoTable(const Music &curent_song) {
     QSqlQuery query;
@@ -231,6 +244,13 @@ bool SqlBase::DeletePlaylist(const QString& name) {
     query.next();
     PLAY_LISTS_R = query.value(0).toInt();
 
+    query.prepare("DELETE FROM PLAYLIST WHERE PLAYLIST_R = ?");
+    query.addBindValue(PLAY_LISTS_R);
+    if (!query.exec()) {
+        qDebug(logDebug()) << "error "  << query.lastError();
+        return false;
+    }
+
     query.prepare("DELETE FROM LIST_PLAYLISTS WHERE PLAY_LISTS_ID = ?");
     query.addBindValue(PLAY_LISTS_R);
     if (!query.exec()) {
@@ -238,12 +258,6 @@ bool SqlBase::DeletePlaylist(const QString& name) {
         return false;
     }
 
-    query.prepare("DELETE FROM PLAYLIST WHERE PLAYLIST_R = ?");
-    query.addBindValue(PLAY_LISTS_R);
-    if (!query.exec()) {
-        qDebug(logDebug()) << "error "  << query.lastError();
-        return false;
-    }
     return true;
 }
 
@@ -387,6 +401,8 @@ bool SqlBase::updateTableRow(const QModelIndex &index, const Music &new_tags) {
     }
     return true;
 }
+
+
 
 
 

@@ -15,6 +15,7 @@ public:
    ~SqlBase();
 
    bool AddtoLibrary(const QString& media_path);
+   bool AddtoLibrary(const QStringList& files);
    bool AddNewPlaylist(const QString& name);
    bool DeletePlaylist(const QString& name);
    Playlist ExportPlaylist(const QString& name);

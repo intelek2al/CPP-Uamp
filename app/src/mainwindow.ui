@@ -1023,12 +1023,13 @@ border-left: 1px solid darkgray;
     <addaction name="actionPlaylist"/>
     <addaction name="actionImport_Playlist"/>
     <addaction name="actionExport_Playlist"/>
-    <addaction name="actionDelete_Plyalist"/>
+    <addaction name="actionDelete_Playlist"/>
    </widget>
    <widget class="QMenu" name="menuSong">
     <property name="title">
      <string>Song</string>
     </property>
+    <addaction name="actionAdd_Song_to_Library"/>
     <addaction name="actionAdd_to_Playlist"/>
     <addaction name="actionInfo"/>
     <addaction name="actionPlay_Next"/>
@@ -1369,9 +1370,23 @@ border-left: 1px solid darkgray;
     <string>Export Playlist</string>
    </property>
   </action>
-  <action name="actionDelete_Plyalist">
+  <action name="actionDelete_Playlist">
    <property name="text">
-    <string>Delete Plyalist</string>
+    <string>Delete Playlist</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete Playlist</string>
+   </property>
+  </action>
+  <action name="actionAdd_Song_to_Library">
+   <property name="text">
+    <string>Add Song to Library</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Song to Library</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
    </property>
   </action>
  </widget>

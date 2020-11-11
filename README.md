@@ -28,7 +28,7 @@ ___
  [Sqlite3](https://www.sqlite.org/index.html)
 
  ### Installation:
-    1. git clone https://github.com/intelek2al/CPP-Utamp
+    1. git clone https://github.com/intelek2al/CPP-Uamp
     2. cmake . -Bbuild -Wdev -Werror=dev && cmake --build ./build
  
  ### How to use?
