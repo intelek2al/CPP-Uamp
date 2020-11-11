@@ -63,6 +63,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::importPlayList);
     connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
     connect(m_base, &SqlBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
+
+    connect(m_SQL_model, &QSqlTableModel::beforeUpdate,this, &MainWindow::on_editTableModel_clicked);
 }
 
 void MainWindow::setupMusicTableModel() {
@@ -303,6 +305,29 @@ void MainWindow::on_actionInfo_triggered()
     qInfo(logInfo()) << "cancel DialogInfo";
 }
 
+void MainWindow::on_editTableModel_clicked(int row, QSqlRecord & record) {
+    Music current_song;
+
+    current_song.m_title = m_SQL_model->record(m_table_index.row()).value("Title").toString();
+    current_song.m_artist = m_SQL_model->record(m_table_index.row()).value("Artist").toString();
+    current_song.m_genre = m_SQL_model->record(m_table_index.row()).value("Genre").toString();
+    current_song.m_album = m_SQL_model->record(m_table_index.row()).value("Album").toString();
+    current_song.m_year = m_SQL_model->record(m_table_index.row()).value("Year").toString();
+    current_song.m_track = m_SQL_model->record(m_table_index.row()).value("Track").toString();
+    current_song.m_comment = m_SQL_model->record(m_table_index.row()).value("Comment").toString();
+    current_song.m_name = m_SQL_model->record(m_table_index.row()).value("Name").toString();
+    current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
+
+    if (!(TagFunctions::modify_tags(current_song))) {
+        qInfo(logInfo()) << current_song.m_path << " is not writable";
+    } else {
+//        emit editTagsCompleted(m_table_index, new_song_info);
+        qInfo(logInfo()) << new_song_info.m_name << " info has been changed!!!";
+    }
+
+}
+
+
 Music MainWindow::getMusicfromTable() {
     Music current_song;
     current_song.m_title = m_SQL_model->record(m_table_index.row()).value("Title").toString();
@@ -317,7 +342,6 @@ Music MainWindow::getMusicfromTable() {
     current_song.m_name = m_SQL_model->record(m_table_index.row()).value("Name").toString();
     current_song.m_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
     current_song.m_cover = m_SQL_model->record(m_table_index.row()).value("Cover").toByteArray();
-    current_song.m_rate = m_SQL_model->record(m_table_index.row()).value("Rating").toString();
     return current_song;
 }
 
@@ -547,6 +571,8 @@ void MainWindow::on_actionAdd_Song_to_Library_triggered() {
     emit m_SQL_model->sort(0, Qt::AscendingOrder);
     m_SQL_model->select();
 }
+
+
 
 
 /*

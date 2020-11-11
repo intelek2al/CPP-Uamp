@@ -13,23 +13,28 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui->setupUi(this);
 
     m_tagsInfo = songInfo;
+    setLines();
 
-    qInfo(logInfo()) << "DialogInfo()";
-    ui->line_title->setText(songInfo.m_title);
-    ui->line_artist->setText(songInfo.m_artist);
-    ui->line_album->setText(songInfo.m_album);
-    ui->line_genre->setText(songInfo.m_genre);
-    ui->line_year->setText(songInfo.m_year);
-    ui->line_track->setText(songInfo.m_track);
-    ui->line_raiting->setText(songInfo.m_rate);
-    ui->line_comments->setText(songInfo.m_comment);
-    ui->line_path->setText(songInfo.m_path);
-    ui->title_large->setText(songInfo.m_title);
-    ui->artisti_large->setText(songInfo.m_artist);
-    connect(ui->coverInfo, &ClickedLabel::doubleClicked, this, &DialogInfo::coverInfoDoubleclicked);
-    load_cover();
 //    qDebug(logDebug()) << "DialogInfo constuctor 4";
 }
+
+void DialogInfo::setLines() {
+    qInfo(logInfo()) << "DialogInfo()";
+    ui->line_title->setText(m_tagsInfo.m_title);
+    ui->line_artist->setText(m_tagsInfo.m_artist);
+    ui->line_album->setText(m_tagsInfo.m_album);
+    ui->line_genre->setText(m_tagsInfo.m_genre);
+    ui->line_year->setText(m_tagsInfo.m_year);
+    ui->line_track->setText(m_tagsInfo.m_track);
+    ui->line_raiting->setText(m_tagsInfo.m_rate);
+    ui->line_comments->setText(m_tagsInfo.m_comment);
+    ui->line_path->setText(m_tagsInfo.m_path);
+    ui->title_large->setText(m_tagsInfo.m_title);
+    ui->artisti_large->setText(m_tagsInfo.m_artist);
+    connect(ui->coverInfo, &ClickedLabel::doubleClicked, this, &DialogInfo::coverInfoDoubleclicked);
+    load_cover();
+}
+
 
 
 void DialogInfo::load_cover() {
@@ -122,10 +127,15 @@ Music DialogInfo::get_tag_changes(Music &music_tags) {
     return Music();
 }
 
-//void DialogInfo::on_nextInfo_clicked()
-//{
-//
-//}
+
+void DialogInfo::on_nextInfo_clicked()
+{
 
 
+}
+
+void DialogInfo::on_prevInfo_clicked()
+{
+
+}
 

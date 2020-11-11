@@ -333,12 +333,13 @@ void TagFunctions::modify_tag_track(const Music& changes) {
 }
 
 bool TagFunctions::modify_tags(const Music& changes) {
+    qDebug (logDebug()) << "TagFunctions::modify_tags";
+
     if (QFileInfo file(changes.m_path); !file.isWritable()) {
         return false;
     }
 
     TagLib::FileRef f(changes.m_path.toStdString().data());
-
     if (!f.isNull() && f.tag())
     {
         TagLib::Tag *tag = f.tag();

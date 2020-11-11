@@ -65,7 +65,7 @@ private slots:
     void on_actionExportPlaylist_triggered();
     void on_actionDeletePlaylist_triggered();
     void on_actionPreferences_triggered();
-    void on_actionInfo_triggered();
+    void on_actionInfo_triggered(); // Info song
     void on_actionAdd_to_Library_triggered();  // cmd + O
     void on_actionAdd_Song_to_Library_triggered();  // cmd + O
     void on_actionDelete_from_Library_triggered();  // delete song from library
@@ -77,6 +77,7 @@ private slots:
     void on_songs_clicked();
     void on_modeButton_clicked();
     void on_upNextButton_clicked();
+    void on_editTableModel_clicked(int row, QSqlRecord & record);
 
 signals:
     void editTagsCompleted(const QModelIndex &, const Music &);
@@ -88,6 +89,7 @@ private:
     void loadCoverImage(const QModelIndex &index);
     void setupMusicTableModel();
     void setupPlayListTableModel();
+
     Music getMusicfromTable();
 
     Ui::MainWindow *ui;
