@@ -4,7 +4,6 @@
 #include <iostream>
 #include "tag_functions.h"
 #include "tableviewer.h"
-#include "musictablemodel.h"
 #include "soundPlayer.h"
 #include "searcher.h"
 #include "settings.h"
@@ -118,7 +117,6 @@ private:
 //    QItemSelectionModel *m_selection_model;
 
 //    QString m_path;
-    MusicTableModel *m_tableModel;
     Searcher *m_searcher;
     SoundPlayer *m_player;
     Settings *m_settings;

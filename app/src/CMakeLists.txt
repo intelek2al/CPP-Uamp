@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.17)
 
 set(SOURCES mainwindow.cpp
-        musictablemodel.cpp
         tag_functions.cpp
         tableviewer.cpp
         searcher.cpp
-        SoundPlayer.cpp
+        soundPlayer.cpp
         loggingcategories.cpp
         settings.cpp
         app.cpp
@@ -27,10 +26,9 @@ set(SOURCES mainwindow.cpp
 
 set(HEADERS mainwindow.h
         tag_functions.h
-        musictablemodel.h
         tableviewer.h
         searcher.h
-        SoundPlayer.h
+        soundPlayer.h
         loggingcategories.h
         settings.h
         app.h
