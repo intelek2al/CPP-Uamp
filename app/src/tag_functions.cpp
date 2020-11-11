@@ -391,7 +391,7 @@ QImage TagFunctions::load_cover_image_mpeg(char *file_path)
     if (!file_path) {
        return QImage();
     }
-    static const char *IdPicture = "APIC";  //  APIC    [#sec4.15 Attached picture]
+//    static const char *IdPicture = "APIC";  //  APIC    [#sec4.15 Attached picture]
     TagLib::MPEG::File mpegFile(file_path);
     TagLib::ID3v2::Tag *tag = mpegFile.ID3v2Tag();
     TagLib::ID3v2::FrameList l = tag->frameList("APIC");
@@ -433,7 +433,7 @@ QImage TagFunctions::load_cover_image_m4a(char *file_path)
     }
 }
 
-QImage TagFunctions::load_cover_image_ogg(char *file_path) {
+QImage TagFunctions::load_cover_image_ogg(char *) {
     return QImage();
 }
 

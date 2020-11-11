@@ -79,7 +79,7 @@ void PlayerPlaylist::next() {
         m_current_play = User;
     else
         m_current_play = Auto;
-    m_auto.printPlaylist();
+//    m_auto.printPlaylist();
     refresh();
 }
 
@@ -87,15 +87,15 @@ void PlayerPlaylist::setStartSong(const Music &song) {
 //    if (!m_auto.empty())
 //        m_history.addFrontMusic(m_auto[0], Auto);
     int pos = 0;
-    for (; pos < m_list.size(); ++pos) {
+    for (; static_cast<size_t>(pos) < m_list.size(); ++pos) {
         if (m_list[pos] == song)
             break;
     }
-    if (pos == m_list.size())
+    if (static_cast<size_t>(pos) == m_list.size())
         return;
-    for (int i = 0; i < m_list.size(); ++i) {
+    for (int i = 0; static_cast<size_t>(i) < m_list.size(); ++i) {
         m_auto.addMusic(m_list[(pos++)]);
-        pos = pos == m_list.size() ? 0 : pos;
+        pos = static_cast<size_t>(pos) == m_list.size() ? 0 : pos;
     }
     m_playlist->clear();
     m_auto.addToMediaPlaylist();
@@ -127,10 +127,10 @@ void PlayerPlaylist::setStartSong(int pos) {
     if (!m_auto.empty())
         m_history.addFrontMusic(m_auto[0], Auto);
     m_auto.clear();
-    for (int i = 0; i < m_list.size(); ++i) {
+    for (int i = 0; static_cast<size_t>(i) < m_list.size(); ++i) {
 //        cout << "Mus added:" << m_list[pos].getStr().toStdString() << endl;
         m_auto.addMusic(m_list[(pos++)]);
-        pos = pos == m_list.size() ? 0 : pos;
+        pos = static_cast<size_t>(pos) == m_list.size() ? 0 : pos;
     }
     m_playlist->clear();
     m_auto.addToMediaPlaylist();
@@ -144,11 +144,12 @@ void PlayerPlaylist::setPlaybackMode(QMediaPlaylist::PlaybackMode mode) {
     switch (m_mode) {
         case QMediaPlaylist::PlaybackMode::Random: {
             m_auto.shuffle();
-            m_auto.printPlaylist();
+//            m_auto.printPlaylist();
             break;
         }
         case QMediaPlaylist::PlaybackMode::CurrentItemInLoop :
             m_auto.unshuffle();
+        default:break;
     }
     if (m_mode == QMediaPlaylist::PlaybackMode::CurrentItemInLoop)
         m_playlist->setPlaybackMode(mode);

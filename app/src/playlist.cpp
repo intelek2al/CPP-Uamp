@@ -5,16 +5,7 @@
 #include <algorithm>
 #include <iterator>
 
-static char *toChar(QString str)
-{
-    char *test = str.toUtf8().data();
-    return test;
-}
-
-Playlist::Playlist()
-{
-
-}
+Playlist::Playlist() {}
 
 Playlist::Playlist(QVector<QUrl> urls, const QString &name) {
     for(const auto &url : urls) {
@@ -34,7 +25,7 @@ void Playlist::addMusic(const Music &music) {
 }
 
 void Playlist::addMusic(Playlist &playlist) {
-    for (int i = 0; i < playlist.size(); ++i) {
+    for (int i = 0; static_cast<size_t>(i) < playlist.size(); ++i) {
         addMusic(playlist[i]);
     }
 }
@@ -48,7 +39,7 @@ QString Playlist::playlistName() const {
 }
 
 Music Playlist::getMusic(int pos) const {
-    if(pos >= 0 && pos < m_musicPlaylist.size())
+    if(pos >= 0 && static_cast<size_t>(pos) < m_musicPlaylist.size())
         return m_musicPlaylist[pos];
     return Music();
 }
@@ -65,7 +56,7 @@ void Playlist::clearMusic(int pos) {
     if (pos == 0) {
         m_musicPlaylist.pop_front();
         return;
-    } else if (pos == size() - 1) {
+    } else if (static_cast<size_t>(pos) == size() - 1) {
         m_musicPlaylist.pop_back();
         return;
     }
@@ -103,7 +94,7 @@ bool Playlist::empty() const {
 }
 
 Music Playlist::operator[](int index) const {
-    if (index >= 0 && index < m_musicPlaylist.size())
+    if (index >= 0 && static_cast<size_t>(index) < m_musicPlaylist.size())
         return m_musicPlaylist[index];
     return Music();
 }
@@ -127,7 +118,7 @@ void Playlist::shuffle() {
     std::mt19937 g(rd());
     if (size() > 1)
         std::shuffle(m_musicPlaylist.begin() + 1, m_musicPlaylist.end(), g);
-    printPlaylist();
+//    printPlaylist();
 }
 
 void Playlist::unshuffle() {

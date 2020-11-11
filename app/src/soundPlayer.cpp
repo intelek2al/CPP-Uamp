@@ -16,7 +16,6 @@ SoundPlayer::SoundPlayer(Ui::MainWindow *child, MainWindow *parent)
     m_player->setPlaylist(m_playlist);
     connect(m_player, &QMediaPlayer::positionChanged, this, &SoundPlayer::setPosition);
     connect(m_player, &QMediaPlayer::volumeChanged, this, &SoundPlayer::setVolume);
-    connect(m_player, &QMediaPlayer::stateChanged, this, &SoundPlayer::stateCheck);
     connect(m_player, &QMediaPlayer::metaDataAvailableChanged, this, &SoundPlayer::metaData);
     connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &SoundPlayer::autoNext);
     ui->labelSong->setText("");
@@ -34,7 +33,7 @@ void SoundPlayer::autoNext(QMediaPlayer::MediaStatus status) {
         next();
 }
 
-void SoundPlayer::setSound(QString path)
+void SoundPlayer::setSound(QString)
 {
     if (!isPlaylistExist)
         return;
@@ -73,29 +72,6 @@ void SoundPlayer::changeMode()
     m_list.setPlaybackMode(m_mode);
 }
 
-void SoundPlayer::stateCheck(QMediaPlayer::State state) {
-//    if(state == QMediaPlayer::PlayingState) {
-//        ui->playButton->setEnabled(false);
-//        ui->pauseButton->setEnabled(true);
-//        ui->stopButton->setEnabled(true);
-//    }
-//    else if(state == QMediaPlayer::PausedState) {
-//        ui->playButton->setEnabled(true);
-//        ui->pauseButton->setEnabled(false);
-//        ui->stopButton->setEnabled(true);
-//    }
-//    else if(state == QMediaPlayer::StoppedState) {
-//        ui->playButton->setEnabled(true);
-//        ui->pauseButton->setEnabled(false);
-//        ui->stopButton->setEnabled(false);
-//        ui->labelTime->setText("00:00:00");
-//        ui->statusPlay->setValue(0);
-//        ui->labelSong->setText("");
-//        ui->labelArtist->setText("");
-//        ui->statusPlay->setEnabled(false);
-//    }
-}
-#include <iostream>
 void SoundPlayer::setPlay()
 {
     QWidget tmp;
@@ -190,17 +166,16 @@ void SoundPlayer::next() {
         return;
     m_list.next();
     setPlay();
-    system("clear");
-    auto test_up = m_list.upNext();
-    auto test_hs = m_list.history();
-    std::cout << " = = = = = = = = =  History  = = = = = = = = = \n";
-    for (int i = test_hs.size() - 1; i >= 0; --i) {
-        std::cout << test_hs[i].getStr().toStdString() << std::endl;
-    }
-    std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
-    for (int i = 0; i < test_up.size(); i++) {
-        std::cout << test_up[i].getStr().toStdString() << std::endl;
-    }
+//    auto test_up = m_list.upNext();
+//    auto test_hs = m_list.history();
+//    std::cout << " = = = = = = = = =  History  = = = = = = = = = \n";
+//    for (int i = test_hs.size() - 1; i >= 0; --i) {
+//        std::cout << test_hs[i].getStr().toStdString() << std::endl;
+//    }
+//    std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
+//    for (int i = 0; i < test_up.size(); i++) {
+//        std::cout << test_up[i].getStr().toStdString() << std::endl;
+//    }
 
 }
 
@@ -208,17 +183,17 @@ void SoundPlayer::previous() {
     m_list.previous();
     setPlay();
     system("clear");
-    auto test = m_list.upNext();
-    auto test_up = m_list.upNext();
-    auto test_hs = m_list.history();
-    std::cout << " = = = = = = = = =  History  = = = = = = = = = \n";
-    for (int i = test_hs.size() - 1; i >= 0; --i) {
-        std::cout << test_hs[i].getStr().toStdString() << std::endl;
-    }
-    std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
-    for (int i = 0; i < test_up.size(); i++) {
-        std::cout << test_up[i].getStr().toStdString() << std::endl;
-    }
+//    auto test = m_list.upNext();
+//    auto test_up = m_list.upNext();
+//    auto test_hs = m_list.history();
+//    std::cout << " = = = = = = = = =  History  = = = = = = = = = \n";
+//    for (int i = test_hs.size() - 1; i >= 0; --i) {
+//        std::cout << test_hs[i].getStr().toStdString() << std::endl;
+//    }
+//    std::cout << " = = = = = = = = =  Up Next  = = = = = = = = = \n";
+//    for (int i = 0; i < test_up.size(); i++) {
+//        std::cout << test_up[i].getStr().toStdString() << std::endl;
+//    }
 }
 
 
@@ -266,7 +241,7 @@ void SoundPlayer::playNext(const Music &song) {
 }
 
 void SoundPlayer::metaData(bool check) {
-    std::cout << "Avalible: " << check << std::endl;
+//    std::cout << "Avalible: " << check << std::endl;
     if (check) {
         auto title = m_player->metaData(QStringLiteral("Title")).toString();
         ui->labelSong->setText(title.isEmpty() ? "Untitled" : title);
@@ -281,14 +256,14 @@ void SoundPlayer::metaData(bool check) {
 }
 
 void SoundPlayer::modelChanged() {
-    std::cout << "= = = = = = = Reloading = = = = = = = " << std::endl;
+//    std::cout << "= = = = = = = Reloading = = = = = = = " << std::endl;
     Playlist playlist = handlerPlaylist(m_model);
     m_list.setChangedPlaylist(playlist);
 }
 
 Playlist SoundPlayer::handlerPlaylist(QSqlQueryModel *model) {
     Playlist playlist;
-    std::cout << "= = = = = = = Loading = = = = = = = " << std::endl;
+//    std::cout << "= = = = = = = Loading = = = = = = = " << std::endl;
     for (int i = 0; i < model->rowCount(); ++i) {
         Music current_song;
         current_song.m_title = model->record(i).value("Title").toString();
@@ -303,7 +278,7 @@ Playlist SoundPlayer::handlerPlaylist(QSqlQueryModel *model) {
         current_song.m_name = model->record(i).value("Name").toString();
         current_song.m_path = model->record(i).value("Path").toString();
         current_song.m_cover = model->record(i).value("Cover").toByteArray();
-        std::cout << "  Song : " << current_song.m_title.toStdString() << std::endl;
+//        std::cout << "  Song : " << current_song.m_title.toStdString() << std::endl;
         playlist.addMusic(current_song);
     }
     return playlist;

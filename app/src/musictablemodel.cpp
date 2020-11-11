@@ -7,7 +7,7 @@
 //#include "music.h"
 
 MusicTableModel::MusicTableModel(MediaLibrary& _m_library, QWidget *parent)
-        : m_class_library(_m_library), m_parent(parent)
+        : m_parent(parent), m_class_library(_m_library)
 {
 }
 
@@ -92,8 +92,8 @@ QVariant MusicTableModel::headerData(int section, Qt::Orientation orientation, i
 
 Qt::ItemFlags MusicTableModel::flags(const QModelIndex &index) const {
     if (index.isValid())
-//        return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
-        return  QAbstractTableModel::flags(index);  // not editible cell
+        return  QAbstractTableModel::flags(index);
+    return Qt::ItemFlags::enum_type::ItemIsEditable;
 }
 
 bool MusicTableModel::insertRows(int row, int count, const QModelIndex &parent) {

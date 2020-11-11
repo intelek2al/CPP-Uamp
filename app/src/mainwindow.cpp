@@ -106,8 +106,6 @@ void MainWindow::setupPlayListTableModel() {
 void MainWindow::onMusicTableContextMenu(const QPoint &point) {
     QMenu contextMenu(tr("Music table context menu"), this);
 
-    QModelIndex index = ui->mainMusicTable->indexAt(point);
-
 //    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
 
     QAction action_add_to_playlist("Add to Playlist", this);
@@ -300,7 +298,7 @@ void MainWindow::on_actionInfo_triggered()
     qInfo(logInfo()) << "cancel DialogInfo";
 }
 
-void MainWindow::on_editTableModel_clicked(int row, QSqlRecord & record) {
+void MainWindow::on_editTableModel_clicked(int, QSqlRecord &) {
     Music current_song;
 
     current_song.m_title = m_SQL_model->record(m_table_index.row()).value("Title").toString();
@@ -458,7 +456,6 @@ void MainWindow::on_actionImportPlaylist_triggered()
 void MainWindow::on_actionExportPlaylist_triggered() {
     qInfo(logInfo()) << "on_actionExportPlaylist_triggered";
 
-    QWidget *fw = qApp->focusWidget();
 //    if (!ui->listPlaylist->hasFocus()) {
 //        qInfo(logInfo()) << "on_actionExportPlaylist_triggered  widget no focus";
 //        return;
@@ -678,8 +675,6 @@ void MainWindow::systemTrayIcon_activated(QSystemTrayIcon::ActivationReason reas
         }
     }
 }
-
-
 
 void MainWindow::init_systemTrayIcon()
 {

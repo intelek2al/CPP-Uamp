@@ -106,6 +106,6 @@ QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option,
 }
 
 void StarDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
-                                        const QModelIndex &index) const {
+                                        const QModelIndex &) const {
     editor->setGeometry(option.rect);
 }

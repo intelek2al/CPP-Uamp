@@ -49,7 +49,7 @@ private:
             if (pos == 0) {
                 historyOwners.pop_front();
                 return;
-            } else if (pos == historyOwners.size() - 1) {
+            } else if (static_cast<size_t>(pos) == historyOwners.size() - 1) {
                 historyOwners.pop_back();
                 return;
             }

@@ -23,7 +23,7 @@ class StarDelegate : public QStyledItemDelegate
 
 
     void updateEditorGeometry(QWidget * editor, const QStyleOptionViewItem & option,
-                             const QModelIndex & index) const;
+                             const QModelIndex & index) const override;
 
 private slots:
   void commitAndCloseEditor();

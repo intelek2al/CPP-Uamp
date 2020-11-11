@@ -38,7 +38,6 @@ public slots:
     void setVolume(int position);
     void setPosition(int position);
     void setMovedPosition(int position);
-    void stateCheck(QMediaPlayer::State state);
     void setPlaylist(const Playlist &playlist);
     void setPlaylist(QSqlQueryModel *model);
     void fastForward();
