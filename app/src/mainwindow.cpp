@@ -7,17 +7,18 @@
 #include "dialoginfo.h"
 #include "stardelegate.h"
 #include "playerqss.h"
+#include "nextup.h"
 #include <QAbstractItemView>
-#include <QItemSelectionModel>
 
+#include <QItemSelectionModel>
 #include <QFileDialog>
 #include <algorithm>
 #include <QtWidgets>
 #include <QSqlQueryModel>
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
+#include <QMouseEvent>
 #include <QSqlQuery>
-#include "nextup.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -64,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_base, &SqlBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
 
     connect(m_SQL_model, &QSqlTableModel::beforeUpdate,this, &MainWindow::on_editTableModel_clicked);
+    init_systemTrayIcon();
 }
 
 void MainWindow::setupMusicTableModel() {
@@ -128,9 +130,11 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
     contextMenu.exec(ui->mainMusicTable->viewport()->mapToGlobal(point));
 }
 
-
+#include <QT>
 void MainWindow::onPlayListContextMenu(const QPoint &point)
 {
+    currentPlayListIndex(ui->listPlaylist->currentIndex());
+
     QMenu contextMenu(tr("SideBar context menu"), this);
 //    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
 
@@ -169,7 +173,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
 {
-//    setMusicPlay(current.m_path);
     setMusicPlay(index.row());
     loadCoverImage(index);
 }
@@ -181,11 +184,6 @@ void MainWindow::setMusicPlay(QString soundPath)
 
 void MainWindow::setMusicPlay(int index)
 {
-//    QSqlQueryModel *model = nullptr;
-//    if (qobject_cast<QSqlQueryModel *>(ui->mainMusicTable->model()) != m_SQL_model) {
-//        std::cout << "new model" << std::endl;
-//        model = qobject_cast<QSqlQueryModel *>(ui->mainMusicTable->model());
-//    }
     m_player->setSound(index, qobject_cast<QSqlQueryModel *>(ui->mainMusicTable->model()));
 }
 
@@ -550,8 +548,10 @@ void MainWindow::on_upNextButton_clicked()
     nextUp->show();
 }
 
+#include <QModelIndex>
+
 void MainWindow::on_actionPlayPlaylist_triggered() {
-    // play selected playlist
+    on_mainMusicTable_doubleClicked(ui->mainMusicTable->model()->index(0, 0));
 }
 
 void MainWindow::on_actionAdd_Song_to_Library_triggered() {
@@ -658,4 +658,46 @@ void MainWindow::on_actionDecrease_Volume_triggered()
 {
     int vol = m_player->volume();
     m_player->setVolume(vol - 5);
+}
+
+void MainWindow::systemTrayIcon_activated(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::DoubleClick) {
+        if (isHidden()) {
+            show();
+        }
+        else {
+            hide();
+        }
+    }
+}
+
+
+
+void MainWindow::init_systemTrayIcon()
+{
+    mySystemTray = new QSystemTrayIcon(this);
+    mySystemTray->setIcon(QIcon(":/image/image/image/systemTrayIcon.png"));
+    mySystemTray->setToolTip("Uamp");
+    connect(mySystemTray,&QSystemTrayIcon::activated,this,&MainWindow::systemTrayIcon_activated);
+    //添加菜单项
+    QAction *action_systemTray_pre = new QAction(QIcon(":/image/image/image/pre.png"), "Previous");
+    connect(action_systemTray_pre, &QAction::triggered, this, &MainWindow::on_actionPrevious_triggered);
+    QAction *action_systemTray_play = new QAction(QIcon(":/image/image/image/play.png"), "Play");
+    connect(action_systemTray_play, &QAction::triggered, this, &MainWindow::on_playButton_clicked);
+    QAction *action_systemTray_next = new QAction(QIcon(":/image/image/image/next.png"), "Next");
+    connect(action_systemTray_next, &QAction::triggered, this, &MainWindow::on_actionNext_triggered);
+    QAction *action_systemTray_playmode = new QAction(QIcon(":/image/image/image/loop.png"), "Loop Mode");
+    connect(action_systemTray_playmode, &QAction::triggered, this, &MainWindow::on_modeButton_clicked);
+    QAction *action_systemTray_quit = new QAction(QIcon(":/image/image/image/exit.png"), "Exit");
+    connect(action_systemTray_quit, &QAction::triggered, &QCoreApplication::quit);
+
+    QMenu *pContextMenu = new QMenu(this);
+    pContextMenu->addAction(action_systemTray_pre);
+    pContextMenu->addAction(action_systemTray_play);
+    pContextMenu->addAction(action_systemTray_next);
+    pContextMenu->addAction(action_systemTray_playmode);
+    pContextMenu->addAction(action_systemTray_quit);
+    mySystemTray->setContextMenu(pContextMenu);
+    mySystemTray->show();
 }
