@@ -703,3 +703,14 @@ void MainWindow::init_systemTrayIcon()
     mySystemTray->setContextMenu(pContextMenu);
     mySystemTray->show();
 }
+
+void MainWindow::on_actionShutDown_triggered() {
+    bool ok;
+    int m_timer = QInputDialog::getInt(this, tr("ShutDown"),
+                                       tr("Set minutes:"), 0, 0, 100, 1, &ok);
+    if (ok) {
+        qInfo(logInfo()) << "time to shutDown = " << m_timer;
+    } else {
+        qInfo(logInfo()) << "on_actionShutDown_triggered canceled";
+    }
+}

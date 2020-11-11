@@ -84,6 +84,8 @@ private slots:
 
     void on_actionNext_triggered();
 
+    void on_actionShutDown_triggered();
+
 
     void on_actionPrevious_triggered();
 

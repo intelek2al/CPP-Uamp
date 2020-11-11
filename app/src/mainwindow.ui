@@ -1111,6 +1111,7 @@ border-left: 1px solid darkgray;
     <addaction name="actionActyvyti"/>
     <addaction name="separator"/>
     <addaction name="actionVizualizer"/>
+    <addaction name="actionShutDown"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -1123,11 +1124,6 @@ border-left: 1px solid darkgray;
     </property>
     <addaction name="actionUamp_Help"/>
    </widget>
-   <widget class="QMenu" name="menuShoutdown">
-    <property name="title">
-     <string>Shoutdown</string>
-    </property>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSong"/>
    <addaction name="menuView"/>
@@ -1135,7 +1131,6 @@ border-left: 1px solid darkgray;
    <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
    <addaction name="menuHelp_2"/>
-   <addaction name="menuShoutdown"/>
   </widget>
   <action name="actionPreferences">
    <property name="text">
@@ -1425,9 +1420,12 @@ border-left: 1px solid darkgray;
     <string>Ctrl+Shift+O</string>
    </property>
   </action>
-  <action name="actionshoutdown">
+  <action name="actionShutDown">
    <property name="text">
-    <string>shoutdown</string>
+    <string>ShutDown</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Q</string>
    </property>
   </action>
  </widget>
