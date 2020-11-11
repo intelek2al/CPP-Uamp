@@ -326,7 +326,7 @@ Playlist SqlBase::ExportPlaylist(const QString &name) {
     query.prepare("SELECT SONGS.SONG_ID, SONGS.Path FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R WHERE PLAYLIST.PLAYLIST_R = ?");
     query.addBindValue(PLAY_LISTS_R);
     if (!query.exec()) {
-        qDebug(logDebug()) << "error  line 302"  << query.lastError();
+        qDebug(logDebug()) << "ExportPlaylist error ="  << query.lastError();
         return Playlist{};
 
     }
@@ -335,9 +335,7 @@ Playlist SqlBase::ExportPlaylist(const QString &name) {
     while (query.next()) {
         QString song_path = query.value("Path").toString();
         urls.push_back(QUrl::fromLocalFile(song_path));
-        qInfo(logInfo()) << "song_path = " << song_path;
     }
-//    m_url = QUrl::fromLocalFile(m_path);
     return {urls, name};
 }
 
@@ -350,7 +348,6 @@ bool SqlBase::importPlayList(Playlist import_playlist) {
     }
 
     emit modelPlaylistSelect();
-
     for (int i = 0; i < import_playlist.size(); ++i) {
         if (!import_playlist[i].empty()) {
             this->insertIntoTable(import_playlist[i]);
@@ -406,20 +403,3 @@ bool SqlBase::updateTableRow(const QModelIndex &index, const Music &new_tags) {
     }
     return true;
 }
-
-
-
-
-
-/*
- * void SqlBase::connectToDataBase() {
-    if (!QFile("/Users/Shared/" DATABASE_NAME).exists()) {
-        qDebug(logDebug()) << "Database = " << "/Users/Shared/" DATABASE_NAME << "does not exists";
-        this->createNewBase();
-    }
-    else {
-
-    }
-}
-
- */

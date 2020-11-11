@@ -11,11 +11,8 @@ DialogInfo::DialogInfo(Music songInfo, QWidget *parent):
     ui(new Ui::DialogInfo)
 {
     ui->setupUi(this);
-
     m_tagsInfo = songInfo;
     setLines();
-
-//    qDebug(logDebug()) << "DialogInfo constuctor 4";
 }
 
 void DialogInfo::setLines() {
@@ -36,8 +33,6 @@ void DialogInfo::setLines() {
     load_cover();
 }
 
-
-
 void DialogInfo::load_cover() {
     QImage coverQImg(":/def_cover_color.png");
     QPixmap outPixmap = QPixmap();
@@ -55,7 +50,6 @@ DialogInfo::~DialogInfo()
 {
     delete ui;
 }
-
 
 void DialogInfo::coverInfoDoubleclicked() {
     qDebug(logDebug()) << "coverInfoDoubleclicked";
@@ -78,9 +72,7 @@ void DialogInfo::coverInfoDoubleclicked() {
 
         if (!(TagFunctions::set_image_mpeg(m_tagsInfo.m_path, file_image))) {
             qInfo(logInfo()) << m_tagsInfo.m_name <<  " not editable";
-//            ui->statusbar->showMessage(m_tagsInfo[0] + "not editable", 2000);
         }
-
         QImage coverQImg(file_image);
         QByteArray byte_cover;
         QBuffer buffer(&byte_cover);
@@ -96,15 +88,10 @@ void DialogInfo::coverInfoDoubleclicked() {
 }
 
 void DialogInfo::accepted() {
-//    qDebug(logDebug()) << "ui->themeComboBox->currentText()" << ui->themeComboBox->currentText();
-//    m_dialog_settings["theme"] = ui->themeComboBox->currentText();
-//
-//    emit SavedSettings(m_dialog_settings);
     QDialog::accept();
 }
 
 Music DialogInfo::get_tag_changes(Music &music_tags) {
-
     music_tags.m_name = m_tagsInfo.m_name;
     music_tags.m_time = m_tagsInfo.m_time;
     music_tags.m_rate = ui->line_raiting->text();
@@ -112,8 +99,6 @@ Music DialogInfo::get_tag_changes(Music &music_tags) {
     music_tags.m_artist = ui->line_artist->text();
     music_tags.m_album = ui->line_album->text();
     music_tags.m_genre = ui->line_genre->text();
-//    music_tags.m_year = std::stoi(ui->line_year->text().toStdString());
-//    music_tags.m_track = std::stoi(ui->line_track->text().toStdString());
     music_tags.m_year = ui->line_year->text();
     music_tags.m_track = ui->line_track->text();
     music_tags.m_rate = ui->line_raiting->text();
@@ -122,22 +107,18 @@ Music DialogInfo::get_tag_changes(Music &music_tags) {
     music_tags.m_path = m_tagsInfo.m_path;
     music_tags.m_lyrics = ui->line_lyrics->toPlainText();
     music_tags.m_url = m_tagsInfo.m_url;
-
-    qDebug(logDebug()) << "music_tags.m_name " << music_tags.m_name;
-    qDebug(logDebug()) << "music_tags.m_time " << music_tags.m_time;
-    qInfo(logInfo()) << "music_tags " << music_tags.getStr();
     return Music();
 }
 
 
 void DialogInfo::on_nextInfo_clicked()
 {
-
+    qDebug(logDebug()) << "DialogInfo::on_nextInfo_clicked";
 
 }
 
 void DialogInfo::on_prevInfo_clicked()
 {
-
+    qDebug(logDebug()) << "DialogInfo::on_prevInfo_clicked";
 }
 

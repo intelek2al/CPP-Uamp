@@ -23,13 +23,13 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     readSettings();
     m_settings = new Settings();
     m_base = new SqlBase();
     setupMusicTableModel();
     setupPlayListTableModel();
-    m_player = new SoundPlayer(ui);
-    QTimer *m_timer = new QTimer(0);
+    m_player = new SoundPlayer(ui, this);
     m_player->setPlaylist(m_SQL_model);
 
     connect(this, &MainWindow::editTagsCompleted, m_base, &SqlBase::updateTableRow);  // edit tags from Info
@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
     connect(m_base, &SqlBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
 
-    connect(m_timer, &QTimer::timeout, this, &MainWindow::on_actionQuit_triggered);
+    connect(m_settings->getTimer(), &QTimer::timeout, this, &MainWindow::on_actionQuit_triggered);
 
     connect(m_SQL_model, &QSqlTableModel::beforeUpdate,this, &MainWindow::on_editTableModel_clicked);
     init_systemTrayIcon();
@@ -442,7 +442,6 @@ void MainWindow::on_actionPlaylist_triggered()
     } else {
         qInfo(logInfo()) << "on_actionPlaylist_triggered canceled";
     }
-
 }
 
 void MainWindow::on_actionImportPlaylist_triggered()
@@ -502,20 +501,16 @@ void MainWindow::on_actionRewind_triggered()
     m_player->rewind();
 }
 
-
 void MainWindow::on_actionAddtoPlaylist_triggered() {
     auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
     auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
     m_base->AddtoPlaylist(current_song_path, cur_playlist);
 }
 
-
-
 void MainWindow::on_search_line_editingFinished()
 {
     m_searcher->search();
 }
-
 
 void MainWindow::on_songs_clicked()
 {
@@ -531,14 +526,18 @@ void MainWindow::on_modeButton_clicked()
     if (tmp == "L") {
         tmp = "S";
         ui->modeButton->setStyleSheet(RandomStyle());
+        m_systemTray->contextMenu()->actions()[3]->setIcon(QIcon(":/image/image/image/play-random.png"));
     }
     else if (tmp == "S") {
         tmp = "C";
         ui->modeButton->setStyleSheet(LoopOneStyle());
+        m_systemTray->contextMenu()->actions()[3]->setIcon(QIcon(":/image/image/image/loop-one.png"));
     }
     else if (tmp == "C") {
         tmp = "L";
         ui->modeButton->setStyleSheet(LoopStyle());
+        m_systemTray->contextMenu()->actions()[3]->setIcon(QIcon(":/image/image/image/loop.png"));
+
     }
     m_player->changeMode();
 }
@@ -590,49 +589,6 @@ void MainWindow::on_action_show_in_finder_triggered() {
 
 
 
-//void MainWindow::on_mainMusicTable_clicked(const QModelIndex &index)
-//{
-//    m_table_index = index;
-//}
-
-
-/*
-QFileDialog* _f_dlg = new QFileDialog(this);
-_f_dlg->setFileMode(QFileDialog::Directory);
-_f_dlg->setOption(QFileDialog::DontUseNativeDialog, true);
-
-// Try to select multiple files and directories at the same time in QFileDialog
-QListView *l = _f_dlg->findChild<QListView*>("listView");
-if (l) {
-    l->setSelectionMode(QAbstractItemView::MultiSelection);
-}
-QTreeView *t = _f_dlg->findChild<QTreeView*>();
-if (t) {
-    t->setSelectionMode(QAbstractItemView::MultiSelection);
-}
-
-//    int nMode =
-    if (_f_dlg->exec()) {
-        QStringList _fnames = _f_dlg->selectedFiles();
-        qDebug(logDebug()) << "add media " << _fnames.size();
-        for (int i = 0; i < _fnames.size(); ++i) {
-            m_library->add_media(_fnames.at(i));
-        }
-
-
-        if (!m_tableModel)
-            delete m_tableModel;
-        m_tableModel = new MusicTableModel(ui->mainMusicTable);
-//            m_searcher->setDown();
-        m_tableModel->music_list_add(m_library->data());
-        ui->mainMusicTable->setModel(m_tableModel);
-    }
-    */
-//  query.prepare("SELECT * FROM SONGS "
-//                "INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
-//                "INNER JOIN LIST_PLAYLISTS ON PLAYLIST.PLAYLIST_R = ?");
-//    query.prepare("SELECT SONGS.SONG_ID, SONGS.Title, SONGS.Artist, SONGS.Album, SONGS.Rating, SONGS.Year, SONGS.Genre, SONGS.Time "
-
 void MainWindow::on_actionPlay_triggered()
 {
     on_playButton_clicked();
@@ -678,44 +634,50 @@ void MainWindow::systemTrayIcon_activated(QSystemTrayIcon::ActivationReason reas
 }
 
 
-
 void MainWindow::init_systemTrayIcon()
 {
-    mySystemTray = new QSystemTrayIcon(this);
-    mySystemTray->setIcon(QIcon(":/image/image/image/systemTrayIcon.png"));
-    mySystemTray->setToolTip("Uamp");
-    connect(mySystemTray,&QSystemTrayIcon::activated,this,&MainWindow::systemTrayIcon_activated);
-    //添加菜单项
+    m_systemTray = new QSystemTrayIcon(this);
+    m_systemTray->setIcon(QIcon(":/image/image/image/systemTrayIcon.png"));
+    m_systemTray->setToolTip("Uamp");
+    connect(m_systemTray, &QSystemTrayIcon::activated, this, &MainWindow::systemTrayIcon_activated);
+
     QAction *action_systemTray_pre = new QAction(QIcon(":/image/image/image/pre.png"), "Previous");
     connect(action_systemTray_pre, &QAction::triggered, this, &MainWindow::on_actionPrevious_triggered);
-    QAction *action_systemTray_play = new QAction(QIcon(":/image/image/image/play.png"), "Play");
+    QAction *action_systemTray_play = new QAction(QIcon(":/image/image/image/pase.png"), "Play");
     connect(action_systemTray_play, &QAction::triggered, this, &MainWindow::on_playButton_clicked);
     QAction *action_systemTray_next = new QAction(QIcon(":/image/image/image/next.png"), "Next");
     connect(action_systemTray_next, &QAction::triggered, this, &MainWindow::on_actionNext_triggered);
     QAction *action_systemTray_playmode = new QAction(QIcon(":/image/image/image/loop.png"), "Loop Mode");
     connect(action_systemTray_playmode, &QAction::triggered, this, &MainWindow::on_modeButton_clicked);
     QAction *action_systemTray_quit = new QAction(QIcon(":/image/image/image/exit.png"), "Exit");
-    connect(action_systemTray_quit, &QAction::triggered, &QCoreApplication::quit);
+    connect(action_systemTray_quit, &QAction::triggered, this, &MainWindow::on_actionQuit_triggered);
 
-    QMenu *pContextMenu = new QMenu(this);
-    pContextMenu->addAction(action_systemTray_pre);
-    pContextMenu->addAction(action_systemTray_play);
-    pContextMenu->addAction(action_systemTray_next);
-    pContextMenu->addAction(action_systemTray_playmode);
-    pContextMenu->addAction(action_systemTray_quit);
-    mySystemTray->setContextMenu(pContextMenu);
-    mySystemTray->show();
+    m_contextMenu = new QMenu(this);
+    m_contextMenu->addAction(action_systemTray_pre);
+    m_contextMenu->addAction(action_systemTray_play);
+    m_contextMenu->addAction(action_systemTray_next);
+    m_contextMenu->addAction(action_systemTray_playmode);
+    m_contextMenu->addAction(action_systemTray_quit);
+    m_contextMenu->actions();
+    m_systemTray->setContextMenu(m_contextMenu);
+    m_systemTray->show();
 }
 
-void MainWindow::on_actionShutDown_triggered() {
+void MainWindow::on_actionStart_triggered() {
+    qInfo(logInfo()) << "MainWindow::on_actionStart_triggered";
     bool ok;
     int minutes = QInputDialog::getInt(this, tr("ShutDown"),
                                        tr("Set minutes:"), 0, 0, 100, 1, &ok);
     if (ok) {
-        m_timer->start(minutes/60000);
-//        m_settings->setTimer(minutes/60000);
+        m_settings->setTimer(minutes * 60000);
         qInfo(logInfo()) << "time to shutDown = " << minutes;
     } else {
         qInfo(logInfo()) << "on_actionShutDown_triggered canceled";
     }
 }
+
+void MainWindow::on_actionStopShutdown_triggered() {
+    qInfo(logInfo()) << "MainWindow::on_actionStopShutdown_triggered";
+    m_settings->getTimer()->stop();
+}
+

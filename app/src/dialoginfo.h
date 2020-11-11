@@ -17,9 +17,7 @@ public:
     ~DialogInfo();
 
     void accepted();
-
     void coverInfoDoubleclicked();
-
     Music get_tag_changes(Music &music_tags);
 
 public slots:

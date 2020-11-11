@@ -133,7 +133,7 @@ QImage TagFunctions::load_cover_image(char *file_path) {
                     if (PicFrame)
                     {
                         coverQImg.loadFromData((const uchar *) PicFrame->picture().data(), PicFrame->picture().size());
-                        coverQImg = coverQImg.scaled(190, 190);
+//                        coverQImg = coverQImg.scaled(190, 190);
                     }
                 }
             }
@@ -159,17 +159,12 @@ unsigned int str_to_uint(const char* new_value) {
 
 
 Music TagFunctions::read_tags(QString file_path) {
-//      0       1       2           3      4          5       6       7        8       9
-//    {"Name", "Time", "Title", "Artist", "Genre", "Album", "Year", "Track", "Path", "Comment" };
     qDebug(logDebug()) << "TagFunctions::read_tags file_path =" << file_path;
     Music data;
-//    std::string file_n = file_name;
-//    std::string file_p = file_path;
     TagLib::FileRef f(file_path.toStdString().data());
 
     if (!f.isNull() && f.tag()) {
         TagLib::Tag *tag = f.tag();
-//        data.m_name = QString(file_n.data());
         data.m_name = QFileInfo(file_path).fileName();
         data.m_title = tag->title().toCString();
         data.m_artist = tag->artist().toCString();
@@ -244,11 +239,8 @@ QByteArray TagFunctions::load_cover_array(QString file_path) {
     QString fileName = QFileInfo(file_path).fileName();
     QString fileType = fileName.mid(fileName.lastIndexOf(".") + 1, -1);
 
-//    qDebug(logDebug()) << "file_path = " << file_path;
-//    qDebug(logDebug()) << "file type = " << fileType;
     if (fileType == "mp3") {
         coverQImg = TagFunctions::load_cover_image_mpeg(file_path.toStdString().data());
-//        coverQImg = TagFunctions::load_cover_image(file_path);
     }
     if (fileType == "m4a") {
         coverQImg = TagFunctions::load_cover_image_m4a(file_path.toStdString().data());
@@ -485,7 +477,6 @@ Music TagFunctions::LoadSongTags(QString file_path) {
     {
         qWarning(logWarning()) << e.what();
     }
-//    std::cout << "MediaLibrary" << tmp.m_path.toStdString() << std::endl;
     return tmp;
 }
 

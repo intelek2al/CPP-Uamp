@@ -64,7 +64,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QTimeEdit" name="timeEdit"/>
+       <widget class="QLabel" name="label_time">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -82,7 +86,7 @@
       <item>
        <widget class="QLabel" name="theme">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Themes</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

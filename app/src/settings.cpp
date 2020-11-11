@@ -51,3 +51,7 @@ void Settings::setTimer(int msec) {
 void Settings::stopTimer() {
     m_reverse_timer->stop();
 }
+
+QTimer *Settings::getTimer() const {
+    return m_reverse_timer;
+}

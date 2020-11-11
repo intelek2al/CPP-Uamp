@@ -1,21 +1,22 @@
 #include "soundPlayer.h"
 #include "ui_mainwindow.h"
 #include "playerqss.h"
+#include "mainwindow.h"
 #include <QMediaMetaData>
 #include <QWidget>
 #include <QFileInfo>
 
-SoundPlayer::SoundPlayer(Ui::MainWindow *child)
+SoundPlayer::SoundPlayer(Ui::MainWindow *child, MainWindow *parent)
 {
+    ui = child;
+    m_parent = parent;
     m_player = new QMediaPlayer();
     m_playlist = SoundPlayer::playlist();
     m_playlist->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
     m_player->setPlaylist(m_playlist);
-    ui = child;
     connect(m_player, &QMediaPlayer::positionChanged, this, &SoundPlayer::setPosition);
     connect(m_player, &QMediaPlayer::volumeChanged, this, &SoundPlayer::setVolume);
     connect(m_player, &QMediaPlayer::stateChanged, this, &SoundPlayer::stateCheck);
-//    connect(m_player, QOverload<bool>::of(&QMediaObject::availabilityChanged) &SoundPlayer::metaData);
     connect(m_player, &QMediaPlayer::metaDataAvailableChanged, this, &SoundPlayer::metaData);
     connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &SoundPlayer::autoNext);
     ui->labelSong->setText("");
@@ -104,11 +105,13 @@ void SoundPlayer::setPlay()
         m_player->play();
 //        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPause));
         ui->playButton->setStyleSheet(PlayStyle());
+        m_parent->m_systemTray->contextMenu()->actions()[1]->setIcon(QIcon(":/image/image/image/play.png"));
     }
     else if(m_player->state() == QMediaPlayer::State::PlayingState) {
         m_player->pause();
 //        ui->playButton->setIcon(tmp.style()->standardIcon(QStyle::SP_MediaPlay));
         ui->playButton->setStyleSheet(PauseStyle());
+        m_parent->m_systemTray->contextMenu()->actions()[1]->setIcon(QIcon(":/image/image/image/pase.png"));
     }
     ui->statusPlay->setEnabled(true);
 }

@@ -21,6 +21,7 @@ public:
     void set_settings(QMap<QString, QString> _settings);
     void loadTheme(QString& theme);
     QMap<QString, QString> get_current_settings() const;
+    QTimer* getTimer() const;
 
 public slots:
     void setTimer(int msec);

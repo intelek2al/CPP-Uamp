@@ -12,12 +12,12 @@ namespace Ui {
     class MainWindow;
 }
 
-
+class MainWindow;
 
 class SoundPlayer : public QObject {
     Q_OBJECT
 public:
-    SoundPlayer(Ui::MainWindow *child);
+    SoundPlayer(Ui::MainWindow *child, MainWindow *parent);
     ~SoundPlayer();
 
     void setSound(QString path);
@@ -65,6 +65,7 @@ private:
     QMediaPlaylist::PlaybackMode m_mode;
     QMediaPlayer *m_player;
     PlayerPlaylist m_list;
+    MainWindow *m_parent;
     static QMediaPlaylist *m_playlist;
     Ui::MainWindow *ui;
     bool isPlaylistExist = false;

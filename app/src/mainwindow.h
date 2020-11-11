@@ -46,6 +46,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+    QSystemTrayIcon *m_systemTray;
+
 private slots:
 //    void on_mainMusicTable_clicked(const QModelIndex &index);
 //    void on_search_line_editingFinished();
@@ -84,7 +86,8 @@ private slots:
 
     void on_actionNext_triggered();
 
-    void on_actionShutDown_triggered();
+    void on_actionStart_triggered();
+    void on_actionStopShutdown_triggered();
 
 
     void on_actionPrevious_triggered();
@@ -113,22 +116,21 @@ private:
     Ui::MainWindow *ui;
 //    MediaLibrary *m_library = nullptr;
 //    QItemSelectionModel *m_selection_model;
-//    QString m_path;
 
+//    QString m_path;
     MusicTableModel *m_tableModel;
     Searcher *m_searcher;
     SoundPlayer *m_player;
     Settings *m_settings;
     QModelIndex m_table_index {};
     QModelIndex m_playList_index {};
-    QSystemTrayIcon *mySystemTray;
     Music new_song_info;
     SqlBase *m_base;
     QSqlTableModel *m_SQL_model;
     QSqlTableModel *m_PlayList_model;
     StarDelegate *m_star_delegate;
     NextUp *nextUp {nullptr};
-    QTimer *m_timer;
+    QMenu *m_contextMenu {nullptr};
 
 //    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);
