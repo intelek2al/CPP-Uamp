@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     setupMusicTableModel();
     setupPlayListTableModel();
     m_player = new SoundPlayer(ui);
+    QTimer *m_timer = new QTimer(0);
     m_player->setPlaylist(m_SQL_model);
 
     connect(this, &MainWindow::editTagsCompleted, m_base, &SqlBase::updateTableRow);  // edit tags from Info
@@ -63,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::importPlayList);
     connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
     connect(m_base, &SqlBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
+
+    connect(m_timer, &QTimer::timeout, this, &MainWindow::on_actionQuit_triggered);
 
     connect(m_SQL_model, &QSqlTableModel::beforeUpdate,this, &MainWindow::on_editTableModel_clicked);
     init_systemTrayIcon();
@@ -706,10 +709,12 @@ void MainWindow::init_systemTrayIcon()
 
 void MainWindow::on_actionShutDown_triggered() {
     bool ok;
-    int m_timer = QInputDialog::getInt(this, tr("ShutDown"),
+    int minutes = QInputDialog::getInt(this, tr("ShutDown"),
                                        tr("Set minutes:"), 0, 0, 100, 1, &ok);
     if (ok) {
-        qInfo(logInfo()) << "time to shutDown = " << m_timer;
+        m_timer->start(minutes/60000);
+//        m_settings->setTimer(minutes/60000);
+        qInfo(logInfo()) << "time to shutDown = " << minutes;
     } else {
         qInfo(logInfo()) << "on_actionShutDown_triggered canceled";
     }

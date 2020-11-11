@@ -128,6 +128,7 @@ private:
     QSqlTableModel *m_PlayList_model;
     StarDelegate *m_star_delegate;
     NextUp *nextUp {nullptr};
+    QTimer *m_timer;
 
 //    void add_to_library(const QString& file_name);
     void setMusicPlay(QString soundPath);

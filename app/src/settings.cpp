@@ -11,10 +11,12 @@ Settings::Settings() {
   // load saved theme
     QString theme = m_preferences->value("theme").toString();
     loadTheme(theme);
+    m_reverse_timer = new QTimer(0);
 }
 
 Settings::~Settings() {
 //    delete m_preferences;
+    delete m_reverse_timer;
 }
 
 
@@ -40,4 +42,12 @@ void Settings::loadTheme(QString &theme) {
 
 QMap<QString, QString> Settings::get_current_settings() const {
     return current_settings;
+}
+
+void Settings::setTimer(int msec) {
+    m_reverse_timer->start(msec);
+}
+
+void Settings::stopTimer() {
+    m_reverse_timer->stop();
 }
