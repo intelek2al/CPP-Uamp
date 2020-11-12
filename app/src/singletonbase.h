@@ -14,10 +14,10 @@ class SingletonDestroyer {
 private:
     SingletonBase* p_instance;
 
+
 public:
     ~SingletonDestroyer();
     void initialize(SingletonBase* p);
-
 };
 
 
@@ -29,6 +29,7 @@ private:
     static SingletonBase* p_instance;
     static SingletonDestroyer destroyer;
 
+
     QSqlDatabase m_media_base;
     bool createConnection();
     bool createNewBase();
@@ -39,11 +40,12 @@ private:
 
 
 
+
 protected:
     SingletonBase();
     SingletonBase (const  SingletonBase& );
-    SingletonBase operator=(SingletonBase& );
-    ~SingletonBase();
+    SingletonBase& operator=(SingletonBase& );
+    ~SingletonBase() { }
     friend class SingletonDestroyer;
 public:
     static SingletonBase& getInstance();
@@ -54,6 +56,7 @@ public:
     bool DeletePlaylist(const QString& name);
     Playlist ExportPlaylist(const QString& name);
     bool AddtoPlaylist(const QString& path, const QString& cur_playlist);
+    bool closeDataBase();
 
 signals:
     void modelPlaylistSelect();

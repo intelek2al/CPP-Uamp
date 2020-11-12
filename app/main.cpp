@@ -1,11 +1,6 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-
-#include "src/mainwindow.h"
-#include "src/loggingcategories.h"
-#include "src/app.h"
-
 #include <sys/stat.h>
 #include <dirent.h>
 #include <QApplication>
@@ -18,7 +13,10 @@
 #include <QLabel>
 #include <QStringList>
 #include <QDir>
-//#include <Q
+
+#include "src/mainwindow.h"
+#include "src/loggingcategories.h"
+#include "src/app.h"
 
 QScopedPointer<QFile>   m_logFile;
 

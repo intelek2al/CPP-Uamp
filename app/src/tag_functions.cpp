@@ -50,8 +50,6 @@ QString TagFunctions::load_lyrics(const QString& file_path) {
             // and/or description, instead of just picking the first.
             if (frame) {
                 lyrics = frame->text();
-//                qDebug (logDebug()) << "TagFunctions::load_lyrics  if frame";
-                qDebug(logDebug()) << lyrics.toCString();
             }
         }
         return QString(lyrics.toCString());

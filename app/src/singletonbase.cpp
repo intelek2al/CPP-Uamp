@@ -10,6 +10,7 @@ SingletonBase * SingletonBase::p_instance = 0;
 SingletonDestroyer SingletonBase::destroyer;
 
 SingletonDestroyer::~SingletonDestroyer() noexcept {
+    qDebug(logDebug()) << "SingletonDestroyer::~SingletonDestroyer";
     delete p_instance;
 }
 
@@ -26,14 +27,6 @@ SingletonBase& SingletonBase::getInstance() {
     }
     return *p_instance;
 }
-
-////////////////////////////
-
-SingletonBase::~SingletonBase() {
-    m_media_base.close();
-//    m_media_base.removeDatabase(m_media_base.connectionName());
-}
-
 
 SingletonBase::SingletonBase() {
     if (createConnection()) {
@@ -427,3 +420,11 @@ bool SingletonBase::updateTableRow(const QModelIndex &index, const Music &new_ta
     }
     return true;
 }
+
+bool SingletonBase::closeDataBase() {
+    qDebug(logDebug()) << "SingletonBase::closeDataBase";
+    m_media_base.close();
+//    m_media_base.removeDatabase(m_media_base.connectionName());
+    return false;
+}
+

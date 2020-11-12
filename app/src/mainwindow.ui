@@ -1089,7 +1089,7 @@ border-left: 1px solid darkgray;
    </widget>
    <widget class="QMenu" name="menuContorl">
     <property name="title">
-     <string>Contorls</string>
+     <string>Controls</string>
     </property>
     <addaction name="actionPlay"/>
     <addaction name="actionNext"/>
