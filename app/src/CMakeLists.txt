@@ -22,6 +22,7 @@ set(SOURCES mainwindow.cpp
         sqlbase.cpp
         nextup.cpp
         nextupwidget.cpp
+        singletonbase.cpp
         )
 
 set(HEADERS mainwindow.h
@@ -47,6 +48,7 @@ set(HEADERS mainwindow.h
         nextup.h
         nextupwidget.h
         playerqss.h
+        singletonbase.h
         )
 
 set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui nextup.ui nextupwidget.ui playerqss.h)
