@@ -123,7 +123,7 @@ private:
     QModelIndex m_table_index {};
     QModelIndex m_playList_index {};
     Music new_song_info;
-    SqlBase *m_base;
+//    SqlBase *m_base;
     QSqlTableModel *m_SQL_model;
     QSqlTableModel *m_PlayList_model;
     StarDelegate *m_star_delegate;

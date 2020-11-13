@@ -11,7 +11,8 @@ SingletonDestroyer SingletonBase::destroyer;
 
 SingletonDestroyer::~SingletonDestroyer() noexcept {
     qDebug(logDebug()) << "SingletonDestroyer::~SingletonDestroyer";
-    delete p_instance;
+
+//    delete p_instance;
 }
 
 
