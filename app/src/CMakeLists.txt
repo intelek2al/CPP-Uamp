@@ -23,6 +23,7 @@ set(SOURCES mainwindow.cpp
         nextup.cpp
         nextupwidget.cpp
         singletonbase.cpp
+        songmodel.cpp
         )
 
 set(HEADERS mainwindow.h
@@ -49,6 +50,7 @@ set(HEADERS mainwindow.h
         nextupwidget.h
         playerqss.h
         singletonbase.h
+        songmodel.h
         )
 
 set(UI mainwindow.ui dialogpreferences.ui dialoginfo.ui nextup.ui nextupwidget.ui playerqss.h)

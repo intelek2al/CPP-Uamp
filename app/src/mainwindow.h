@@ -10,6 +10,7 @@
 #include "medialibrary.h"
 #include "stardelegate.h"
 #include "sqlbase.h"
+#include "songmodel.h"
 
 #include <stdexcept>
 #include <QMainWindow>
@@ -125,6 +126,7 @@ private:
     Music new_song_info;
 //    SqlBase *m_base;
     QSqlTableModel *m_SQL_model;
+//    SongModel *m_SQL_model;
     QSqlTableModel *m_PlayList_model;
     StarDelegate *m_star_delegate;
     NextUp *nextUp {nullptr};

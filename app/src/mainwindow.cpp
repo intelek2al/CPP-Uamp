@@ -9,6 +9,7 @@
 #include "playerqss.h"
 #include "nextup.h"
 #include "singletonbase.h"
+#include "songmodel.h"
 #include <QAbstractItemView>
 
 #include <QItemSelectionModel>
@@ -83,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 void MainWindow::setupMusicTableModel() {
     m_SQL_model = new QSqlTableModel(this);
+//    m_SQL_model = new SongModel(this);
     SingletonBase::getInstance();
 
     m_SQL_model->setTable("SONGS");

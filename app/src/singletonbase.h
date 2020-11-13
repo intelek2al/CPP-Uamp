@@ -66,6 +66,7 @@ public slots:
     bool insertIntoTable(const Music& curent_song);      // Добавление записей в таблицу
     bool updateTableRow(const QModelIndex &index, const Music &new_tags);
     bool importPlayList(Playlist import_playlist);
+//    bool updateMediaBase();
 };
 
 
