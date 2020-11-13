@@ -11,7 +11,7 @@ set(SOURCES mainwindow.cpp
         dialogpreferences.cpp
         settings.cpp
         dialoginfo.cpp
-        medialibrary.cpp
+#        medialibrary.cpp
         clickedlabel.cpp
         music.cpp
         playlist.cpp
@@ -19,7 +19,7 @@ set(SOURCES mainwindow.cpp
         starrating.cpp
         stardelegate.cpp
         stareditor.cpp
-        sqlbase.cpp
+#        sqlbase.cpp
         nextup.cpp
         nextupwidget.cpp
         singletonbase.cpp
@@ -37,7 +37,7 @@ set(HEADERS mainwindow.h
         dialogpreferences.h
         settings.h
         dialoginfo.h
-        medialibrary.h
+#        medialibrary.h
         clickedlabel.h
         music.h
         playlist.h
@@ -45,7 +45,7 @@ set(HEADERS mainwindow.h
         starrating.h
         stardelegate.h
         stareditor.h
-        sqlbase.h
+#        sqlbase.h
         nextup.h
         nextupwidget.h
         playerqss.h

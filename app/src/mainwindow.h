@@ -7,7 +7,6 @@
 #include "soundPlayer.h"
 #include "searcher.h"
 #include "settings.h"
-#include "medialibrary.h"
 #include "stardelegate.h"
 #include "sqlbase.h"
 #include "songmodel.h"
@@ -84,8 +83,13 @@ private slots:
     void on_action_show_in_finder_triggered();
     void on_actionPlay_triggered();
 
-    void on_actionNext_triggered();
+    // side buttoms
+    void on_recentlyadded_clicked();
+    void on_artists_clicked();
+    void on_albums_clicked();
+    void on_genres_clicked();
 
+    void on_actionNext_triggered();
     void on_actionStart_triggered();
     void on_actionStopShutdown_triggered();
 
@@ -114,10 +118,6 @@ private:
     Music getMusicfromTable();
 
     Ui::MainWindow *ui;
-//    MediaLibrary *m_library = nullptr;
-//    QItemSelectionModel *m_selection_model;
-
-//    QString m_path;
     Searcher *m_searcher;
     SoundPlayer *m_player;
     Settings *m_settings;

@@ -704,3 +704,23 @@ void MainWindow::on_actionStopShutdown_triggered() {
     m_settings->getTimer()->stop();
 }
 
+void MainWindow::on_recentlyadded_clicked()
+{
+    qDebug(logDebug()) << "on_recentlyadded_clicked";
+
+}
+
+void MainWindow::on_artists_clicked()
+{
+    qDebug(logDebug()) << "on_artists_clicked";
+}
+
+void MainWindow::on_albums_clicked()
+{
+    qDebug(logDebug()) << "on_albums_clicked";
+}
+
+void MainWindow::on_genres_clicked()
+{
+    qDebug(logDebug()) << "on_genres_clicked";
+}

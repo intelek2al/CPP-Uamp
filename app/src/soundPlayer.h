@@ -59,6 +59,8 @@ private slots:
 //    void on_statusPlay_valueChangedålay_valueChanged(int value);
 //    void on_mainMusicTable_pressed(const QModelIndex &index);
 
+
+
 private:
 //    QMediaPlayer::State m_state = QMediaPlayer::State::StoppedState;
     QMediaPlaylist::PlaybackMode m_mode;

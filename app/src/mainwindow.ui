@@ -712,7 +712,7 @@ QLineEdit:pressed
             <number>0</number>
            </property>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="recentlyadded">
              <property name="styleSheet">
               <string notr="true">QPushButton
 {
@@ -742,7 +742,7 @@ color:rgb(255, 255, 255);
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="artists">
              <property name="styleSheet">
               <string notr="true">QPushButton
 {
@@ -772,7 +772,7 @@ color:rgb(255, 255, 255);
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_4">
+            <widget class="QPushButton" name="albums">
              <property name="styleSheet">
               <string notr="true">QPushButton
 {
@@ -832,7 +832,7 @@ color:rgb(255, 255, 255);
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_6">
+            <widget class="QPushButton" name="genres">
              <property name="styleSheet">
               <string notr="true">QPushButton
 {
@@ -858,6 +858,9 @@ color:rgb(255, 255, 255);
              </property>
              <property name="text">
               <string>Genres</string>
+             </property>
+             <property name="autoDefault">
+              <bool>false</bool>
              </property>
             </widget>
            </item>

@@ -30,13 +30,13 @@ SingletonBase& SingletonBase::getInstance() {
 }
 
 SingletonBase::SingletonBase() {
-    if (createConnection()) {
+    if (createConnection() == false) {
         qDebug(logDebug()) << "SqlBase: createConnection false";
         createNewBase();
     }
     else {
         qDebug(logDebug()) << "SqlBase: createConnection true";
-        // exit from app !!!
+        updateMediaBase();
     }
 }
 
@@ -63,6 +63,7 @@ bool SingletonBase::createConnection() {
         QSqlQuery query;
         query.exec("PRAGMA foreign_keys = ON;");
     }
+
     return true;
 }
 
@@ -85,7 +86,8 @@ bool SingletonBase::createTableSongs() {
       "Path           TEXT    UNIQUE  NOT NULL,"  \
       "Lyrics         TEXT    ,"  \
       "Count          INTEGER ," \
-      "Cover          BLOB    "  \
+      "Cover          BLOB    ,"  \
+      "DateTime       TEXT    "  \
       ");";
 
     if (!query.exec(str)) {
@@ -202,10 +204,12 @@ bool SingletonBase::insertIntoTable(const Music &curent_song) {
     if (!curent_song.empty()) {
         qDebug(logDebug()) << "Music current : " << curent_song.m_name, curent_song.m_title;
 
+        QDateTime now = QDateTime::currentDateTime();
+
         query.prepare("INSERT INTO SONGS (Title, Time, Artist, Rating, Genre, Album, Year, "
-                      "Track, Comment, Name, Lyrics, Path, Cover) "
+                      "Track, Comment, Name, Lyrics, Path, Cover, DateTime) "
                       "VALUES (:Title, :Time, :Artist, :Rating, :Genre, :Album, :Year, :Track, :Comment, "
-                      ":Name, :Lyrics, :Path, :Cover)");
+                      ":Name, :Lyrics, :Path, :Cover, :DateTime)");
         query.bindValue(":Title", curent_song.m_title);
         query.bindValue(":Time", curent_song.m_time);
         query.bindValue(":Artist", curent_song.m_artist);
@@ -220,6 +224,7 @@ bool SingletonBase::insertIntoTable(const Music &curent_song) {
         query.bindValue(":Path", curent_song.m_path);
         query.bindValue(":Cover", curent_song.m_cover);
         query.bindValue(":Count", curent_song.m_count);
+        query.bindValue(":DateTime", now.toString());
 
         if (!query.exec()) {
             qDebug(logDebug()) << "error = " << query.lastError();
@@ -426,6 +431,44 @@ bool SingletonBase::closeDataBase() {
     qDebug(logDebug()) << "SingletonBase::closeDataBase";
     m_media_base.close();
 //    m_media_base.removeDatabase(m_media_base.connectionName());
+    return false;
+}
+
+bool SingletonBase::updateMediaBase() {
+    qDebug(logDebug()) << "updateMediaBase";
+    QSqlQuery query;
+
+    query.prepare("SELECT SONG_ID, Path from SONGS");
+    if (!query.exec()) {
+        qDebug(logDebug()) << "error = " << query.lastError();
+        return false;
+    }
+    QVector<int> songs_id;
+    while (query.next()) {
+        QString _path = query.value("Path").toString();
+        int song_id = query.value("SONG_ID").toInt();
+        if (QFileInfo _file = QFileInfo(_path); !(_file.exists() && _file.isFile())) {
+            qDebug(logDebug()) << "deleted path = " << _path;
+            songs_id.push_back(song_id);
+        }
+    }
+    qDebug(logDebug()) << "path count =" << songs_id.size();
+
+    for (int i = 0; i < songs_id.size(); ++i) {
+        query.prepare("DELETE FROM SONGS WHERE SONG_ID = ?");
+        query.addBindValue(songs_id[i]);
+        if (!(query.exec())) {
+            qDebug(logDebug()) << "error = " << query.lastError();
+        }
+    }
+
+    emit modelMusicSelect();
+    return false;
+}
+
+
+bool SingletonBase::deleteSong(const QString &path) {
+
     return false;
 }
 

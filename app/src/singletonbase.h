@@ -21,6 +21,7 @@ public:
 };
 
 
+
 class SingletonBase : public QObject {
 
 Q_OBJECT
@@ -37,9 +38,8 @@ private:
     bool createTableListPlaylists();
     bool createTablePlaylist();
     bool loadData();
-
-
-
+    bool updateMediaBase();
+    bool deleteSong(const QString& path);
 
 protected:
     SingletonBase();
