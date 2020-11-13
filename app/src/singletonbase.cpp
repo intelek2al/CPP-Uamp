@@ -32,10 +32,11 @@ SingletonBase& SingletonBase::getInstance() {
 SingletonBase::SingletonBase() {
     if (createConnection() == false) {
         qDebug(logDebug()) << "SqlBase: createConnection false";
-        createNewBase();
+
     }
     else {
         qDebug(logDebug()) << "SqlBase: createConnection true";
+        createNewBase();
         updateMediaBase();
     }
 }
@@ -224,7 +225,7 @@ bool SingletonBase::insertIntoTable(const Music &curent_song) {
         query.bindValue(":Path", curent_song.m_path);
         query.bindValue(":Cover", curent_song.m_cover);
         query.bindValue(":Count", curent_song.m_count);
-        query.bindValue(":DateTime", now.toString());
+        query.bindValue(":DateTime", now.toString("yyyy-MM-dd hh:mm:ss.z"));
 
         if (!query.exec()) {
             qDebug(logDebug()) << "error = " << query.lastError();

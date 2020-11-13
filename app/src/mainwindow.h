@@ -8,7 +8,6 @@
 #include "searcher.h"
 #include "settings.h"
 #include "stardelegate.h"
-#include "sqlbase.h"
 #include "songmodel.h"
 
 #include <stdexcept>

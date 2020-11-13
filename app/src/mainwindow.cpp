@@ -707,7 +707,29 @@ void MainWindow::on_actionStopShutdown_triggered() {
 void MainWindow::on_recentlyadded_clicked()
 {
     qDebug(logDebug()) << "on_recentlyadded_clicked";
+    QSqlQuery query;
+    QSqlQueryModel *model_recently = new QSqlQueryModel;
 
+
+
+//  auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
+//  int PLAY_LISTS_R;
+//
+//  query.prepare("SELECT PLAY_LISTS_ID FROM LIST_PLAYLISTS WHERE Name = ?");
+//  query.addBindValue(cur_playlist);
+//  query.exec();
+//  query.next();
+//  PLAY_LISTS_R =  query.value(0).toInt();
+//  qDebug(logDebug()) << "PLAY_LISTS_R = " << PLAY_LISTS_R;
+//
+//
+  query.prepare("SELECT * FROM SONGS ORDER BY DateTime DESC LIMIT 20");
+//  query.addBindValue(PLAY_LISTS_R);
+  query.exec();
+
+//  model_recently->sort(15, Qt::AscendingOrder);
+  model_recently->setQuery(query);
+  ui->mainMusicTable->setModel(model_recently);
 }
 
 void MainWindow::on_artists_clicked()
