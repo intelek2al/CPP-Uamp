@@ -709,22 +709,7 @@ void MainWindow::on_recentlyadded_clicked()
     qDebug(logDebug()) << "on_recentlyadded_clicked";
     QSqlQuery query;
     QSqlQueryModel *model_recently = new QSqlQueryModel;
-
-
-
-//  auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
-//  int PLAY_LISTS_R;
-//
-//  query.prepare("SELECT PLAY_LISTS_ID FROM LIST_PLAYLISTS WHERE Name = ?");
-//  query.addBindValue(cur_playlist);
-//  query.exec();
-//  query.next();
-//  PLAY_LISTS_R =  query.value(0).toInt();
-//  qDebug(logDebug()) << "PLAY_LISTS_R = " << PLAY_LISTS_R;
-//
-//
   query.prepare("SELECT * FROM SONGS ORDER BY DateTime DESC LIMIT 20");
-//  query.addBindValue(PLAY_LISTS_R);
   query.exec();
 
 //  model_recently->sort(15, Qt::AscendingOrder);
@@ -735,14 +720,35 @@ void MainWindow::on_recentlyadded_clicked()
 void MainWindow::on_artists_clicked()
 {
     qDebug(logDebug()) << "on_artists_clicked";
+  QSqlQuery query;
+  QSqlQueryModel *model_artists = new QSqlQueryModel;
+  query.prepare("SELECT DISTINCT Artist FROM SONGS");
+  query.exec();
+  ui->mainMusicTable->showColumn(0);
+  model_artists->setQuery(query);
+  ui->mainMusicTable->setModel(model_artists);
 }
 
 void MainWindow::on_albums_clicked()
 {
     qDebug(logDebug()) << "on_albums_clicked";
+  QSqlQuery query;
+  QSqlQueryModel *model_Album = new QSqlQueryModel;
+  query.prepare("SELECT DISTINCT Album FROM SONGS");
+  query.exec();
+  ui->mainMusicTable->showColumn(0);
+  model_Album->setQuery(query);
+  ui->mainMusicTable->setModel(model_Album);
 }
 
 void MainWindow::on_genres_clicked()
 {
     qDebug(logDebug()) << "on_genres_clicked";
+  QSqlQuery query;
+  QSqlQueryModel *model_genre = new QSqlQueryModel;
+  query.prepare("SELECT DISTINCT Genre FROM SONGS");
+  query.exec();
+  ui->mainMusicTable->showColumn(0);
+  model_genre->setQuery(query);
+  ui->mainMusicTable->setModel(model_genre);
 }
