@@ -26,6 +26,7 @@
 #include <QMetaDataReaderControl>
 #include <QSqlTableModel>
 #include <QSystemTrayIcon>
+#include <QSqlRelationalTableModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -127,6 +128,7 @@ private:
     QSqlTableModel *m_SQL_model;
 //    SongModel *m_SQL_model;
     QSqlTableModel *m_PlayList_model;
+//  QSqlRelationalTableModel *m_PlayList_model;
     StarDelegate *m_star_delegate;
     NextUp *nextUp {nullptr};
     QMenu *m_contextMenu {nullptr};
