@@ -421,12 +421,9 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
   m_playList_index = index;
   auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
   qDebug(logDebug()) << "cur_playlist =" << cur_playlist;
-/*
   QSqlQuery query;
   QSqlQueryModel *model = new QSqlQueryModel;
   int PLAY_LISTS_R;
-
-
 
   query.prepare("SELECT PLAY_LISTS_ID FROM LIST_PLAYLISTS WHERE Name = ?");
   query.addBindValue(cur_playlist);
@@ -434,8 +431,6 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
   query.next();
   PLAY_LISTS_R =  query.value(0).toInt();
   qDebug(logDebug()) << "PLAY_LISTS_R = " << PLAY_LISTS_R;
-
-
     query.prepare("SELECT * "
                   "FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
                   "WHERE PLAYLIST.PLAYLIST_R = ?");
@@ -443,14 +438,15 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
   query.exec();
   model->setQuery(query);
   ui->mainMusicTable->setModel(model);
-
-   */
+/*
   QSqlRelationalTableModel *m_SONGS_2 = new  QSqlRelationalTableModel(this);
   m_SONGS_2->setTable("SONGS");
-//  m_SONGS_2->setRelation(0, QSqlRelation("PLAYLIST", "SONG_ID", "SONG_R"));
+  m_SONGS_2->setRelation(0, QSqlRelation("PLAYLIST", "SONG_ID", "SONG_R"));
   m_SONGS_2->select(); // Делаем выборку данных из таблицы
   ui->mainMusicTable->setModel(m_SONGS_2);
   m_SONGS_2->select(); // Делаем выборку данных из таблицы
+
+  */
 }
 
 void MainWindow::on_actionPlaylist_triggered()
@@ -543,16 +539,16 @@ void MainWindow::on_search_line_editingFinished()
 
 void MainWindow::on_songs_clicked()
 {
-  QSqlRelationalTableModel *m_PlayList_model_2 = new  QSqlRelationalTableModel(this);
-  m_PlayList_model_2->setTable("SONGS");
-  m_PlayList_model_2->setRelation(0, QSqlRelation("PLAYLIST", "SONG_R", "SONG_ID"));
-  ui->mainMusicTable->setModel(m_PlayList_model_2);
-  m_PlayList_model_2->select(); // Делаем выборку данных из таблицы
+//  QSqlRelationalTableModel *m_PlayList_model_2 = new  QSqlRelationalTableModel(this);
+//  m_PlayList_model_2->setTable("SONGS");
+//  m_PlayList_model_2->setRelation(0, QSqlRelation("PLAYLIST", "SONG_R", "SONG_ID"));
+//  ui->mainMusicTable->setModel(m_PlayList_model_2);
+//  m_PlayList_model_2->select(); // Делаем выборку данных из таблицы
 
-//    ui->mainMusicTable->setModel(m_SQL_model);
-//    ui->mainMusicTable->hideColumn(0);
-//    ui->mainMusicTable->hideColumn(12);
-//    m_SQL_model->select();
+    ui->mainMusicTable->setModel(m_SQL_model);
+    ui->mainMusicTable->hideColumn(0);
+    ui->mainMusicTable->hideColumn(12);
+    m_SQL_model->select();
 }
 
 void MainWindow::on_modeButton_clicked()
