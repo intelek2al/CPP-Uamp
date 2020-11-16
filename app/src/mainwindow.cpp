@@ -170,7 +170,7 @@ MainWindow::~MainWindow()
 //    delete  m_library;
     delete nextUp;
     delete ui;
-    system("leaks -q uamp");
+//    system("leaks -q uamp");
 }
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
