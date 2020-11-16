@@ -1,11 +1,6 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
-
-#include "src/mainwindow.h"
-#include "src/loggingcategories.h"
-#include "src/app.h"
-
 #include <sys/stat.h>
 #include <dirent.h>
 #include <QApplication>
@@ -18,7 +13,10 @@
 #include <QLabel>
 #include <QStringList>
 #include <QDir>
-//#include <Q
+
+#include "src/mainwindow.h"
+#include "src/loggingcategories.h"
+#include "src/app.h"
 
 QScopedPointer<QFile>   m_logFile;
 
@@ -30,7 +28,7 @@ int main(int argc, char **argv)
 {
     App app(argc, argv, "Ucode", "uamp");
 
-    m_logFile.reset(new QFile("../../app/logFile.txt"));  // run from Clion
+    m_logFile.reset(new QFile("./logFile.txt"));  // run from Clion
     m_logFile.data()->open(QFile::Append | QFile::Text);
     // Устанавливаем обработчик. To restore the message handler, call qInstallMessageHandler(0).
     qInstallMessageHandler(messageHandler);

@@ -25,7 +25,7 @@ void DialogInfo::setLines() {
     ui->line_track->setText(m_tagsInfo.m_track);
     ui->line_raiting->setText(m_tagsInfo.m_rate);
     ui->line_comments->setText(m_tagsInfo.m_comment);
-    ui->line_path->setText(m_tagsInfo.m_path);
+    ui->label_path->setText(m_tagsInfo.m_path);
     ui->title_large->setText(m_tagsInfo.m_title);
     ui->artisti_large->setText(m_tagsInfo.m_artist);
     ui->line_lyrics->setText(m_tagsInfo.m_lyrics);

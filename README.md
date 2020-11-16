@@ -2,7 +2,7 @@
 ___
 
  ### Description:
-    Ucode project: uamp - music player app in c++ 
+    Ucode project: Uamp - music player app in c++ 
  ### Developers:
  [Mykyta Savytskyi](https://github.com/intelek2al) | 
  [Serhiy Nikolayenko](https://github.com/N-911)
@@ -42,9 +42,7 @@ ___
 ### General features:
 - [x] support these audio format: mp3, pm4, wav, flac 
 - [x] support such standard option:
-    - [ ] play
-    - [ ] pause
-    - [ ] stop
+    - [ ] play/pause
     - [ ] fast forward
     - [ ] rewind
     - [ ] next
@@ -58,26 +56,32 @@ ___
 - [x] loop (repeat) a single song or Queue
 - [x] shuffle songs listed in the Queue
 - [x] sort songs listed in the Queue by title, genre, etc.
-- [x] edit songs album art using pictures on the computer
+- [x] edit songs album art using pictures on the computer (DoubleClick by image)
 - [x] database Library
 - [x] support displaying/editing of the audio tags (Artist, Title, Album, Genre)
 - [x] searching music and playlists by various criteria
 - [x] support advanced sorting by the newest songs, highest raiting
 - [x] searching music and playlists by various criter
 - [x] support hotkeys for all standard options
+- [x] system tray icon (Previous, Play/Pause, Next, Loop Mode, Exit)
+- [x] shutdown timer (Start/Stop)
 - [x] error handling in logfile
 
 ### Shortcuts
 * Add to Library:         Cmd + O
+* Add Song to Library:    Cmd + O
 * Song Info:              Cmd + I
 * Delete from Library:    Shift + Cmd + D
-* Play:                   Space
-* Stop:                   Cmd = .
+* Play/Pause:             Space
 * Next:                   Cmd + Right
 * Previous:               Cmd + Left
 * Increase Volume:        Cmd + Up
 * Decrease Volume:        Cmd + Down
-* Quit:         Cmd + Q
+* Shuffle/Repeat:         Cmd + M
+* Fast Forward:           Alt + Right;
+* Rewind:                 Alt + Left;
+* Shutdown Start:         Alt + Cmd + Q; (Dialog for input minutes)
+* Quit:                   Cmd + Q
 
 ### License
 [MIT](https://choosealicense.com/licenses/mit/)

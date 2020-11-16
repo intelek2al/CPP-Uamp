@@ -8,6 +8,8 @@
 #include "stardelegate.h"
 #include "playerqss.h"
 #include "nextup.h"
+#include "singletonbase.h"
+#include "songmodel.h"
 #include <QAbstractItemView>
 
 #include <QItemSelectionModel>
@@ -26,19 +28,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     readSettings();
     m_settings = new Settings();
-    m_base = new SqlBase();
+    SingletonBase::getInstance();
+
+//    m_base = new SqlBase();
     setupMusicTableModel();
     setupPlayListTableModel();
+
     m_player = new SoundPlayer(ui, this);
     m_player->setPlaylist(m_SQL_model);
 
-    connect(this, &MainWindow::editTagsCompleted, m_base, &SqlBase::updateTableRow);  // edit tags from Info
+//    connect(this, &MainWindow::editTagsCompleted, m_base, &SqlBase::updateTableRow);  // edit tags from Info
+    connect(this, &MainWindow::editTagsCompleted, &SingletonBase::getInstance(), &SingletonBase::updateTableRow);  // edit tags from Info
 
     QImage def_cover(":/def_cover_black.jpg"); // default cover in player
     QPixmap pix(QPixmap::fromImage(def_cover));
     ui->cover_label->setPixmap(pix);
 
-    // context menu for ...
     ui->listPlaylist->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->listPlaylist, SIGNAL(customContextMenuRequested(const QPoint &)), this,
             SLOT(onPlayListContextMenu(const QPoint &)));
@@ -60,19 +65,29 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(m_SQL_model, &QSqlTableModel::modelReset, m_player, &SoundPlayer::modelChanged);
     connect(ui->search_line, &QLineEdit::textChanged, m_searcher, &Searcher::search);
     connect(ui->filterBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_searcher, &Searcher::search);
-    connect(m_player, &SoundPlayer::playlistImported, [=](Playlist pl){ m_base->importPlayList(pl); });
-    connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::importPlayList);
-    connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
-    connect(m_base, &SqlBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
+
+//    connect(m_player, &SoundPlayer::playlistImported, [=](Playlist pl){ m_base->importPlayList(pl); });
+    connect(m_player, &SoundPlayer::playlistImported, [=](Playlist pl){ SingletonBase::getInstance().importPlayList(pl); });
+
+//    connect(m_player, &SoundPlayer::playlistImported, m_base, &SqlBase::importPlayList);
+    connect(m_player, &SoundPlayer::playlistImported, &SingletonBase::getInstance(), &SingletonBase::importPlayList);
+
+//    connect(m_base, &SqlBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
+    connect(&SingletonBase::getInstance(), &SingletonBase::modelPlaylistSelect, m_PlayList_model, &QSqlTableModel::select);
+
+//    connect(m_base, &SqlBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
+    connect(&SingletonBase::getInstance(), &SingletonBase::modelMusicSelect, m_SQL_model, &QSqlTableModel::select);
 
     connect(m_settings->getTimer(), &QTimer::timeout, this, &MainWindow::on_actionQuit_triggered);
-
     connect(m_SQL_model, &QSqlTableModel::beforeUpdate,this, &MainWindow::on_editTableModel_clicked);
     init_systemTrayIcon();
 }
 
 void MainWindow::setupMusicTableModel() {
     m_SQL_model = new QSqlTableModel(this);
+//    m_SQL_model = new SongModel(this);
+    SingletonBase::getInstance();
+
     m_SQL_model->setTable("SONGS");
     m_SQL_model->setEditStrategy(QSqlTableModel::OnFieldChange);
     m_SQL_model->select();
@@ -90,11 +105,15 @@ void MainWindow::setupMusicTableModel() {
     ui->mainMusicTable->hideColumn(12);  // count
     ui->mainMusicTable->hideColumn(13);  // cover
     ui->mainMusicTable->hideColumn(14);  // cover
+    ui->mainMusicTable->hideColumn(15);  // cover
+    ui->mainMusicTable->hideColumn(16);  // cover
+    ui->mainMusicTable->hideColumn(17);  // cover
     ui->mainMusicTable->resizeColumnsToContents();
 }
 
 void MainWindow::setupPlayListTableModel() {
-    m_PlayList_model = new QSqlTableModel;
+
+    m_PlayList_model = new QSqlTableModel(this);
     m_PlayList_model->setTable("LIST_PLAYLISTS");
     m_PlayList_model->select();
     ui->listPlaylist->setModel(m_PlayList_model);
@@ -136,18 +155,14 @@ void MainWindow::onMusicTableContextMenu(const QPoint &point) {
 void MainWindow::onPlayListContextMenu(const QPoint &point)
 {
     currentPlayListIndex(ui->listPlaylist->currentIndex());
-
     QMenu contextMenu(tr("SideBar context menu"), this);
-//    auto fullFileName = dynamic_cast<QFileSystemModel *>(ui->treeView->model())->filePath(ui->treeView->indexAt(point));
 
     QAction action_new("New Playlist", this);
     connect(&action_new, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
-//    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
     contextMenu.addAction(&action_new);
 
     QAction action_play("Play Playlist", this);
     connect(&action_play, &QAction::triggered, this, &MainWindow::on_actionPlayPlaylist_triggered);
-//    connect(ui->actionPlaylist, &QAction::triggered, this, &MainWindow::on_actionPlaylist_triggered);
     contextMenu.addAction(&action_play);
 
     QAction action_import_plst("Import Playlist", this);
@@ -166,11 +181,17 @@ void MainWindow::onPlayListContextMenu(const QPoint &point)
 
 MainWindow::~MainWindow()
 {
+    qDebug(logDebug()) << "~MainWindow";
     delete m_searcher;
-//    delete  m_library;
+    delete m_SQL_model;
+    delete m_PlayList_model;
+    delete m_star_delegate;
+    delete m_contextMenu;
+    delete m_settings;
     delete nextUp;
     delete ui;
-//    system("leaks -q uamp");
+    SingletonBase::getInstance().closeDataBase();
+
 }
 
 void MainWindow::on_mainMusicTable_doubleClicked(const QModelIndex &index)  // player
@@ -244,6 +265,7 @@ void MainWindow::writeSettings() {
 void MainWindow::on_actionQuit_triggered()
 {
     writeSettings();
+
     qInfo(logInfo()) << QString("Quit uamp\n");
     App::quit();
 }
@@ -357,7 +379,8 @@ void MainWindow::on_actionDelete_from_Library_triggered()
 void MainWindow::on_actionAdd_to_Library_triggered()  // add folders
 {
     QString f_name = QFileDialog::getExistingDirectory(this, "Add media", "");
-    m_base->AddtoLibrary(f_name);
+//    m_base->AddtoLibrary(f_name);
+    SingletonBase::getInstance().AddtoLibrary(f_name);
     m_SQL_model->select();
 
     emit m_SQL_model->layoutChanged();
@@ -393,11 +416,10 @@ void MainWindow::currentMusicTableIndex(const QModelIndex &index) {
 
 void MainWindow::currentPlayListIndex(const QModelIndex &index) {
   qInfo(logInfo()) << "MainWindow::currentPlayListIndex";
+
   m_playList_index = index;
-//  auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
   auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
   qDebug(logDebug()) << "cur_playlist =" << cur_playlist;
-
   QSqlQuery query;
   QSqlQueryModel *model = new QSqlQueryModel;
   int PLAY_LISTS_R;
@@ -408,8 +430,6 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
   query.next();
   PLAY_LISTS_R =  query.value(0).toInt();
   qDebug(logDebug()) << "PLAY_LISTS_R = " << PLAY_LISTS_R;
-
-
     query.prepare("SELECT * "
                   "FROM SONGS INNER JOIN PLAYLIST ON SONGS.SONG_ID = PLAYLIST.SONG_R "
                   "WHERE PLAYLIST.PLAYLIST_R = ?");
@@ -417,12 +437,15 @@ void MainWindow::currentPlayListIndex(const QModelIndex &index) {
   query.exec();
   model->setQuery(query);
   ui->mainMusicTable->setModel(model);
+/*
+  QSqlRelationalTableModel *m_SONGS_2 = new  QSqlRelationalTableModel(this);
+  m_SONGS_2->setTable("SONGS");
+  m_SONGS_2->setRelation(0, QSqlRelation("PLAYLIST", "SONG_ID", "SONG_R"));
+  m_SONGS_2->select(); // Делаем выборку данных из таблицы
+  ui->mainMusicTable->setModel(m_SONGS_2);
+  m_SONGS_2->select(); // Делаем выборку данных из таблицы
 
-//    QSqlRelationalTableModel *r_model = new QSqlRelationalTableModel;
-//    r_model->setTable("SONGS");
-//    r_model->setRelation(0, QSqlRelation("PLAYLIST_ID", "SONG_ID", "SONG_ID"));
-//    ui->mainMusicTable->setModel(r_model);
-    // show in table list of songs current playList
+  */
 }
 
 void MainWindow::on_actionPlaylist_triggered()
@@ -435,7 +458,8 @@ void MainWindow::on_actionPlaylist_triggered()
                                                       &ok);
     if (ok) {
         qInfo(logInfo()) << "new playlist " << new_playlist_name;
-        m_base->AddNewPlaylist(new_playlist_name);
+//        m_base->AddNewPlaylist(new_playlist_name);
+        SingletonBase::getInstance().AddNewPlaylist(new_playlist_name);
         m_PlayList_model->select();
     } else {
         qInfo(logInfo()) << "on_actionPlaylist_triggered canceled";
@@ -472,14 +496,16 @@ void MainWindow::on_actionExportPlaylist_triggered() {
 
     qInfo(logInfo()) << "playlist_name "  << playlist_name;
 
-    Playlist current = m_base->ExportPlaylist(playlist_name);
+//    Playlist current = m_base->ExportPlaylist(playlist_name);
+    Playlist current = SingletonBase::getInstance().ExportPlaylist(playlist_name);
 
     m_player->exportPlaylist(current, dialog.selectedFiles().first());
 }
 
 void MainWindow::on_actionDeletePlaylist_triggered() {
     QString name = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
-    m_base->DeletePlaylist(name);
+//    m_base->DeletePlaylist(name);
+    SingletonBase::getInstance().DeletePlaylist(name);
     m_PlayList_model->select();
 }
 
@@ -501,7 +527,8 @@ void MainWindow::on_actionRewind_triggered()
 void MainWindow::on_actionAddtoPlaylist_triggered() {
     auto current_song_path = m_SQL_model->record(m_table_index.row()).value("Path").toString();
     auto cur_playlist = m_PlayList_model->record(m_playList_index.row()).value("Name").toString();
-    m_base->AddtoPlaylist(current_song_path, cur_playlist);
+//    m_base->AddtoPlaylist(current_song_path, cur_playlist);
+    SingletonBase::getInstance().AddtoPlaylist(current_song_path, cur_playlist);
 }
 
 void MainWindow::on_search_line_editingFinished()
@@ -511,6 +538,12 @@ void MainWindow::on_search_line_editingFinished()
 
 void MainWindow::on_songs_clicked()
 {
+//  QSqlRelationalTableModel *m_PlayList_model_2 = new  QSqlRelationalTableModel(this);
+//  m_PlayList_model_2->setTable("SONGS");
+//  m_PlayList_model_2->setRelation(0, QSqlRelation("PLAYLIST", "SONG_R", "SONG_ID"));
+//  ui->mainMusicTable->setModel(m_PlayList_model_2);
+//  m_PlayList_model_2->select(); // Делаем выборку данных из таблицы
+
     ui->mainMusicTable->setModel(m_SQL_model);
     ui->mainMusicTable->hideColumn(0);
     ui->mainMusicTable->hideColumn(12);
@@ -560,7 +593,8 @@ void MainWindow::on_actionAdd_Song_to_Library_triggered() {
     QStringList files = QFileDialog::getOpenFileNames(this, "Add song", "/home",
                                                   tr("Audio (*.mp3 *.flac *.wav *.m4a *.aif)"));
 
-    m_base->AddtoLibrary(files);
+//    m_base->AddtoLibrary(files);
+    SingletonBase::getInstance().AddtoLibrary(files);
     m_SQL_model->select();
 
     emit m_SQL_model->layoutChanged();
@@ -677,3 +711,51 @@ void MainWindow::on_actionStopShutdown_triggered() {
     m_settings->getTimer()->stop();
 }
 
+void MainWindow::on_recentlyadded_clicked()
+{
+    qDebug(logDebug()) << "on_recentlyadded_clicked";
+    QSqlQuery query;
+    QSqlQueryModel *model_recently = new QSqlQueryModel;
+  query.prepare("SELECT * FROM SONGS ORDER BY DateTime DESC LIMIT 20");
+  query.exec();
+
+//  model_recently->sort(15, Qt::AscendingOrder);
+  model_recently->setQuery(query);
+  ui->mainMusicTable->setModel(model_recently);
+}
+
+void MainWindow::on_artists_clicked()
+{
+    qDebug(logDebug()) << "on_artists_clicked";
+  QSqlQuery query;
+  QSqlQueryModel *model_artists = new QSqlQueryModel;
+  query.prepare("SELECT DISTINCT Artist FROM SONGS");
+  query.exec();
+  ui->mainMusicTable->showColumn(0);
+  model_artists->setQuery(query);
+  ui->mainMusicTable->setModel(model_artists);
+}
+
+void MainWindow::on_albums_clicked()
+{
+    qDebug(logDebug()) << "on_albums_clicked";
+  QSqlQuery query;
+  QSqlQueryModel *model_Album = new QSqlQueryModel;
+  query.prepare("SELECT DISTINCT Album FROM SONGS");
+  query.exec();
+  ui->mainMusicTable->showColumn(0);
+  model_Album->setQuery(query);
+  ui->mainMusicTable->setModel(model_Album);
+}
+
+void MainWindow::on_genres_clicked()
+{
+    qDebug(logDebug()) << "on_genres_clicked";
+  QSqlQuery query;
+  QSqlQueryModel *model_genre = new QSqlQueryModel;
+  query.prepare("SELECT DISTINCT Genre FROM SONGS");
+  query.exec();
+  ui->mainMusicTable->showColumn(0);
+  model_genre->setQuery(query);
+  ui->mainMusicTable->setModel(model_genre);
+}

@@ -23,7 +23,7 @@ class ImageFile;
  *
  * <Header for 'Unsynchronised lyrics/text transcription', ID: "USLT">
     Text encoding       $xx
-    Language            $xx xx xx
+    Languae            $xx xx xx
     Content descriptor  <text string according to encoding> $00 (00)
     Lyrics/text         <full text string according to encoding>
 */
@@ -50,8 +50,6 @@ QString TagFunctions::load_lyrics(const QString& file_path) {
             // and/or description, instead of just picking the first.
             if (frame) {
                 lyrics = frame->text();
-                qDebug (logDebug()) << "TagFunctions::load_lyrics  if frame";
-                qDebug(logDebug()) << lyrics.toCString();
             }
         }
         return QString(lyrics.toCString());
@@ -175,6 +173,7 @@ Music TagFunctions::read_tags(QString file_path) {
         data.m_path = file_path;
         data.m_comment =tag->comment().toCString();
         data.m_lyrics = load_lyrics(file_path);
+//        data.m_lyrics = nullptr;
         data.m_url = QUrl(data.m_path);
 
         /*
@@ -201,11 +200,7 @@ Music TagFunctions::read_tags(QString file_path) {
             int seconds = properties->length() % 60;
             int minutes = (properties->length() - seconds) / 60;
             int hours = (properties->length() - minutes) / 60;
-//            QTime time(hours, minutes, seconds);
             QTime time(hours, minutes, seconds);
-
-//            data.m_time =(QString::fromStdString(std::to_string(minutes) +
-//                                             ":" + std::to_string(seconds)));
             QString str_seconds = seconds < 9 ? "0" + QString::number(time.second()) : QString::number(time.second());
             data.m_time = QString::number(time.minute()) + ":" + str_seconds;
             /*
@@ -217,11 +212,7 @@ Music TagFunctions::read_tags(QString file_path) {
                  << std::setw(2) << seconds << endl;
             */
         }
-        data.m_lyrics = load_lyrics(file_path);
-        qDebug(logDebug()) << "TagFunctions::read_tags lyrics =" << data.m_lyrics;
         data.m_cover = load_cover_array(file_path);
-        load_lyrics(file_path);
-
     } else {
         qWarning(logWarning()) << "TagFunctions::read_tags  tags doesn't read";
     }
